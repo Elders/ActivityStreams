@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{F42E9A
 		ActivityStreams\RELEASE_NOTES.md = ActivityStreams\RELEASE_NOTES.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Tests", "ActivityStreams.Tests\ActivityStreams.Tests.csproj", "{79CB0B90-FF73-421D-8EDA-11C805670493}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6D64E748-0A5C-466F-AD59-0CD015496F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D64E748-0A5C-466F-AD59-0CD015496F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D64E748-0A5C-466F-AD59-0CD015496F09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79CB0B90-FF73-421D-8EDA-11C805670493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CB0B90-FF73-421D-8EDA-11C805670493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79CB0B90-FF73-421D-8EDA-11C805670493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79CB0B90-FF73-421D-8EDA-11C805670493}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
