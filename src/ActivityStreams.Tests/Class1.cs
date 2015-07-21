@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Machine.Specifications;
+﻿using Machine.Specifications;
 
 namespace ActivityStreams.Tests
 {

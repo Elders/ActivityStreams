@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests
+namespace ActivityStreams.Tests.Streams
 {
     [Subject("Streams")]
     public class When_a_new_activity_stream_item_is_created
@@ -26,6 +26,5 @@ namespace ActivityStreams.Tests
         static object body;
         static object place;
         static object author;
-
     }
 }
