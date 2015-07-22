@@ -3,27 +3,30 @@ using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
-    public class ActivityStreamItem : IEquatable<ActivityStreamItem>
+    public class Activity : IEquatable<Activity>
     {
-        ActivityStreamItem() { }
+        Activity() { }
 
-        public ActivityStreamItem(byte[] id, object body, object place, object author)
+        public Activity(byte[] id, byte[] streamId, object body, object author)
         {
             Id = id;
+            StreamId = streamId;
             Body = body;
-            Place = place;
             Author = author;
+            Timestamp = DateTime.UtcNow;
         }
 
         public byte[] Id { get; }
 
-        public object Body { get; }
+        public byte[] StreamId { get; }
 
-        public object Place { get; }
+        public object Body { get; }
 
         public object Author { get; }
 
-        public int GetHashCode(ActivityStreamItem obj)
+        public DateTime Timestamp { get; }
+
+        public int GetHashCode(Activity obj)
         {
             return obj.GetHashCode();
         }
@@ -32,11 +35,11 @@ namespace ActivityStreams
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (!typeof(ActivityStreamItem).IsAssignableFrom(obj.GetType())) return false;
-            return Equals((ActivityStreamItem)obj);
+            if (!typeof(Activity).IsAssignableFrom(obj.GetType())) return false;
+            return Equals((Activity)obj);
         }
 
-        public virtual bool Equals(ActivityStreamItem other)
+        public virtual bool Equals(Activity other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -48,7 +51,7 @@ namespace ActivityStreams
             unchecked { return 223 ^ ByteArrayHelper.ComputeHash(Id); }
         }
 
-        public static bool operator ==(ActivityStreamItem left, ActivityStreamItem right)
+        public static bool operator ==(Activity left, Activity right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
@@ -57,10 +60,9 @@ namespace ActivityStreams
                 return left.Equals(right);
         }
 
-        public static bool operator !=(ActivityStreamItem left, ActivityStreamItem right)
+        public static bool operator !=(Activity left, Activity right)
         {
             return !(left == right);
         }
     }
-
 }

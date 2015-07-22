@@ -3,17 +3,18 @@ using Machine.Specifications;
 
 namespace ActivityStreams.Tests.Streams
 {
-
     [Subject("Streams")]
-    public class When_comparing_two_equal_activity_stream_items
+    public class When_comparing_two_equal_activities
     {
         Establish context = () =>
             {
+                var streamId = Encoding.UTF8.GetBytes("streamId");
+
                 var id1 = Encoding.UTF8.GetBytes("ActivityStreamItemId1");
-                item1 = new ActivityStreamItem(id1, "body1", "place1", "author1");
+                item1 = new Activity(id1, streamId, "body1", "author1");
 
                 var id2 = Encoding.UTF8.GetBytes("ActivityStreamItemId1");
-                item2 = new ActivityStreamItem(id2, "body2", "place2", "author2");
+                item2 = new Activity(id2, streamId, "body2", "author2");
             };
 
         Because of = () => areEqual = item1.Equals(item2) && item1 == item2;
@@ -21,7 +22,7 @@ namespace ActivityStreams.Tests.Streams
         It should_be_equal = () => areEqual.ShouldBeTrue();
 
         static bool areEqual = false;
-        static ActivityStreamItem item1;
-        static ActivityStreamItem item2;
+        static Activity item1;
+        static Activity item2;
     }
 }

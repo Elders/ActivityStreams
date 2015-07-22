@@ -51,9 +51,10 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Streams\When_a_new_activity_stream_item_is_created.cs" />
-    <Compile Include="Streams\When_comparing_two_different_activity_stream_items.cs" />
-    <Compile Include="Streams\When_comparing_two_equal_activity_stream_items.cs" />
+    <Compile Include="Streams\When_a_new_activity_is_created.cs" />
+    <Compile Include="Streams\When_comparing_two_different_activities.cs" />
+    <Compile Include="Streams\When_comparing_two_equal_activities.cs" />
+    <Compile Include="Subscriptions\When_a_user_subscribes_twice_to_a_stream.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

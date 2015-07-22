@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ActivityStreams
 {
     public class ActivityStream
     {
-        readonly HashSet<ActivityStreamItem> items;
+        readonly HashSet<Activity> activities;
 
         public ActivityStream()
         {
-            items = new HashSet<ActivityStreamItem>();
+            activities = new HashSet<Activity>();
         }
 
-        public void Append(ActivityStreamItem item)
+        public void Append(Activity item)
         {
-
+            activities.Add(item);
         }
+
+        public IEnumerable<Activity> Activities { get { return activities.ToList().AsReadOnly(); } }
     }
 }
