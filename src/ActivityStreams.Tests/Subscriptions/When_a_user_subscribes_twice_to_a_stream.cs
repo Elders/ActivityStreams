@@ -9,17 +9,20 @@ namespace ActivityStreams.Tests.Subscriptions
     {
         Establish context = () =>
             {
+                var subscriptionId = Encoding.UTF8.GetBytes("subscriptionId");
                 var ownerId = Encoding.UTF8.GetBytes("ownerId");
-                subscription = new Subscription(ownerId);
-                streamId = Encoding.UTF8.GetBytes("streamId");
-                subscription.SubscribeTo(streamId);
+                subscription = new Subscription(subscriptionId, ownerId);
+                var firstStreamId = Encoding.UTF8.GetBytes("streamId");
+                subscription.SubscribeTo(firstStreamId);
+
+                secondStreamId = Encoding.UTF8.GetBytes("streamId");
             };
 
-        Because of = () => subscription.SubscribeTo(streamId);
+        Because of = () => subscription.SubscribeTo(secondStreamId);
 
         It should_be_threated_as_a_single_subscribtion = () => subscription.Streams.Count().ShouldEqual(1);
 
         static Subscription subscription;
-        static byte[] streamId;
+        static byte[] secondStreamId;
     }
 }

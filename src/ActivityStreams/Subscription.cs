@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
@@ -7,13 +8,16 @@ namespace ActivityStreams
     {
         readonly HashSet<byte[]> streamSubscriptions;
 
-        public Subscription(byte[] owner)
+        public Subscription(byte[] id, byte[] ownerId)
         {
-            Owner = owner;
-            streamSubscriptions = new HashSet<byte[]>();
+            Id = id;
+            OwnerId = ownerId;
+            streamSubscriptions = new HashSet<byte[]>(new ByteArrayEqualityComparer());
         }
 
-        public byte[] Owner { get; }
+        public byte[] Id { get; }
+
+        public byte[] OwnerId { get; }
 
         public IEnumerable<byte[]> Streams { get { return streamSubscriptions.ToList().AsReadOnly(); } }
 

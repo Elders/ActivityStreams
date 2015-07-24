@@ -1,7 +1,22 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace ActivityStreams.Helpers
 {
+    public class ByteArrayEqualityComparer : IEqualityComparer<byte[]>
+    {
+        public bool Equals(byte[] x, byte[] y)
+        {
+            return ByteArrayHelper.Compare(x, y);
+        }
+
+        public int GetHashCode(byte[] obj)
+        {
+            return ByteArrayHelper.ComputeHash(obj);
+        }
+    }
+
     public static class ByteArrayHelper
     {
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]

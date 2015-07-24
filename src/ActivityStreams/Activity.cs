@@ -9,6 +9,11 @@ namespace ActivityStreams
 
         public Activity(byte[] id, byte[] streamId, object body, object author)
         {
+            if (ReferenceEquals(null, id) || id.Length == 0) throw new ArgumentNullException(nameof(id));
+            if (ReferenceEquals(null, streamId) || streamId.Length == 0) throw new ArgumentNullException(nameof(streamId));
+            if (ReferenceEquals(null, body)) throw new ArgumentNullException(nameof(body));
+            if (ReferenceEquals(null, author)) throw new ArgumentNullException(nameof(author));
+
             Id = id;
             StreamId = streamId;
             Body = body;
