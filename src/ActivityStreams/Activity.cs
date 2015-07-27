@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ActivityStreams.Helpers;
 
 namespace ActivityStreams
@@ -7,7 +8,7 @@ namespace ActivityStreams
     {
         Activity() { }
 
-        public Activity(byte[] id, byte[] streamId, object body, object author)
+        Activity(byte[] id, byte[] streamId, object body, object author, DateTime timestamp)
         {
             if (ReferenceEquals(null, id) || id.Length == 0) throw new ArgumentNullException(nameof(id));
             if (ReferenceEquals(null, streamId) || streamId.Length == 0) throw new ArgumentNullException(nameof(streamId));
@@ -18,8 +19,12 @@ namespace ActivityStreams
             StreamId = streamId;
             Body = body;
             Author = author;
-            Timestamp = DateTime.UtcNow;
+            Timestamp = timestamp.ToFileTimeUtc();
         }
+
+        public Activity(byte[] id, byte[] streamId, object body, object author)
+            : this(id, streamId, body, author, DateTime.UtcNow)
+        { }
 
         public byte[] Id { get; }
 
@@ -29,7 +34,7 @@ namespace ActivityStreams
 
         public object Author { get; }
 
-        public DateTime Timestamp { get; }
+        public long Timestamp { get; }
 
         public int GetHashCode(Activity obj)
         {
@@ -68,6 +73,25 @@ namespace ActivityStreams
         public static bool operator !=(Activity left, Activity right)
         {
             return !(left == right);
+        }
+
+        static IComparer<Activity> comparerInstance = new ActivityComparer();
+        public static IComparer<Activity> Comparer = comparerInstance;
+
+        public static Activity UnitTestFactory(byte[] id, byte[] streamId, object body, object author, DateTime timestamp)
+        {
+            return new Activity(id, streamId, body, author, timestamp);
+        }
+
+        class ActivityComparer : IComparer<Activity>
+        {
+            public int Compare(Activity x, Activity y)
+            {
+                if (x == y) return 0;
+                var compareResult = Comparer<long>.Default.Compare(x.Timestamp, y.Timestamp);
+                if (compareResult == 0) return Comparer<int>.Default.Compare(x.GetHashCode(), y.GetHashCode());
+                return compareResult;
+            }
         }
     }
 }
