@@ -81,5 +81,10 @@ namespace ActivityStreams
         {
             return !(left == right);
         }
+
+        public void UnSubscribe(byte[] streamId)
+        {
+            streamSubscriptions.Remove(streamId);
+        }
     }
 }

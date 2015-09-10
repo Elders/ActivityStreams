@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace ActivityStreams.Persistence
+﻿namespace ActivityStreams.Persistence
 {
     public interface ISubscriptionRepository
     {
-        void Save(ActivityFeed subsription);
-        void Delete(ActivityFeed subscription);
-        ActivityFeed Load(byte[] subscriptionId);
-        IEnumerable<ActivityFeed> LoadOwnerSubscriptions(byte[] ownerId);
+        void Save(Subscription subscription);
+        void Delete(Subscription subscription);
+        ActivityFeed Load(byte[] ownerId);
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
@@ -23,6 +21,11 @@ namespace ActivityStreams
         {
             var subscription = new Subscription(OwnerId, streamId);
             subscriptions.Add(subscription);
+        }
+
+        public void RemoveStream(Subscription subscription)
+        {
+            subscriptions.Remove(subscription);
         }
     }
 }
