@@ -1,27 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using System.Web.Http;
-using ActivityStreams.Persistence;
 using Elders.Web.Api;
 
 namespace ActivityStreams.Api.Controllers
 {
     public class ActivitiesController : ApiController
     {
-        IActivityRepository ActivityRepository;
-        IActivityFeedRepository FeedRepository;
-
-        public IHttpActionResult PostActivity(byte[] activityId, byte[] streamId, object body)
+        public IHttpActionResult PostActivity(string activityId, string streamId, object body)
         {
-            var activity = new Activity(activityId, streamId, body, null);
-            ActivityRepository.Append(activity);
+            var activityIdBytes = Encoding.UTF8.GetBytes(activityId);
+            var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
+
+            var activity = new Activity(activityIdBytes, streamIdBytes, body, null);
+            WebApiApplication.ActivityRepository.Append(activity);
             return this.Accepted(streamId);
         }
 
-        public ResponseResult<FeedModel> LoadActivities(byte[] feedId)
+        public ResponseResult<FeedModel> LoadActivities(string feedId)
         {
+            var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
 
-            var feed = FeedRepository.Get(feedId);
-            var activities = ActivityRepository.Load(feed);
+            var feed = WebApiApplication.FeedRepository.Get(feedIdBytes);
+            var activities = WebApiApplication.ActivityRepository.Load(feed);
 
             return new ResponseResult<FeedModel>(new FeedModel(activities));
         }

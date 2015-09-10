@@ -1,32 +1,36 @@
-﻿using System.Web.Http;
-using ActivityStreams.Persistence;
+﻿using System.Text;
+using System.Web.Http;
 
 namespace ActivityStreams.Api.Controllers
 {
     public class FeedsController : ApiController
     {
-        IActivityFeedRepository ActivityFeedRepository;
-
-        public IHttpActionResult AttachStream(byte[] feedId, byte[] streamId)
+        public IHttpActionResult AttachStream(string feedId, string streamId)
         {
-            var feed = ActivityFeedRepository.Get(feedId);
+            var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
+            var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
+
+            var feed = WebApiApplication.FeedRepository.Get(feedIdBytes);
             if (feed == null) return base.NotFound();
 
-            var feedStream = new FeedStream(feedId, streamId);
+            var feedStream = new FeedStream(feedIdBytes, streamIdBytes);
             feed.AttachStream(feedStream);
-            ActivityFeedRepository.Save(feed);
+            WebApiApplication.FeedRepository.Save(feed);
 
             return this.Ok();
         }
 
-        public IHttpActionResult DetachStream(byte[] feedId, byte[] streamId)
+        public IHttpActionResult DetachStream(string feedId, string streamId)
         {
-            var feed = ActivityFeedRepository.Get(feedId);
+            var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
+            var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
+
+            var feed = WebApiApplication.FeedRepository.Get(feedIdBytes);
             if (feed == null) return base.NotFound();
 
-            var feedStream = new FeedStream(feedId, streamId);
+            var feedStream = new FeedStream(feedIdBytes, streamIdBytes);
             feed.DetachStream(feedStream);
-            ActivityFeedRepository.Save(feed);
+            WebApiApplication.FeedRepository.Save(feed);
 
             return this.Ok();
         }
