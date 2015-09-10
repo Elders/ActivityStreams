@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ActivityStreams.Persistence.InMemory
 {
@@ -21,16 +22,35 @@ namespace ActivityStreams.Persistence.InMemory
         /// </summary>
         public IEnumerable<Activity> Load(Subscription subscription)
         {
-            foreach (var streamId in subscription.Streams)
+            var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count);
+            foreach (var item in activityStreamStore)
             {
-                SortedSet<Activity> stream;
-                if (activityStreamStore.TryGetValue(streamId, out stream))
+                snapshot.Add(item.Key, new Queue<Activity>(item.Value));
+            }
+
+            SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.Comparer);
+            var streams = subscription.Streams.ToList();
+            var streamsCount = streams.Count;
+
+            //  Init
+            for (int streamIndexInsideSubsciption = 0; streamIndexInsideSubsciption < streamsCount; streamIndexInsideSubsciption++)
+            {
+                var streamId = streams[streamIndexInsideSubsciption];
+                var activity = snapshot[streamId].Dequeue();
+                buffer.Add(activity);
+            }
+
+            while (buffer.Count > 0)
+            {
+                Activity nextActivity = buffer.FirstOrDefault();
+                buffer.Remove(nextActivity);
+                var streamQueue = snapshot[nextActivity.StreamId];
+                if (streamQueue.Count > 0)
                 {
-                    foreach (var activity in stream)
-                    {
-                        yield return activity;
-                    }
+                    var candidate = snapshot[nextActivity.StreamId].Dequeue();
+                    buffer.Add(candidate);
                 }
+                yield return nextActivity;
             }
         }
     }
