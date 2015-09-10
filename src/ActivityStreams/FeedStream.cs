@@ -4,15 +4,15 @@ using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
-    public class Subscription : IEqualityComparer<Subscription>, IEquatable<Subscription>
+    public class FeedStream : IEqualityComparer<FeedStream>, IEquatable<FeedStream>
     {
-        public Subscription(byte[] ownerId, byte[] streamId)
+        public FeedStream(byte[] feedId, byte[] streamId)
         {
-            OwnerId = ownerId;
+            FeedId = feedId;
             StreamId = streamId;
         }
 
-        public byte[] OwnerId { get; set; }
+        public byte[] FeedId { get; set; }
 
         public byte[] StreamId { get; set; }
 
@@ -20,10 +20,10 @@ namespace ActivityStreams
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as Subscription);
+            return Equals(obj as FeedStream);
         }
 
-        public bool Equals(Subscription other)
+        public bool Equals(FeedStream other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -33,11 +33,11 @@ namespace ActivityStreams
                 return false;
 
             return
-                 ByteArrayHelper.Compare(OwnerId, other.OwnerId) &&
+                 ByteArrayHelper.Compare(FeedId, other.FeedId) &&
                  ByteArrayHelper.Compare(StreamId, other.StreamId);
         }
 
-        public bool Equals(Subscription left, Subscription right)
+        public bool Equals(FeedStream left, FeedStream right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
@@ -46,7 +46,7 @@ namespace ActivityStreams
                 return left.Equals(right);
         }
 
-        public int GetHashCode(Subscription obj)
+        public int GetHashCode(FeedStream obj)
         {
             return obj.GetHashCode();
         }
@@ -58,7 +58,7 @@ namespace ActivityStreams
                 int hashCode = 463;
                 int multiplier = 11;
 
-                var ownerHash = ByteArrayHelper.ComputeHash(OwnerId);
+                var ownerHash = ByteArrayHelper.ComputeHash(FeedId);
                 var streamIdHash = ByteArrayHelper.ComputeHash(StreamId);
 
                 hashCode = hashCode * multiplier ^ ownerHash;
@@ -68,7 +68,7 @@ namespace ActivityStreams
             }
         }
 
-        public static bool operator ==(Subscription left, Subscription right)
+        public static bool operator ==(FeedStream left, FeedStream right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
@@ -77,14 +77,9 @@ namespace ActivityStreams
                 return left.Equals(right);
         }
 
-        public static bool operator !=(Subscription left, Subscription right)
+        public static bool operator !=(FeedStream left, FeedStream right)
         {
             return !(left == right);
-        }
-
-        public void UnSubscribe(byte[] streamId)
-        {
-            streamSubscriptions.Remove(streamId);
         }
     }
 }

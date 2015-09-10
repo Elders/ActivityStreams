@@ -1,32 +1,22 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Linq;
 
 namespace ActivityStreams.Persistence.InMemory
 {
-    public class InMemorySubscriptionRepository : ISubscriptionRepository
+    public class InMemorySubscriptionRepository : IActivityFeedRepository
     {
-        ConcurrentDictionary<byte[], ActivityFeed> activityFeedStore = new ConcurrentDictionary<byte[], ActivityFeed>();
+        ConcurrentDictionary<byte[], Feed> activityFeedStore = new ConcurrentDictionary<byte[], Feed>();
 
-        public void Delete(Subscription subscription)
+        public Feed Get(byte[] id)
         {
-            ActivityFeed feed;
-
-            if (activityFeedStore.TryGetValue(subscription.OwnerId, out feed))
-                feed.RemoveStream(subscription);
-        }
-
-        public ActivityFeed Load(byte[] ownerId)
-        {
-            ActivityFeed feed;
-
-            if (activityFeedStore.TryGetValue(ownerId, out feed))
+            Feed feed;
+            if (activityFeedStore.TryGetValue(id, out feed))
                 return feed;
 
             return null;
         }
 
-        public void Save(Subscription subscription)
+        public Feed Save(Feed feed)
         {
             throw new NotImplementedException();
         }

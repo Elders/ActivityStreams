@@ -37,15 +37,15 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityFeed.cs" />
+    <Compile Include="Feed.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
-    <Compile Include="Persistence\IActivityFeedRepository.cs" />
+    <Compile Include="Persistence\IActivityRepository.cs" />
     <Compile Include="Persistence\InMemory\InMemoryActivityFeedRepository.cs" />
     <Compile Include="Persistence\InMemory\InMemorySubscriptionRepository.cs" />
-    <Compile Include="Persistence\ISubscriptionRepository.cs" />
+    <Compile Include="Persistence\IActivityFeedRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Subscription.cs" />
+    <Compile Include="FeedStream.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

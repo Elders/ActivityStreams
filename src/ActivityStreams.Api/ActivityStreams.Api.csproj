@@ -150,7 +150,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ActivitiesController.cs" />
-    <Compile Include="Controllers\SubscriptionsController.cs" />
+    <Compile Include="Controllers\FeedsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

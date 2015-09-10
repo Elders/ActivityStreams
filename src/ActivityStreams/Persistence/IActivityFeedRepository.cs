@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
-
-namespace ActivityStreams.Persistence
+﻿namespace ActivityStreams.Persistence
 {
     public interface IActivityFeedRepository
     {
-        void Append(Activity activity);
+        /// <summary>
+        /// Gets the feed for the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the feed.</param>
+        /// <returns>Returns the feed.</returns>
+        Feed Get(byte[] id);
 
-        IEnumerable<Activity> Load(ActivityFeed feed);
+        Feed Save(Feed feed);
     }
 }

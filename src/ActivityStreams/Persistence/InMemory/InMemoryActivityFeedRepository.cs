@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ActivityStreams.Persistence.InMemory
 {
-    public class InMemoryActivityFeedRepository : IActivityFeedRepository
+    public class InMemoryActivityFeedRepository : IActivityRepository
     {
         ConcurrentDictionary<byte[], SortedSet<Activity>> activityStreamStore = new ConcurrentDictionary<byte[], SortedSet<Activity>>();
 
@@ -20,7 +20,7 @@ namespace ActivityStreams.Persistence.InMemory
         /// <summary>
         /// FanIn
         /// </summary>
-        public IEnumerable<Activity> Load(ActivityFeed feed)
+        public IEnumerable<Activity> Load(Feed feed)
         {
             var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count);
             foreach (var item in activityStreamStore)
@@ -29,7 +29,7 @@ namespace ActivityStreams.Persistence.InMemory
             }
 
             SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.Comparer);
-            var streams = feed.Streams.ToList();
+            var streams = feed.FeedStreams.ToList();
             var streamsCount = streams.Count;
 
             //  Init

@@ -31,9 +31,9 @@ namespace ActivityStreams.Tests.Streams
                 activityStreamRepository.Append(item1);
 
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
-                subscription = new ActivityFeed(subscriptionOwnerId);
-                subscription.AddStream(streamId1);
-                subscription.AddStream(streamId2);
+                subscription = new Feed(subscriptionOwnerId);
+                subscription.AttachStream(new FeedStream(subscriptionOwnerId, streamId1));
+                subscription.AttachStream(new FeedStream(subscriptionOwnerId, streamId2));
             };
 
         Because of = () => activityStream = activityStreamRepository.Load(subscription).ToList();
@@ -47,8 +47,8 @@ namespace ActivityStreams.Tests.Streams
             activityStream[2].ShouldEqual(item3);
         };
 
-        static IActivityFeedRepository activityStreamRepository;
-        static ActivityFeed subscription;
+        static IActivityRepository activityStreamRepository;
+        static Feed subscription;
         static List<Activity> activityStream;
         static Activity item1;
         static Activity item2;

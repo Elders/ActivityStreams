@@ -9,19 +9,19 @@ namespace ActivityStreams.Tests.Subscriptions
     {
         Establish context = () =>
             {
-                var ownerId = Encoding.UTF8.GetBytes("ownerId");
-                feed = new ActivityFeed(ownerId);
+                var feedId = Encoding.UTF8.GetBytes("ownerId");
+                feed = new Feed(feedId);
                 var firstStreamId = Encoding.UTF8.GetBytes("streamId");
-                feed.AddStream(firstStreamId);
+                feed.AttachStream(new FeedStream(feed.Id, firstStreamId));
 
                 secondStreamId = Encoding.UTF8.GetBytes("streamId");
             };
 
-        Because of = () => feed.AddStream(secondStreamId);
+        Because of = () => feed.AttachStream(new FeedStream(feed.Id, secondStreamId));
 
-        It should_be_threated_as_a_single_subscribtion = () => feed.Streams.Count().ShouldEqual(1);
+        It should_be_threated_as_a_single_subscribtion = () => feed.FeedStreams.Count().ShouldEqual(1);
 
-        static ActivityFeed feed;
+        static Feed feed;
         static byte[] secondStreamId;
     }
 }
