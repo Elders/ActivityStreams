@@ -38,7 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivityFeed.cs" />
-    <Compile Include="ActivityStream.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
     <Compile Include="Persistence\IActivityFeedRepository.cs" />
