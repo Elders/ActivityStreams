@@ -24,15 +24,14 @@ namespace ActivityStreams.Tests.Streams
                 var id3 = Encoding.UTF8.GetBytes("activityId3");
                 item3 = Activity.UnitTestFactory(id3, streamId, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
 
-                activityStreamRepository = new InMemoryActivityStreamRepository();
+                activityStreamRepository = new InMemoryActivityFeedRepository();
                 activityStreamRepository.Append(item2);
                 activityStreamRepository.Append(item3);
                 activityStreamRepository.Append(item1);
 
-                var subscriptionId = Encoding.UTF8.GetBytes("subscriptionId");
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
-                subscription = new Subscription(subscriptionId, subscriptionOwnerId);
-                subscription.SubscribeTo(streamId);
+                subscription = new ActivityFeed(subscriptionOwnerId);
+                subscription.AddStream(streamId);
             };
 
         Because of = () => activityStream = activityStreamRepository.Load(subscription).ToList();
@@ -46,8 +45,8 @@ namespace ActivityStreams.Tests.Streams
             activityStream[2].ShouldEqual(item3);
         };
 
-        static IActivityStreamRepository activityStreamRepository;
-        static Subscription subscription;
+        static IActivityFeedRepository activityStreamRepository;
+        static ActivityFeed subscription;
         static List<Activity> activityStream;
         static Activity item1;
         static Activity item2;

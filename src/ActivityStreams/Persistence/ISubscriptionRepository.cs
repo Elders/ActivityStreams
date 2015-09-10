@@ -4,9 +4,9 @@ namespace ActivityStreams.Persistence
 {
     public interface ISubscriptionRepository
     {
-        void Save(Subscription subsription);
-        void Delete(Subscription subscription);
-        Subscription Load(byte[] subscriptionId);
-        IEnumerable<Subscription> LoadOwnerSubscriptions(byte[] ownerId);
+        void Save(ActivityFeed subsription);
+        void Delete(ActivityFeed subscription);
+        ActivityFeed Load(byte[] subscriptionId);
+        IEnumerable<ActivityFeed> LoadOwnerSubscriptions(byte[] ownerId);
     }
 }

@@ -37,11 +37,12 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityFeed.cs" />
     <Compile Include="ActivityStream.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
-    <Compile Include="Persistence\IActivityStreamRepository.cs" />
-    <Compile Include="Persistence\InMemory\InMemoryActivityStreamRepository.cs" />
+    <Compile Include="Persistence\IActivityFeedRepository.cs" />
+    <Compile Include="Persistence\InMemory\InMemoryActivityFeedRepository.cs" />
     <Compile Include="Persistence\ISubscriptionRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Subscription.cs" />

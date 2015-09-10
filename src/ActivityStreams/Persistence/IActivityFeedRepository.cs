@@ -2,10 +2,10 @@
 
 namespace ActivityStreams.Persistence
 {
-    public interface IActivityStreamRepository
+    public interface IActivityFeedRepository
     {
         void Append(Activity activity);
 
-        IEnumerable<Activity> Load(Subscription subscription);
+        IEnumerable<Activity> Load(ActivityFeed feed);
     }
 }
