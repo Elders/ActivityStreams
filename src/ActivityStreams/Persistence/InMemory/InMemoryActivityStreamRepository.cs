@@ -16,6 +16,9 @@ namespace ActivityStreams.Persistence.InMemory
                 activityStreamStore.TryAdd(activity.StreamId, new SortedSet<Activity>(Activity.Comparer) { activity });
         }
 
+        /// <summary>
+        /// FanIn
+        /// </summary>
         public IEnumerable<Activity> Load(Subscription subscription)
         {
             foreach (var streamId in subscription.Streams)
@@ -29,6 +32,24 @@ namespace ActivityStreams.Persistence.InMemory
                     }
                 }
             }
+        }
+    }
+
+    public class Paging
+    {
+        public Paging(int skip, int take)
+        {
+            Skip = skip;
+            Take = take;
+        }
+
+        public int Skip { get; } = 5;
+
+        public int Take { get; }
+
+        public Paging Next(Paging paging)
+        {
+            return new Paging(paging.Skip + paging.Take, paging.Take);
         }
     }
 }

@@ -94,4 +94,9 @@ namespace ActivityStreams
             }
         }
     }
+
+    public class ActivityMeta
+    {
+        public Dictionary<string, object> MetaCollection { get; set; }
+    }
 }

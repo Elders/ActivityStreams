@@ -9,20 +9,21 @@ using Machine.Specifications;
 namespace ActivityStreams.Tests.Streams
 {
     [Subject("Streams")]
-    public class When_loading_single_activity_stream
+    public class When_loading_multiple_activity_stream
     {
         Establish context = () =>
             {
-                var streamId = Encoding.UTF8.GetBytes("streamId");
+                var streamId1 = Encoding.UTF8.GetBytes("streamId1");
+                var streamId2 = Encoding.UTF8.GetBytes("streamId2");
 
                 var id1 = Encoding.UTF8.GetBytes("activityId1");
-                item1 = Activity.UnitTestFactory(id1, streamId, "body1", "author1", DateTime.UtcNow.AddMinutes(1));
+                item1 = Activity.UnitTestFactory(id1, streamId1, "body1", "author1", DateTime.UtcNow.AddMinutes(1));
 
                 var id2 = Encoding.UTF8.GetBytes("activityId2");
-                item2 = Activity.UnitTestFactory(id2, streamId, "body2", "author2", DateTime.UtcNow.AddMinutes(2));
+                item2 = Activity.UnitTestFactory(id2, streamId2, "body2", "author2", DateTime.UtcNow.AddMinutes(2));
 
                 var id3 = Encoding.UTF8.GetBytes("activityId3");
-                item3 = Activity.UnitTestFactory(id3, streamId, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
+                item3 = Activity.UnitTestFactory(id3, streamId1, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
 
                 activityStreamRepository = new InMemoryActivityStreamRepository();
                 activityStreamRepository.Append(item2);
@@ -32,7 +33,8 @@ namespace ActivityStreams.Tests.Streams
                 var subscriptionId = Encoding.UTF8.GetBytes("subscriptionId");
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
                 subscription = new Subscription(subscriptionId, subscriptionOwnerId);
-                subscription.SubscribeTo(streamId);
+                subscription.SubscribeTo(streamId1);
+                subscription.SubscribeTo(streamId2);
             };
 
         Because of = () => activityStream = activityStreamRepository.Load(subscription).ToList();
