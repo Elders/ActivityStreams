@@ -5,8 +5,19 @@ using Elders.Web.Api;
 
 namespace ActivityStreams.Api.Controllers
 {
+    /// <summary>
+    /// Activities end point
+    /// </summary>
     public class ActivitiesController : ApiController
     {
+        /// <summary>
+        ///  Post activity to stream
+        /// </summary>
+        /// <param name="activityId"></param>
+        /// <param name="streamId"></param>
+        /// <param name="body"></param>
+        /// <returns></returns>
+        [HttpPost]
         public IHttpActionResult PostActivity(string activityId, string streamId, object body)
         {
             var activityIdBytes = Encoding.UTF8.GetBytes(activityId);
@@ -16,7 +27,12 @@ namespace ActivityStreams.Api.Controllers
             WebApiApplication.ActivityRepository.Append(activity);
             return this.Accepted(streamId);
         }
-
+        /// <summary>
+        /// Load Activities for feed
+        /// </summary>
+        /// <param name="feedId"></param>
+        /// <returns></returns>
+        [HttpGet]
         public ResponseResult<FeedModel> LoadActivities(string feedId)
         {
             var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
