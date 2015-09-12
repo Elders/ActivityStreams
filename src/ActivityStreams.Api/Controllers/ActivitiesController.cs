@@ -38,8 +38,10 @@ namespace ActivityStreams.Api.Controllers
             var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
 
             var feed = WebApiApplication.FeedRepository.Get(feedIdBytes);
-            var activities = WebApiApplication.ActivityRepository.Load(feed);
+            if (feed == null)
+                return new ResponseResult<FeedModel>();
 
+            var activities = WebApiApplication.ActivityRepository.Load(feed);
             return new ResponseResult<FeedModel>(new FeedModel(activities));
         }
     }

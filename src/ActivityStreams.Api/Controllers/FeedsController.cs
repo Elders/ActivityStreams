@@ -22,7 +22,10 @@ namespace ActivityStreams.Api.Controllers
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
 
             var feed = WebApiApplication.FeedRepository.Get(feedIdBytes);
-            if (feed == null) return base.NotFound();
+            if (feed == null)
+            {
+                feed = new Feed(feedIdBytes);
+            }
 
             var feedStream = new FeedStream(feedIdBytes, streamIdBytes);
             feed.AttachStream(feedStream);

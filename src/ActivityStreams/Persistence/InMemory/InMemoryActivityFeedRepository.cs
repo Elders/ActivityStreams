@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using ActivityStreams.Helpers;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace ActivityStreams.Persistence.InMemory
 {
     public class InMemoryActivityFeedRepository : IActivityRepository
     {
-        ConcurrentDictionary<byte[], SortedSet<Activity>> activityStreamStore = new ConcurrentDictionary<byte[], SortedSet<Activity>>();
+        ConcurrentDictionary<byte[], SortedSet<Activity>> activityStreamStore = new ConcurrentDictionary<byte[], SortedSet<Activity>>(new ByteArrayEqualityComparer());
 
         public void Append(Activity activity)
         {
@@ -22,7 +23,7 @@ namespace ActivityStreams.Persistence.InMemory
         /// </summary>
         public IEnumerable<Activity> Load(Feed feed)
         {
-            var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count);
+            var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count, new ByteArrayEqualityComparer());
             foreach (var item in activityStreamStore)
             {
                 snapshot.Add(item.Key, new Queue<Activity>(item.Value));
@@ -31,10 +32,13 @@ namespace ActivityStreams.Persistence.InMemory
             SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.Comparer);
             var streams = feed.FeedStreams.ToList();
             var streamsCount = streams.Count;
+            var snapshotCount = snapshot.Count;
 
             //  Init
             for (int streamIndexInsideSubsciption = 0; streamIndexInsideSubsciption < streamsCount; streamIndexInsideSubsciption++)
             {
+                if (snapshotCount <= streamIndexInsideSubsciption)
+                    break;
                 var streamId = streams[streamIndexInsideSubsciption];
                 var activity = snapshot[streamId].Dequeue();
                 buffer.Add(activity);

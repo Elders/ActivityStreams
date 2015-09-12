@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ActivityStreams.Helpers;
 using System.Collections.Concurrent;
 
 namespace ActivityStreams.Persistence.InMemory
 {
     public class InMemorySubscriptionRepository : IActivityFeedRepository
     {
-        ConcurrentDictionary<byte[], Feed> activityFeedStore = new ConcurrentDictionary<byte[], Feed>();
+        ConcurrentDictionary<byte[], Feed> activityFeedStore = new ConcurrentDictionary<byte[], Feed>(new ByteArrayEqualityComparer());
 
         public Feed Get(byte[] id)
         {
@@ -18,7 +18,7 @@ namespace ActivityStreams.Persistence.InMemory
 
         public void Save(Feed feed)
         {
-            throw new NotImplementedException();
+            activityFeedStore.TryAdd(feed.Id, feed);
         }
     }
 }
