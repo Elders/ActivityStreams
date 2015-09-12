@@ -1,8 +1,8 @@
-using System.Web.Http;
-using WebActivatorEx;
 using ActivityStreams.Api.Help;
 using Swashbuckle.Application;
 using System;
+using System.Web.Http;
+using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -187,13 +187,13 @@ namespace ActivityStreams.Api.Help
                         // in a badge at the bottom of the page. Use these options to set a different validator URL or to disable the
                         // feature entirely.
                         //c.SetValidatorUrl("http://localhost/validator");
-                        //c.DisableValidator();
+                        c.DisableValidator();
 
                         // Use this option to control how the Operation listing is displayed.
                         // It can be set to "None" (default), "List" (shows operations for each resource),
                         // or "Full" (fully expanded: shows operations and their details).
                         //
-                        //c.DocExpansion(DocExpansion.List);
+                        c.DocExpansion(DocExpansion.List);
 
                         // Use the CustomAsset option to provide your own version of assets used in the swagger-ui.
                         // It's typically used to instruct Swashbuckle to return your version instead of the default
@@ -219,7 +219,7 @@ namespace ActivityStreams.Api.Help
 
         private static string GetXmlCommentsPath()
         {
-            return String.Format(@"{0}bin\ActivityStreams.Api.XML", AppDomain.CurrentDomain.BaseDirectory);
+            return string.Format(@"{0}bin\ActivityStreams.Api.XML", AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }
