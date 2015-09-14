@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ActivityStreams.Api\ActivityStreams.Api.csproj">
-      <Project>{7414e315-cfa1-4b5d-841b-999a0209956d}</Project>
+      <Project>{7a7f0c1b-1b5f-4cab-9651-b939cda4a5e8}</Project>
       <Name>ActivityStreams.Api</Name>
     </ProjectReference>
   </ItemGroup>

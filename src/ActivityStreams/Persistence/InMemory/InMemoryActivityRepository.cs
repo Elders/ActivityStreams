@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ActivityStreams.Persistence.InMemory
 {
-    public class InMemoryActivityFeedRepository : IActivityRepository
+    public class InMemoryActivityRepository : IActivityRepository
     {
         ConcurrentDictionary<byte[], SortedSet<Activity>> activityStreamStore = new ConcurrentDictionary<byte[], SortedSet<Activity>>(new ByteArrayEqualityComparer());
 

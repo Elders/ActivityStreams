@@ -1,5 +1,6 @@
 using ActivityStreams.Api.Help;
 using Swashbuckle.Application;
+using Swashbuckle.Swagger;
 using System;
 using System.Web.Http;
 using WebActivatorEx;
@@ -27,13 +28,13 @@ namespace ActivityStreams.Api.Help
                         // the docs is taken as the default. If your API supports multiple schemes and you want to be explicit
                         // about them, you can use the "Schemes" option as shown below.
                         //
-                        //c.Schemes(new[] { "http", "https" });
+                        c.Schemes(new[] { "https" });
 
                         // Use "SingleApiVersion" to describe a single version API. Swagger 2.0 includes an "Info" object to
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "ActivitySteams.Api.Help");
+                        c.SingleApiVersion("v1", "ActivitySteams.Api");
 
                         // If your API has multiple versions, use "MultipleApiVersions" instead of "SingleApiVersion".
                         // In this case, you must provide a lambda that tells Swashbuckle which actions should be
@@ -75,7 +76,7 @@ namespace ActivityStreams.Api.Help
                         //    });
 
                         // Set this flag to omit descriptions for any actions decorated with the Obsolete attribute
-                        //c.IgnoreObsoleteActions();
+                        c.IgnoreObsoleteActions();
 
                         // Each operation be assigned one or more tags which are then used by consumers for various reasons.
                         // For example, the swagger-ui groups operations according to the first tag of each operation.
@@ -103,7 +104,7 @@ namespace ActivityStreams.Api.Help
                         // use the "MapType" option when the resulting Schema is a primitive or array type. If you need to alter a
                         // complex Schema, use a Schema filter.
                         //
-                        //c.MapType<ProductType>(() => new Schema { type = "integer", format = "int32" });
+                        //c.MapType<IHttpActionResult>(() => new Schema { type = "PostActivityModel", format = "object" });
                         //
                         // If you want to post-modify "complex" Schemas once they've been generated, across the board or for a
                         // specific type, you can wire up one or more Schema filters.
@@ -112,7 +113,7 @@ namespace ActivityStreams.Api.Help
 
                         // Set this flag to omit schema property descriptions for any type properties decorated with the
                         // Obsolete attribute 
-                        //c.IgnoreObsoleteProperties();
+                        c.IgnoreObsoleteProperties();
 
                         // In a Swagger 2.0 document, complex types are typically declared globally and referenced by unique
                         // Schema Id. By default, Swashbuckle does NOT use the full type name in Schema Ids. In most cases, this
