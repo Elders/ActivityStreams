@@ -6,7 +6,7 @@ using ActivityStreams.Persistence;
 using ActivityStreams.Persistence.InMemory;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Streams
+namespace ActivityStreams.Tests.Activities
 {
     [Subject("Streams")]
     public class When_loading_multiple_activity_stream

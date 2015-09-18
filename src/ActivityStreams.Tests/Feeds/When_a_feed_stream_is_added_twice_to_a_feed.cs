@@ -2,10 +2,10 @@
 using System.Text;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Subscriptions
+namespace ActivityStreams.Tests.Feeds
 {
-    [Subject("Subscriptions")]
-    public class When_a_user_subscribes_twice_to_a_stream
+    [Subject("Feeds")]
+    public class When_a_feed_stream_is_added_twice_to_a_feed
     {
         Establish context = () =>
             {

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Streams
+namespace ActivityStreams.Tests.Activities
 {
     [Subject("Streams")]
     public class When_comparing_two_equal_activities

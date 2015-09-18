@@ -9,6 +9,6 @@
         /// <returns>Returns the feed.</returns>
         Feed Get(byte[] id);
 
-        Feed Save(Feed feed);
+        void Save(Feed feed);
     }
 }

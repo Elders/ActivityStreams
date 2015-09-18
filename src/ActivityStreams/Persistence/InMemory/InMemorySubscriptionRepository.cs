@@ -16,7 +16,7 @@ namespace ActivityStreams.Persistence.InMemory
             return null;
         }
 
-        public Feed Save(Feed feed)
+        public void Save(Feed feed)
         {
             throw new NotImplementedException();
         }
