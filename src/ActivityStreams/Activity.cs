@@ -8,14 +8,14 @@ namespace ActivityStreams
     {
         Activity() { }
 
-        Activity(byte[] id, byte[] streamId, object body, object author, DateTime timestamp)
+        Activity(byte[] streamId, byte[] id, object body, object author, DateTime timestamp)
         {
             if (ReferenceEquals(null, id) || id.Length == 0) throw new ArgumentNullException(nameof(id));
             if (ReferenceEquals(null, streamId) || streamId.Length == 0) throw new ArgumentNullException(nameof(streamId));
             if (ReferenceEquals(null, body)) throw new ArgumentNullException(nameof(body));
             //if (ReferenceEquals(null, author)) throw new ArgumentNullException(nameof(author));
 
-            Id = id;
+            ExternalId = id;
             StreamId = streamId;
             Body = body;
             Author = author;
@@ -23,10 +23,10 @@ namespace ActivityStreams
         }
 
         public Activity(byte[] id, byte[] streamId, object body, object author)
-            : this(id, streamId, body, author, DateTime.UtcNow)
+            : this(streamId, id, body, author, DateTime.UtcNow)
         { }
 
-        public byte[] Id { get; }
+        public byte[] ExternalId { get; }
 
         public byte[] StreamId { get; }
 
@@ -53,12 +53,12 @@ namespace ActivityStreams
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return ByteArrayHelper.Compare(Id, other.Id);
+            return ByteArrayHelper.Compare(ExternalId, other.ExternalId);
         }
 
         public override int GetHashCode()
         {
-            unchecked { return 223 ^ ByteArrayHelper.ComputeHash(Id); }
+            unchecked { return 223 ^ ByteArrayHelper.ComputeHash(ExternalId); }
         }
 
         public static bool operator ==(Activity left, Activity right)
@@ -80,7 +80,7 @@ namespace ActivityStreams
 
         public static Activity UnitTestFactory(byte[] id, byte[] streamId, object body, object author, DateTime timestamp)
         {
-            return new Activity(id, streamId, body, author, timestamp);
+            return new Activity(streamId, id, body, author, timestamp);
         }
 
         class ActivityComparer : IComparer<Activity>
