@@ -24,7 +24,7 @@ namespace ActivityStreams.Tests.Activities
                 var id3 = Encoding.UTF8.GetBytes("activityId3");
                 item3 = Activity.UnitTestFactory(id3, streamId, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
 
-                activityStreamRepository = new InMemoryActivityFeedRepository();
+                activityStreamRepository = new InMemoryActivityRepository();
                 activityStreamRepository.Append(item2);
                 activityStreamRepository.Append(item3);
                 activityStreamRepository.Append(item1);

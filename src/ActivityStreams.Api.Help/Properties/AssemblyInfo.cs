@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ActivityStreams.Api")]
+[assembly: AssemblyTitle("ActivityStreams.Api.Help")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ActivityStreams.Api")]
+[assembly: AssemblyProduct("ActivityStreams.Api.Help")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7a7f0c1b-1b5f-4cab-9651-b939cda4a5e8")]
+[assembly: Guid("f94daf68-d59f-4843-98d5-621448c999d8")]
 
 // Version information for an assembly consists of the following four values:
 //
