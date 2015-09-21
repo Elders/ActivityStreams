@@ -25,6 +25,6 @@ namespace ActivityStreams.Tests.Activities
         static byte[] id;
         static byte[] streamId;
         static object body;
-        static object author;
+        static string author;
     }
 }

@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using ActivityStreams.Helpers;
+using System.Runtime.Serialization;
 
 namespace ActivityStreams
 {
+    [DataContract(Name = "5896a266-2cb2-4814-ac5c-506fe4b4f50e")]
     public class Activity : IEquatable<Activity>
     {
         Activity() { }
 
-        Activity(byte[] streamId, byte[] id, object body, object author, DateTime timestamp)
+        Activity(byte[] streamId, byte[] id, object body, string author, DateTime timestamp)
         {
             if (ReferenceEquals(null, id) || id.Length == 0) throw new ArgumentNullException(nameof(id));
             if (ReferenceEquals(null, streamId) || streamId.Length == 0) throw new ArgumentNullException(nameof(streamId));
             if (ReferenceEquals(null, body)) throw new ArgumentNullException(nameof(body));
-            //if (ReferenceEquals(null, author)) throw new ArgumentNullException(nameof(author));
+            if (ReferenceEquals(null, author)) throw new ArgumentNullException(nameof(author));
 
             ExternalId = id;
             StreamId = streamId;
@@ -22,19 +24,27 @@ namespace ActivityStreams
             Timestamp = timestamp.ToFileTimeUtc();
         }
 
-        public Activity(byte[] id, byte[] streamId, object body, object author)
+        public Activity(byte[] id, byte[] streamId, object body, string author)
             : this(streamId, id, body, author, DateTime.UtcNow)
         { }
 
-        public byte[] ExternalId { get; }
+        [DataMember(Order = 1)]
+        public byte[] StreamId { get; private set; }
 
-        public byte[] StreamId { get; }
+        [DataMember(Order = 2)]
+        public long Timestamp { get; private set; }
 
-        public object Body { get; }
+        [DataMember(Order = 3)]
+        public object Body { get; private set; }
 
-        public object Author { get; }
+        /// <summary>
+        /// Reference back to an object inside system which generated the activity. Usually it is used to identify idempotency.
+        /// </summary>
+        [DataMember(Order = 4)]
+        public byte[] ExternalId { get; private set; }
 
-        public long Timestamp { get; }
+        [DataMember(Order = 5)]
+        public string Author { get; private set; }
 
         public int GetHashCode(Activity obj)
         {
@@ -78,11 +88,12 @@ namespace ActivityStreams
         static IComparer<Activity> comparerInstance = new ActivityComparer();
         public static IComparer<Activity> Comparer = comparerInstance;
 
-        public static Activity UnitTestFactory(byte[] id, byte[] streamId, object body, object author, DateTime timestamp)
+        public static Activity UnitTestFactory(byte[] id, byte[] streamId, object body, string author, DateTime timestamp)
         {
             return new Activity(streamId, id, body, author, timestamp);
         }
 
+        [DataContract(Name = "b1a79981-edae-4880-ad3c-fdaa7c5980ad")]
         class ActivityComparer : IComparer<Activity>
         {
             public int Compare(Activity x, Activity y)

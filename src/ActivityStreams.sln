@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Api", "Acti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Api.Help", "ActivityStreams.Api.Help\ActivityStreams.Api.Help.csproj", "{F94DAF68-D59F-4843-98D5-621448C999D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Persistence.Cassandra.Tests", "ActivityStreams.Persistence.Cassandra.Tests\ActivityStreams.Persistence.Cassandra.Tests.csproj", "{A237C101-157E-4926-B807-EE905427BB25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tests", ".tests", "{46D6DDB1-3E86-4255-A733-4CDCDAEFDDB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +43,16 @@ Global
 		{F94DAF68-D59F-4843-98D5-621448C999D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F94DAF68-D59F-4843-98D5-621448C999D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F94DAF68-D59F-4843-98D5-621448C999D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A237C101-157E-4926-B807-EE905427BB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A237C101-157E-4926-B807-EE905427BB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A237C101-157E-4926-B807-EE905427BB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A237C101-157E-4926-B807-EE905427BB25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{79CB0B90-FF73-421D-8EDA-11C805670493} = {46D6DDB1-3E86-4255-A733-4CDCDAEFDDB2}
+		{A237C101-157E-4926-B807-EE905427BB25} = {46D6DDB1-3E86-4255-A733-4CDCDAEFDDB2}
 	EndGlobalSection
 EndGlobal
