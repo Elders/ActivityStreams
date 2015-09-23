@@ -1,35 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ActivityStreams.Persistence;
 
 namespace ActivityStreams
 {
+    public interface IFeedable
+    {
+
+    }
+
     public class Feed
     {
-        const int feedStreamLimit = 40000;
         readonly HashSet<FeedStream> feedStreams;
+        readonly IFeedStreamRepository repository;
 
-        public Feed(byte[] id)
+        internal Feed(byte[] id, IEnumerable<FeedStream> feedStreams, IFeedStreamRepository repository)
         {
             Id = id;
-            feedStreams = new HashSet<FeedStream>();
+            this.feedStreams = new HashSet<FeedStream>(feedStreams);
+            this.repository = repository;
         }
 
         public byte[] Id { get; }
 
-        public IEnumerable<byte[]> FeedStreams { get { return feedStreams.Select(x => x.StreamId).ToList(); } }
+        public IEnumerable<byte[]> Streams { get { return feedStreams.Select(x => x.StreamId).ToList(); } }
 
         public void AttachStream(FeedStream feedStream)
         {
-            if (feedStreams.Count > feedStreamLimit)
-                throw new NotImplementedException("Cassandra supports up to 55k items in List. Do a new implementation hahaha.");
-
-            feedStreams.Add(feedStream);
+            if (feedStreams.Add(feedStream))
+                repository.AttachStream(feedStream);
         }
 
         public void DetachStream(FeedStream feedStream)
         {
-            feedStreams.Remove(feedStream);
+            if (feedStreams.Remove(feedStream))
+                repository.DetachStream(feedStream);
+        }
+    }
+
+    public class FeedFactory
+    {
+        readonly IFeedStreamRepository repository;
+
+        public FeedFactory(IFeedStreamRepository repository)
+        {
+            this.repository = repository;
+        }
+
+        public Feed GG(byte[] feedId)
+        {
+            var feedStreams = repository.Load(feedId);
+            return new Feed(feedId, feedStreams, repository);
         }
     }
 }

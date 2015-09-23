@@ -24,4 +24,30 @@ namespace ActivityStreams.Persistence
         /// <returns></returns>
         IEnumerable<Activity> Load(Feed feed, DateTime timestamp);
     }
+
+    public class ActivityRepository : IActivityRepository
+    {
+        IActivityStore store;
+
+        public ActivityRepository(IActivityStore store)
+        {
+            this.store = store;
+        }
+
+        public void Append(Activity activity)
+        {
+            store.Save(activity);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed)
+        {
+            return Load(feed, DateTime.UtcNow);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, DateTime timestamp)
+        {
+            var result = store.Get(feed, new Paging(timestamp.ToFileTimeUtc(), 20));
+            return result;
+        }
+    }
 }

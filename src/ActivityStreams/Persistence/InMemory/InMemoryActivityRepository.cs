@@ -36,7 +36,7 @@ namespace ActivityStreams.Persistence.InMemory
             }
 
             SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.Comparer);
-            var streams = feed.FeedStreams.ToList();
+            var streams = feed.Streams.ToList();
             var streamsCount = streams.Count;
             var snapshotCount = snapshot.Count;
 
@@ -63,18 +63,5 @@ namespace ActivityStreams.Persistence.InMemory
                 yield return nextActivity;
             }
         }
-    }
-
-    public class Paging
-    {
-        public Paging(long timestamp, int take)
-        {
-            Timestamp = timestamp;
-            Take = take;
-        }
-
-        public long Timestamp { get; private set; }
-
-        public int Take { get; private set; }
     }
 }

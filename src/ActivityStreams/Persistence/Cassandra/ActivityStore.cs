@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cassandra;
-using ActivityStreams.Persistence.InMemory;
 
 namespace ActivityStreams.Persistence.Cassandra
 {
     /// <summary>
     /// Type reference: http://docs.datastax.com/en/developer/csharp-driver/2.7/csharp-driver/reference/csharpType2Cql3Datatypes_r.html
     /// </summary>
-    public class ActivityStore
+    public class ActivityStore : IActivityStore
     {
         const string AppendActivityStreamQueryTemplate = @"INSERT INTO activities_desc (sid,ts,data) VALUES (?,?,?);";
 
@@ -40,7 +39,7 @@ namespace ActivityStreams.Persistence.Cassandra
         {
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.Comparer);
 
-            foreach (var streamId in feed.FeedStreams)
+            foreach (var streamId in feed.Streams)
             {
                 var streamIdQuery = Convert.ToBase64String(streamId);
 

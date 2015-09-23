@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
+using ActivityStreams.Persistence;
+using ActivityStreams.Persistence.InMemory;
 using Machine.Specifications;
 
 namespace ActivityStreams.Tests.Feeds
@@ -10,7 +12,8 @@ namespace ActivityStreams.Tests.Feeds
         Establish context = () =>
             {
                 var feedId = Encoding.UTF8.GetBytes("ownerId");
-                feed = new Feed(feedId);
+                var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
+                feed = feedFactory.GG(feedId);
                 var firstStreamId = Encoding.UTF8.GetBytes("streamId");
                 feed.AttachStream(new FeedStream(feed.Id, firstStreamId));
 
@@ -19,7 +22,7 @@ namespace ActivityStreams.Tests.Feeds
 
         Because of = () => feed.AttachStream(new FeedStream(feed.Id, secondStreamId));
 
-        It should_be_threated_as_a_single_subscribtion = () => feed.FeedStreams.Count().ShouldEqual(1);
+        It should_be_threated_as_a_single_subscribtion = () => feed.Streams.Count().ShouldEqual(1);
 
         static Feed feed;
         static byte[] secondStreamId;

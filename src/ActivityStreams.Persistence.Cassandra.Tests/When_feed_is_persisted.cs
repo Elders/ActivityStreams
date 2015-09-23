@@ -1,12 +1,11 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Text;
 using Cassandra;
 using Machine.Specifications;
-using System;
-using System.IO;
-using ActivityStreams.Helpers;
 using ActivityStreams.Persistence.Cassandra.Tests.Helpers;
 using ActivityStreams.Persistence.Cassandra.Tests.Models;
+using System.Linq;
 
 namespace ActivityStreams.Persistence.Cassandra.Tests
 {
@@ -17,8 +16,8 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         {
             session = SessionCreator.Create();
             serializer = new ProteusSerializer(new[] { Assembly.GetAssembly(typeof(Activity)), Assembly.GetAssembly(typeof(ActivityBody)) });
-            var store = new FeedStore(session, serializer);
-            feedRepository = new FeedRepo(store);
+            var store = new FeedStreamStore(session);
+            feedRepository = new FeedStreamRepository(store);
 
             ActivityStreamsStorageManager manager = new ActivityStreamsStorageManager(session);
             manager.CreateFeedsStorage();
@@ -27,18 +26,17 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             timestamp = shit.ToFileTimeUtc();
             feedId = Encoding.UTF8.GetBytes("feedId" + timestamp);
             var streamId = Encoding.UTF8.GetBytes("strid" + timestamp);
-            feed = new Feed(feedId);
-
-            var feedStream = new FeedStream(feedId, streamId);
-
-            feed.AttachStream(feedStream);
+            feedFactory = new FeedFactory(feedRepository);
+            feed = feedFactory.GG(feedId);
+            feedStream = new FeedStream(feedId, streamId);
         };
 
-        Because of = () => feedRepository.Save(feed);
+        Because of = () => feed.AttachStream(feedStream);
 
-        It should_have_the_activity_stored_properly = () =>
+        It should_have_the_attached_feed_stream = () =>
         {
-            3456.ShouldBeOfExactType<int>();
+            var feed = feedFactory.GG(feedId);
+            feed.Streams.Count().ShouldEqual(1);
         };
 
 
@@ -47,7 +45,9 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
         static ISerializer serializer;
         static ISession session;
-        static IFeedRepository feedRepository;
+        static IFeedStreamRepository feedRepository;
         static Feed feed;
+        static FeedFactory feedFactory;
+        static FeedStream feedStream;
     }
 }

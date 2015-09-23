@@ -6,71 +6,58 @@ using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
 {
-    public class FeedRepo : IFeedRepository
+    public class FeedStreamStore : IFeedStreamStore
     {
-        readonly FeedStore store;
-        public FeedRepo(FeedStore store)
-        {
-            this.store = store;
-        }
+        const string StoreFeedStreamQueryTemplate = @"INSERT INTO ""feedstreams"" (fid,sid) VALUES (?,?);";
 
-        public Feed Get(byte[] id)
-        {
-            return store.Get(id);
-        }
+        const string DeleteFeedStreamQueryTemplate = @"DELETE FROM ""feedstreams"" WHERE fid=? AND sid=?;";
 
-        public void Save(Feed feed)
-        {
-            store.Save(feed);
-        }
-    }
-
-    public class FeedStore
-    {
-        const string StoreFeedQueryTemplate = @"INSERT INTO feeds (fid,fs) VALUES (?,?);";
-
-        const string GetFeedQueryTemplate = @"SELECT data FROM ""activities_desc"" where sid=? AND ts<=?;";
-
-        readonly ISerializer serializer;
+        const string LoadFeedStreamQueryTemplate = @"SELECT sid FROM ""feedstreams"" where fid=?;";
 
         readonly ISession session;
 
-        public FeedStore(ISession session, ISerializer serializer)
+        public FeedStreamStore(ISession session)
         {
             this.session = session;
-            this.serializer = serializer;
         }
 
-        public void Save(Feed feed)
+        public void Save(FeedStream feedStream)
         {
-            var prepared = session.Prepare(StoreFeedQueryTemplate);
-
+            var prepared = session.Prepare(StoreFeedStreamQueryTemplate);
+            var fid = Convert.ToBase64String(feedStream.FeedId);
+            var sid = Convert.ToBase64String(feedStream.StreamId);
             session
                 .Execute(prepared
-                .Bind(Convert.ToBase64String(feed.Id), feed.FeedStreams));
+                .Bind(fid, sid));
         }
 
-        public Feed Get(byte[] feedId)
+        public void Delete(FeedStream feedStream)
         {
-            var feedIdQueryable = Convert.ToBase64String(feedId);
+            var prepared = session.Prepare(DeleteFeedStreamQueryTemplate);
+            var fid = Convert.ToBase64String(feedStream.FeedId);
+            var sid = Convert.ToBase64String(feedStream.StreamId);
+            session
+                .Execute(prepared
+                .Bind(fid, sid));
+        }
 
+        public IEnumerable<FeedStream> Load(byte[] feedId)
+        {
+            var fid = Convert.ToBase64String(feedId);
             var prepared = session
-                    .Prepare(GetFeedQueryTemplate)
-                    .Bind(feedIdQueryable);
+                    .Prepare(LoadFeedStreamQueryTemplate)
+                    .Bind(fid);
 
             var rowSet = session.Execute(prepared);
-            var feedStreams = rowSet.GetRows().Single().GetValue<List<FeedStream>>("fsd");
-            var feed = new Feed(new byte[1] { 1 });
-            return feed;
-        }
-
-        byte[] SerializeActivity(Activity activity)
-        {
-            using (var stream = new MemoryStream())
+            IList<FeedStream> feedStreams = new List<FeedStream>();
+            foreach (var row in rowSet.GetRows())
             {
-                serializer.Serialize(stream, activity);
-                return stream.ToArray();
+                var stream = row.GetValue<byte[]>("sid");
+                var feedStream = new FeedStream(feedId, stream);
+                feedStreams.Add(feedStream);
             }
+
+            return feedStreams;
         }
     }
 }

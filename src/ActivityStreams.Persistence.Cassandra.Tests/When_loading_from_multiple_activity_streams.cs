@@ -22,7 +22,8 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             ActivityStreamsStorageManager manager = new ActivityStreamsStorageManager(session);
             manager.CreateActivitiesStorage();
 
-            feed = new GGFactory(activityRepository).GetFeed(10, 3);
+            var feedFactory = new FeedFactory(new FeedStreamRepository(new FeedStreamStore(session)));
+            feed = new GGFactory(activityRepository, feedFactory).GetFeed(10, 3);
         };
 
         Because of = () => { results = activityRepository.Load(feed, DateTime.UtcNow.AddYears(2)).ToList(); };
@@ -40,16 +41,18 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
     public class GGFactory
     {
         readonly IActivityRepository activityRepository;
+        readonly FeedFactory feedFactory;
 
-        public GGFactory(IActivityRepository activityRepository)
+        public GGFactory(IActivityRepository activityRepository, FeedFactory feedFactory)
         {
             this.activityRepository = activityRepository;
+            this.feedFactory = feedFactory;
         }
 
         public Feed GetFeed(int numberOfStreams, int activitiesPerStream)
         {
             var feedId = Encoding.UTF8.GetBytes("feedid");
-            var feed = new Feed(feedId);
+            var feed = feedFactory.GG(feedId);
             for (int i = 0; i < numberOfStreams; i++)
             {
                 for (int j = 0; j < activitiesPerStream; j++)

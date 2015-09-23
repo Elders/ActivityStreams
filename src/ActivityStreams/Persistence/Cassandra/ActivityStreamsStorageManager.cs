@@ -8,7 +8,7 @@ namespace ActivityStreams.Persistence.Cassandra
 
         const string CreateEventsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""activities_desc"" (sid text, ts bigint, data blob, PRIMARY KEY (sid,ts)) WITH CLUSTERING ORDER BY (ts DESC);";
 
-        const string CreateFeedsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""feeds"" (fid text, fs list<blob>, PRIMARY KEY (fid));";
+        const string CreateFeedsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""feedstreams"" (fid text, sid blob, PRIMARY KEY (fid,sid));";
 
         readonly ISession session;
 

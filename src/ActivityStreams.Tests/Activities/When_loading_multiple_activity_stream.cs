@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ActivityStreams.Persistence;
+using ActivityStreams.Persistence.Cassandra;
 using ActivityStreams.Persistence.InMemory;
 using Machine.Specifications;
 
@@ -31,12 +32,13 @@ namespace ActivityStreams.Tests.Activities
                 activityStreamRepository.Append(item1);
 
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
-                subscription = new Feed(subscriptionOwnerId);
-                subscription.AttachStream(new FeedStream(subscriptionOwnerId, streamId1));
-                subscription.AttachStream(new FeedStream(subscriptionOwnerId, streamId2));
+                var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
+                feed = feedFactory.GG(subscriptionOwnerId);
+                feed.AttachStream(new FeedStream(subscriptionOwnerId, streamId1));
+                feed.AttachStream(new FeedStream(subscriptionOwnerId, streamId2));
             };
 
-        Because of = () => activityStream = activityStreamRepository.Load(subscription).ToList();
+        Because of = () => activityStream = activityStreamRepository.Load(feed).ToList();
 
         It should_return_all_activities = () => activityStream.Count.ShouldEqual(3);
 
@@ -48,7 +50,7 @@ namespace ActivityStreams.Tests.Activities
         };
 
         static IActivityRepository activityStreamRepository;
-        static Feed subscription;
+        static Feed feed;
         static List<Activity> activityStream;
         static Activity item1;
         static Activity item2;
