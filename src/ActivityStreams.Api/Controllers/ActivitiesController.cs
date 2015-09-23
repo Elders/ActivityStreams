@@ -31,7 +31,7 @@ namespace ActivityStreams.Api.Controllers
         {
             var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
 
-            var feed = WebApiApplication.FeedRepository.Get(feedIdBytes);
+            var feed = ActivityStreams.Api.WebApiApplication.FeedFactory.GG(feedIdBytes);
             if (feed == null)
                 return new ResponseResult<FeedModel>();
 
