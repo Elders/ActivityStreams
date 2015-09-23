@@ -53,6 +53,10 @@
     <Compile Include="Activity.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
     <Compile Include="Persistence\Cassandra\ActivityRepository.cs" />
+    <Compile Include="Persistence\Cassandra\ActivityStore.cs" />
+    <Compile Include="Persistence\Cassandra\ActivityStreamsStorageManager.cs" />
+    <Compile Include="Serialization\Proteus\ProteusSerializer.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Persistence\IActivityRepository.cs" />
     <Compile Include="Persistence\InMemory\InMemoryActivityRepository.cs" />
     <Compile Include="Persistence\IActivityFeedRepository.cs" />
