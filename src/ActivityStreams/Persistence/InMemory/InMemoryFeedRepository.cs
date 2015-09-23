@@ -3,7 +3,7 @@ using ActivityStreams.Helpers;
 
 namespace ActivityStreams.Persistence.InMemory
 {
-    public class InMemoryFeedRepository : IActivityFeedRepository
+    public class InMemoryFeedRepository : IFeedRepository
     {
         ConcurrentDictionary<byte[], Feed> activityFeedStore = new ConcurrentDictionary<byte[], Feed>(new ByteArrayEqualityComparer());
 

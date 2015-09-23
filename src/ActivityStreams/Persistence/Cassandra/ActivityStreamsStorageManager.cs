@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using Cassandra;
-using Elders.Proteus;
-using ActivityStreams.Persistence.InMemory;
+﻿using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
 {
-
     public class ActivityStreamsStorageManager
     {
         const string CreateKeySpaceTemplate = @"CREATE KEYSPACE IF NOT EXISTS ""activitystreams"" WITH replication = {{'class':'SimpleStrategy', 'replication_factor':1}};";
+
         const string CreateEventsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""activities_desc"" (sid text, ts bigint, data blob, PRIMARY KEY (sid,ts)) WITH CLUSTERING ORDER BY (ts DESC);";
+
+        const string CreateFeedsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""feeds"" (fid text, fs list<blob>, PRIMARY KEY (fid));";
 
         readonly ISession session;
 
@@ -24,8 +19,14 @@ namespace ActivityStreams.Persistence.Cassandra
 
         public void CreateActivitiesStorage()
         {
-            var createEventsTable = CreateEventsTableTemplate.ToLowerInvariant();
-            session.Execute(createEventsTable);
+            var tableQ = CreateEventsTableTemplate.ToLowerInvariant();
+            session.Execute(tableQ);
+        }
+
+        public void CreateFeedsStorage()
+        {
+            var tableQ = CreateFeedsTableTemplate.ToLowerInvariant();
+            session.Execute(tableQ);
         }
     }
 }

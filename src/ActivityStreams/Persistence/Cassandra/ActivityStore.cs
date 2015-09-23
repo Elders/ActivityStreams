@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Cassandra;
-using Elders.Proteus;
 using ActivityStreams.Persistence.InMemory;
 
 namespace ActivityStreams.Persistence.Cassandra
 {
-
+    /// <summary>
+    /// Type reference: http://docs.datastax.com/en/developer/csharp-driver/2.7/csharp-driver/reference/csharpType2Cql3Datatypes_r.html
+    /// </summary>
     public class ActivityStore
     {
         const string AppendActivityStreamQueryTemplate = @"INSERT INTO activities_desc (sid,ts,data) VALUES (?,?,?);";
@@ -71,8 +71,5 @@ namespace ActivityStreams.Persistence.Cassandra
                 return stream.ToArray();
             }
         }
-
-        public class LoadSession
-        { }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace ActivityStreams.Persistence
 {
-    public interface IActivityFeedRepository
+    public interface IFeedRepository
     {
         /// <summary>
         /// Gets the feed for the specified ID.
