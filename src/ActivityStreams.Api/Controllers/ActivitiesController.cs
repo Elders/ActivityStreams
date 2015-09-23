@@ -17,7 +17,7 @@ namespace ActivityStreams.Api.Controllers
             var activityIdBytes = Encoding.UTF8.GetBytes(model.ActivityId);
             var streamIdBytes = Encoding.UTF8.GetBytes(model.StreamId);
 
-            var activity = new Activity(activityIdBytes, streamIdBytes, model.Body, null);
+            var activity = new Activity(streamIdBytes, activityIdBytes, model.Body, null);
             WebApiApplication.ActivityRepository.Append(activity);
             return this.Ok(model.ActivityId);
         }

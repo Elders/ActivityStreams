@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using ActivityStreams.Helpers;
@@ -22,6 +23,11 @@ namespace ActivityStreams.Persistence.InMemory
         /// FanIn
         /// </summary>
         public IEnumerable<Activity> Load(Feed feed)
+        {
+            return Load(feed, DateTime.UtcNow);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, DateTime timestamp)
         {
             var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count, new ByteArrayEqualityComparer());
             foreach (var item in activityStreamStore)
@@ -61,19 +67,14 @@ namespace ActivityStreams.Persistence.InMemory
 
     public class Paging
     {
-        public Paging(int skip, int take)
+        public Paging(long timestamp, int take)
         {
-            Skip = skip;
+            Timestamp = timestamp;
             Take = take;
         }
 
-        public int Skip { get; } = 5;
+        public long Timestamp { get; private set; }
 
-        public int Take { get; }
-
-        public Paging Next(Paging paging)
-        {
-            return new Paging(paging.Skip + paging.Take, paging.Take);
-        }
+        public int Take { get; private set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ActivityStreams.Persistence
 {
@@ -15,5 +16,12 @@ namespace ActivityStreams.Persistence
         /// <param name="feed"></param>
         /// <returns></returns>
         IEnumerable<Activity> Load(Feed feed);
+
+        /// <summary>
+        /// Loads all activities associated with the streams for the specified feed.
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <returns></returns>
+        IEnumerable<Activity> Load(Feed feed, DateTime timestamp);
     }
 }

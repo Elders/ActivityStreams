@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using ActivityStreams.Persistence.InMemory;
 using Cassandra;
 using Elders.Proteus;
 
@@ -10,26 +12,81 @@ namespace ActivityStreams.Persistence.Cassandra
 {
     public class ActivityRepository : IActivityRepository
     {
-        const string AppendActivityQueryTemplate = @"INSERT INTO ""activities_desc"" (sid,ts,data) VALUES (?,?,?);";
+        ActivityStore store;
+
+        public ActivityRepository(ActivityStore store)
+        {
+            this.store = store;
+        }
+
+        public void Append(Activity activity)
+        {
+            store.Save(activity);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed)
+        {
+            return Load(feed, DateTime.UtcNow);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, DateTime timestamp)
+        {
+            var result = store.Get(feed, new Paging(timestamp.ToFileTimeUtc(), 20));
+            return result;
+        }
+    }
+
+    public class ActivityStore
+    {
+        const string AppendActivityStreamQueryTemplate = @"INSERT INTO activities_desc (sid,ts,data) VALUES (?,?,?);";
+
+        const string LoadActivityStreamQueryTemplate = @"SELECT data FROM ""activities_desc"" where sid=? AND ts<=?;";
 
         readonly ISerializer serializer;
 
         readonly ISession session;
 
-        public ActivityRepository(ISession session, ISerializer serializer)
+        public ActivityStore(ISession session, ISerializer serializer)
         {
             this.session = session;
             this.serializer = serializer;
         }
 
-        public void Append(Activity activity)
+        public void Save(Activity activity)
         {
-            var prepared = session.Prepare(AppendActivityQueryTemplate);
+            var prepared = session.Prepare(AppendActivityStreamQueryTemplate);
 
             byte[] data = SerializeActivity(activity);
             session
                 .Execute(prepared
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
+        }
+
+        public IEnumerable<Activity> Get(Feed feed, Paging paging)
+        {
+            SortedSet<Activity> activities = new SortedSet<Activity>(Activity.Comparer);
+
+            foreach (var streamId in feed.FeedStreams)
+            {
+                var streamIdQuery = Convert.ToBase64String(streamId);
+
+                var prepared = session
+                        .Prepare(LoadActivityStreamQueryTemplate)
+                        .Bind(streamIdQuery, paging.Timestamp)
+                        .SetAutoPage(false)
+                        .SetPageSize(paging.Take);
+
+                var rowSet = session.Execute(prepared);
+                foreach (var row in rowSet.GetRows())
+                {
+                    using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
+                    {
+                        var storedActivity = (Activity)serializer.Deserialize(stream);
+                        activities.Add(storedActivity);
+                    }
+                }
+            }
+            return activities.Take(paging.Take);
         }
 
         byte[] SerializeActivity(Activity activity)
@@ -41,15 +98,8 @@ namespace ActivityStreams.Persistence.Cassandra
             }
         }
 
-        public IEnumerable<Activity> Load(Feed feed)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class ActivityStore
-    {
-
+        public class LoadSession
+        { }
     }
 
     public class ActivityStreamsStorageManager

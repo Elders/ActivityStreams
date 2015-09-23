@@ -24,7 +24,7 @@ namespace ActivityStreams
             Timestamp = timestamp.ToFileTimeUtc();
         }
 
-        public Activity(byte[] id, byte[] streamId, object body, string author)
+        public Activity(byte[] streamId, byte[] id, object body, string author)
             : this(streamId, id, body, author, DateTime.UtcNow)
         { }
 
@@ -88,9 +88,9 @@ namespace ActivityStreams
         static IComparer<Activity> comparerInstance = new ActivityComparer();
         public static IComparer<Activity> Comparer = comparerInstance;
 
-        public static Activity UnitTestFactory(byte[] id, byte[] streamId, object body, string author, DateTime timestamp)
+        public static Activity UnitTestFactory(byte[] streamId, byte[] externalId, object body, string author, DateTime timestamp)
         {
-            return new Activity(streamId, id, body, author, timestamp);
+            return new Activity(streamId, externalId, body, author, timestamp);
         }
 
         [DataContract(Name = "b1a79981-edae-4880-ad3c-fdaa7c5980ad")]
