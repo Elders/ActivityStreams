@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ActivityStreams.Persistence;
 
@@ -7,7 +6,12 @@ namespace ActivityStreams
 {
     public interface IFeedable
     {
-
+        /// <summary>
+        /// Feeds with more food.
+        /// </summary>
+        /// <param name="feedStream"></param>
+        void AttachStream(FeedStream feedStream);
+        void DetachStream(FeedStream feedStream);
     }
 
     public class Feed
@@ -15,10 +19,10 @@ namespace ActivityStreams
         readonly HashSet<FeedStream> feedStreams;
         readonly IFeedStreamRepository repository;
 
-        internal Feed(byte[] id, IEnumerable<FeedStream> feedStreams, IFeedStreamRepository repository)
+        internal Feed(byte[] id, IFeedStreamRepository repository)
         {
-            Id = id;
-            this.feedStreams = new HashSet<FeedStream>(feedStreams);
+            this.Id = id;
+            this.feedStreams = new HashSet<FeedStream>(repository.Load(id));
             this.repository = repository;
         }
 
@@ -50,8 +54,7 @@ namespace ActivityStreams
 
         public Feed GG(byte[] feedId)
         {
-            var feedStreams = repository.Load(feedId);
-            return new Feed(feedId, feedStreams, repository);
+            return new Feed(feedId, repository);
         }
     }
 }
