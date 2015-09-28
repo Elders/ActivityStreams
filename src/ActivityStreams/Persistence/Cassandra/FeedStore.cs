@@ -25,7 +25,7 @@ namespace ActivityStreams.Persistence.Cassandra
         {
             var prepared = session.Prepare(StoreFeedStreamQueryTemplate);
             var fid = Convert.ToBase64String(feedStream.FeedId);
-            var sid = Convert.ToBase64String(feedStream.StreamId);
+            var sid = feedStream.StreamId;
             session
                 .Execute(prepared
                 .Bind(fid, sid));
@@ -35,7 +35,7 @@ namespace ActivityStreams.Persistence.Cassandra
         {
             var prepared = session.Prepare(DeleteFeedStreamQueryTemplate);
             var fid = Convert.ToBase64String(feedStream.FeedId);
-            var sid = Convert.ToBase64String(feedStream.StreamId);
+            var sid = feedStream.StreamId;
             session
                 .Execute(prepared
                 .Bind(fid, sid));

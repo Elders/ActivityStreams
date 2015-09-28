@@ -50,4 +50,49 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         static FeedFactory feedFactory;
         static FeedStream feedStream;
     }
+
+
+    [Subject("")]
+    public class When_feed_has_one_stream
+    {
+        Establish context = () =>
+        {
+            session = SessionCreator.Create();
+            serializer = new ProteusSerializer(new[] { Assembly.GetAssembly(typeof(Activity)), Assembly.GetAssembly(typeof(ActivityBody)) });
+            var store = new FeedStreamStore(session);
+            feedRepository = new FeedStreamRepository(store);
+
+            ActivityStreamsStorageManager manager = new ActivityStreamsStorageManager(session);
+            manager.CreateFeedsStorage();
+
+            var shit = DateTime.UtcNow;
+            timestamp = shit.ToFileTimeUtc();
+            feedId = Encoding.UTF8.GetBytes("feedId" + timestamp);
+            theStreamId = "strid" + timestamp;
+            var streamId = Encoding.UTF8.GetBytes(theStreamId);
+            feedFactory = new FeedFactory(feedRepository);
+            feed = feedFactory.GG(feedId);
+            feedStream = new FeedStream(feedId, streamId);
+        };
+
+        Because of = () => feed.AttachStream(feedStream);
+
+        It should_have_the_attached_feed_stream = () =>
+        {
+            var feed = feedFactory.GG(feedId);
+            var loadedStream = System.Text.Encoding.UTF8.GetString(feed.Streams.First());
+            theStreamId.ShouldEqual(loadedStream);
+        };
+
+        static string theStreamId;
+        static byte[] feedId;
+        static long timestamp;
+
+        static ISerializer serializer;
+        static ISession session;
+        static IFeedStreamRepository feedRepository;
+        static Feed feed;
+        static FeedFactory feedFactory;
+        static FeedStream feedStream;
+    }
 }
