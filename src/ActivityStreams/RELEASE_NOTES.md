@@ -1,3 +1,6 @@
+#### 0.2.0-alpha003 - 28.09.2015
+* Fixed streamId persistence in the feeds
+
 #### 0.2.0-alpha002 - 24.09.2015
 * Publish nuget package. Try1
 
