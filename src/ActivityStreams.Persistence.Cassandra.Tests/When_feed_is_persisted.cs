@@ -72,15 +72,15 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             var streamId = Encoding.UTF8.GetBytes(theStreamId);
             feedFactory = new FeedFactory(feedRepository);
             feed = feedFactory.GG(feedId);
-            feedStream = new FeedStream(feedId, streamId);
+            feedStream = new Stream(feedId, streamId);
         };
 
-        Because of = () => feed.AttachStream(feedStream);
+        Because of = () => feed.Attach(feedStream);
 
         It should_have_the_attached_feed_stream = () =>
         {
             var feed = feedFactory.GG(feedId);
-            var loadedStream = System.Text.Encoding.UTF8.GetString(feed.Streams.First());
+            var loadedStream = System.Text.Encoding.UTF8.GetString(feed.Streams.First().StreamId);
             theStreamId.ShouldEqual(loadedStream);
         };
 
@@ -93,6 +93,6 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         static IFeedStreamRepository feedRepository;
         static Feed feed;
         static FeedFactory feedFactory;
-        static FeedStream feedStream;
+        static IStream feedStream;
     }
 }

@@ -7,18 +7,13 @@ namespace ActivityStreams
     public class Feed : IStream
     {
         readonly HashSet<IStream> feedStreams;
-        /// <summary>
-        /// Feeds with more food.
-        /// </summary>
-        /// <param name="feedStream"></param>
-        void AttachStream(FeedStream feedStream);
-        void DetachStream(FeedStream feedStream);
+
         readonly IFeedStreamRepository repository;
 
         internal Feed(byte[] id, IFeedStreamRepository repository)
         {
             this.Id = id;
-            this.feedStreams = new HashSet<FeedStream>(repository.Load(id));
+            this.feedStreams = new HashSet<IStream>(repository.Load(id));
             FeedId = id;
             this.repository = repository;
         }
