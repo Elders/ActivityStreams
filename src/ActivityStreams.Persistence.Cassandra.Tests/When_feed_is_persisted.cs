@@ -28,10 +28,10 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             var streamId = Encoding.UTF8.GetBytes("strid" + timestamp);
             feedFactory = new FeedFactory(feedRepository);
             feed = feedFactory.GG(feedId);
-            feedStream = new FeedStream(feedId, streamId);
+            feedStream = new Stream(feedId, streamId);
         };
 
-        Because of = () => feed.AttachStream(feedStream);
+        Because of = () => feed.Attach(feedStream);
 
         It should_have_the_attached_feed_stream = () =>
         {
@@ -48,7 +48,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         static IFeedStreamRepository feedRepository;
         static Feed feed;
         static FeedFactory feedFactory;
-        static FeedStream feedStream;
+        static IStream feedStream;
     }
 
 

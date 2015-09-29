@@ -58,8 +58,8 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
                 for (int j = 0; j < activitiesPerStream; j++)
                 {
                     var streamId = Guid.NewGuid();
-                    var feedStream = new FeedStream(feedId, streamId.ToByteArray());
-                    feed.AttachStream(feedStream);
+                    var feedStream = new Stream(feedId, streamId.ToByteArray());
+                    feed.Attach(feedStream);
                     var externalId = $"extid-{i}-{j}";
                     var body = new ActivityBody() { Content = externalId };
 

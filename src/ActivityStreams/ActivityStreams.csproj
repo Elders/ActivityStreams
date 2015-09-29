@@ -52,6 +52,7 @@
     <Compile Include="Feed.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
+    <Compile Include="IStream.cs" />
     <Compile Include="Persistence\Cassandra\ActivityStore.cs" />
     <Compile Include="Persistence\Cassandra\ActivityStreamsStorageManager.cs" />
     <Compile Include="Persistence\IActivityStore.cs" />
@@ -65,7 +66,7 @@
     <Compile Include="Persistence\IActivityFeedRepository.cs" />
     <Compile Include="Persistence\InMemory\InMemoryFeedStreamStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FeedStream.cs" />
+    <Compile Include="Stream.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

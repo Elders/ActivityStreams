@@ -34,8 +34,8 @@ namespace ActivityStreams.Tests.Activities
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
                 var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
                 feed = feedFactory.GG(subscriptionOwnerId);
-                feed.AttachStream(new FeedStream(subscriptionOwnerId, streamId1));
-                feed.AttachStream(new FeedStream(subscriptionOwnerId, streamId2));
+                feed.Attach(new Stream(subscriptionOwnerId, streamId1));
+                feed.Attach(new Stream(subscriptionOwnerId, streamId2));
             };
 
         Because of = () => activityStream = activityStreamRepository.Load(feed).ToList();

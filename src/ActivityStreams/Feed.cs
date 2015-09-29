@@ -4,42 +4,51 @@ using ActivityStreams.Persistence;
 
 namespace ActivityStreams
 {
-    public interface IFeedable
+    public class Feed : IStream
     {
+        readonly HashSet<IStream> feedStreams;
         /// <summary>
         /// Feeds with more food.
         /// </summary>
         /// <param name="feedStream"></param>
         void AttachStream(FeedStream feedStream);
         void DetachStream(FeedStream feedStream);
-    }
-
-    public class Feed
-    {
-        readonly HashSet<FeedStream> feedStreams;
         readonly IFeedStreamRepository repository;
 
         internal Feed(byte[] id, IFeedStreamRepository repository)
         {
             this.Id = id;
             this.feedStreams = new HashSet<FeedStream>(repository.Load(id));
+            FeedId = id;
             this.repository = repository;
         }
 
+        public byte[] StreamId { get; set; }
+
         public byte[] Id { get; }
 
-        public IEnumerable<byte[]> Streams { get { return feedStreams.Select(x => x.StreamId).ToList(); } }
+        public byte[] FeedId { get; set; }
 
-        public void AttachStream(FeedStream feedStream)
+        public IEnumerable<IStream> Streams { get { return feedStreams.SelectMany(x => x.Streams).ToSet(); } }
+
+        public void Attach(IStream feedStream)
         {
             if (feedStreams.Add(feedStream))
                 repository.AttachStream(feedStream);
         }
 
-        public void DetachStream(FeedStream feedStream)
+        public void Detach(IStream feedStream)
         {
             if (feedStreams.Remove(feedStream))
                 repository.DetachStream(feedStream);
+        }
+    }
+
+    public static class CollectionExtensions
+    {
+        public static ISet<TSource> ToSet<TSource>(this IEnumerable<TSource> source)
+        {
+            return new HashSet<TSource>(source);
         }
     }
 

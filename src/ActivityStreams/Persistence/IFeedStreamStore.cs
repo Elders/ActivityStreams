@@ -4,10 +4,10 @@ namespace ActivityStreams.Persistence
 {
     public interface IFeedStreamStore
     {
-        IEnumerable<FeedStream> Load(byte[] feedId);
+        IEnumerable<IStream> Load(byte[] feedId);
 
-        void Save(FeedStream feedStream);
+        void Save(IStream feedStream);
 
-        void Delete(FeedStream feedStream);
+        void Delete(IStream feedStream);
     }
 }

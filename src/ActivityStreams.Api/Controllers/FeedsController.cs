@@ -22,8 +22,8 @@ namespace ActivityStreams.Api.Controllers
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
 
             var feed = WebApiApplication.FeedFactory.GG(feedIdBytes);
-            var feedStream = new FeedStream(feedIdBytes, streamIdBytes);
-            feed.AttachStream(feedStream);
+            var feedStream = new Stream(feedIdBytes, streamIdBytes);
+            feed.Attach(feedStream);
 
             return this.Ok();
         }
@@ -41,8 +41,8 @@ namespace ActivityStreams.Api.Controllers
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
 
             var feed = WebApiApplication.FeedFactory.GG(feedIdBytes);
-            var feedStream = new FeedStream(feedIdBytes, streamIdBytes);
-            feed.DetachStream(feedStream);
+            var feedStream = new Stream(feedIdBytes, streamIdBytes);
+            feed.Detach(feedStream);
 
             return this.Ok();
         }

@@ -4,11 +4,11 @@ namespace ActivityStreams.Persistence
 {
     public interface IFeedStreamRepository
     {
-        IEnumerable<FeedStream> Load(byte[] feedId);
+        IEnumerable<IStream> Load(byte[] feedId);
 
-        void AttachStream(FeedStream feedStream);
+        void AttachStream(IStream feedStream);
 
-        void DetachStream(FeedStream feedStream);
+        void DetachStream(IStream feedStream);
     }
 
     public class FeedStreamRepository : IFeedStreamRepository
@@ -20,17 +20,17 @@ namespace ActivityStreams.Persistence
             this.store = store;
         }
 
-        public void AttachStream(FeedStream feedStream)
+        public void AttachStream(IStream feedStream)
         {
             store.Save(feedStream);
         }
 
-        public void DetachStream(FeedStream feedStream)
+        public void DetachStream(IStream feedStream)
         {
             store.Delete(feedStream);
         }
 
-        public IEnumerable<FeedStream> Load(byte[] feedId)
+        public IEnumerable<IStream> Load(byte[] feedId)
         {
             return store.Load(feedId);
         }
