@@ -41,7 +41,7 @@ namespace ActivityStreams.Persistence.Cassandra
 
             foreach (var streamId in feed.Streams)
             {
-                var streamIdQuery = Convert.ToBase64String(streamId);
+                var streamIdQuery = Convert.ToBase64String(streamId.StreamId);
 
                 var prepared = session
                         .Prepare(LoadActivityStreamQueryTemplate)

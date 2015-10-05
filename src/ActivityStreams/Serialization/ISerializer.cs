@@ -4,8 +4,8 @@ namespace ActivityStreams.Persistence.Cassandra
 {
     public interface ISerializer
     {
-        object Deserialize(Stream str);
-        void Serialize<T>(Stream str, T message);
+        object Deserialize(System.IO.Stream str);
+        void Serialize<T>(System.IO.Stream str, T message);
     }
 
     public static class ISerializerExtensions

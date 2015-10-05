@@ -23,14 +23,14 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             manager.CreateActivitiesStorage();
 
             var feedFactory = new FeedFactory(new FeedStreamRepository(new FeedStreamStore(session)));
-            feed = new GGFactory(activityRepository, feedFactory).GetFeed(10, 3);
+            feed = new GGFactory(activityRepository, feedFactory).GetFeed(10, 2);
         };
 
-        Because of = () => { results = activityRepository.Load(feed, DateTime.UtcNow.AddYears(2)).ToList(); };
+        Because of = () => { results = activityRepository.Load(feed, DateTime.UtcNow.AddYears(3)).ToList(); };
 
         It should_do_the_right_job = () =>
         {
-            results.Count.ShouldEqual(9);
+            results.Count.ShouldEqual(8);
         };
 
         static List<Activity> results;
@@ -51,15 +51,15 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
         public Feed GetFeed(int numberOfStreams, int activitiesPerStream)
         {
-            var feedId = Encoding.UTF8.GetBytes("feedid");
+            var feedId = Encoding.UTF8.GetBytes("feedid" + DateTime.UtcNow.ToFileTimeUtc());
             var feed = feedFactory.GG(feedId);
             for (int i = 0; i < numberOfStreams; i++)
             {
                 for (int j = 0; j < activitiesPerStream; j++)
                 {
                     var streamId = Guid.NewGuid();
-                    var feedStream = new FeedStream(feedId, streamId.ToByteArray());
-                    feed.AttachStream(feedStream);
+                    var feedStream = new Stream(feedId, streamId.ToByteArray());
+                    feed.Attach(feedStream);
                     var externalId = $"extid-{i}-{j}";
                     var body = new ActivityBody() { Content = externalId };
 

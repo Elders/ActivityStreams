@@ -7,32 +7,32 @@ namespace ActivityStreams.Persistence.InMemory
 {
     public class InMemoryFeedStreamStore : IFeedStreamStore
     {
-        ConcurrentDictionary<byte[], List<FeedStream>> activityFeedStore = new ConcurrentDictionary<byte[], List<FeedStream>>(new ByteArrayEqualityComparer());
+        ConcurrentDictionary<byte[], List<IStream>> activityFeedStore = new ConcurrentDictionary<byte[], List<IStream>>(new ByteArrayEqualityComparer());
 
-        public void Delete(FeedStream feedStream)
+        public void Delete(IStream feedStream)
         {
-            List<FeedStream> feedStreams = new List<FeedStream>();
+            List<IStream> feedStreams = new List<IStream>();
             if (activityFeedStore.TryGetValue(feedStream.FeedId, out feedStreams) == false)
                 activityFeedStore.TryAdd(feedStream.FeedId, feedStreams);
 
             feedStreams.Remove(feedStream);
         }
 
-        public IEnumerable<FeedStream> Load(byte[] feedId)
+        public IEnumerable<IStream> Load(byte[] feedId)
         {
-            List<FeedStream> feedStreams;
+            List<IStream> feedStreams;
             if (activityFeedStore.TryGetValue(feedId, out feedStreams))
                 return feedStreams;
 
-            return Enumerable.Empty<FeedStream>();
+            return Enumerable.Empty<IStream>();
         }
 
-        public void Save(FeedStream feedStream)
+        public void Save(IStream feedStream)
         {
-            List<FeedStream> feedStreams;
+            List<IStream> feedStreams;
             if (activityFeedStore.TryGetValue(feedStream.FeedId, out feedStreams) == false)
             {
-                feedStreams = new List<FeedStream>();
+                feedStreams = new List<IStream>();
                 activityFeedStore.TryAdd(feedStream.FeedId, feedStreams);
             }
 

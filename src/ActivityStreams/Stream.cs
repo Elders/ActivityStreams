@@ -4,9 +4,10 @@ using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
-    public class FeedStream : IEqualityComparer<FeedStream>, IEquatable<FeedStream>
+
+    public class Stream : IStream, IEqualityComparer<Stream>, IEquatable<Stream>
     {
-        public FeedStream(byte[] feedId, byte[] streamId)
+        public Stream(byte[] feedId, byte[] streamId)
         {
             FeedId = feedId;
             StreamId = streamId;
@@ -16,14 +17,16 @@ namespace ActivityStreams
 
         public byte[] StreamId { get; set; }
 
+        public IEnumerable<IStream> Streams { get { yield return this; } }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as FeedStream);
+            return Equals(obj as Stream);
         }
 
-        public bool Equals(FeedStream other)
+        public bool Equals(Stream other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -37,7 +40,7 @@ namespace ActivityStreams
                  ByteArrayHelper.Compare(StreamId, other.StreamId);
         }
 
-        public bool Equals(FeedStream left, FeedStream right)
+        public bool Equals(Stream left, Stream right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
@@ -46,7 +49,7 @@ namespace ActivityStreams
                 return left.Equals(right);
         }
 
-        public int GetHashCode(FeedStream obj)
+        public int GetHashCode(Stream obj)
         {
             return obj.GetHashCode();
         }
@@ -68,7 +71,17 @@ namespace ActivityStreams
             }
         }
 
-        public static bool operator ==(FeedStream left, FeedStream right)
+        public void Attach(IStream feedStream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Detach(IStream feedStream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool operator ==(Stream left, Stream right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
@@ -77,7 +90,7 @@ namespace ActivityStreams
                 return left.Equals(right);
         }
 
-        public static bool operator !=(FeedStream left, FeedStream right)
+        public static bool operator !=(Stream left, Stream right)
         {
             return !(left == right);
         }

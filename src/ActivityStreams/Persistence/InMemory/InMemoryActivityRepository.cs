@@ -46,7 +46,7 @@ namespace ActivityStreams.Persistence.InMemory
                 if (snapshotCount <= streamIndexInsideSubsciption)
                     break;
                 var streamId = streams[streamIndexInsideSubsciption];
-                var activity = snapshot[streamId].Dequeue();
+                var activity = snapshot[streamId.StreamId].Dequeue();
                 buffer.Add(activity);
             }
 

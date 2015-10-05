@@ -21,7 +21,7 @@ namespace ActivityStreams.Persistence.Cassandra
             this.session = session;
         }
 
-        public void Save(FeedStream feedStream)
+        public void Save(IStream feedStream)
         {
             var prepared = session.Prepare(StoreFeedStreamQueryTemplate);
             var fid = Convert.ToBase64String(feedStream.FeedId);
@@ -31,7 +31,7 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(fid, sid));
         }
 
-        public void Delete(FeedStream feedStream)
+        public void Delete(IStream feedStream)
         {
             var prepared = session.Prepare(DeleteFeedStreamQueryTemplate);
             var fid = Convert.ToBase64String(feedStream.FeedId);
@@ -41,7 +41,7 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(fid, sid));
         }
 
-        public IEnumerable<FeedStream> Load(byte[] feedId)
+        public IEnumerable<IStream> Load(byte[] feedId)
         {
             var fid = Convert.ToBase64String(feedId);
             var prepared = session
@@ -49,11 +49,11 @@ namespace ActivityStreams.Persistence.Cassandra
                     .Bind(fid);
 
             var rowSet = session.Execute(prepared);
-            IList<FeedStream> feedStreams = new List<FeedStream>();
+            IList<IStream> feedStreams = new List<IStream>();
             foreach (var row in rowSet.GetRows())
             {
                 var stream = row.GetValue<byte[]>("sid");
-                var feedStream = new FeedStream(feedId, stream);
+                var feedStream = new Stream(feedId, stream);
                 feedStreams.Add(feedStream);
             }
 
