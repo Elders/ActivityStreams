@@ -1,3 +1,7 @@
+#### 0.2.0-alpha004 - 05.10.2015
+* Ability to attach/detach feed to feed or stream to feed
+* Rollback the C* driver because of a bug
+
 #### 0.2.0-alpha003 - 28.09.2015
 * Fixed streamId persistence in the feeds
 
