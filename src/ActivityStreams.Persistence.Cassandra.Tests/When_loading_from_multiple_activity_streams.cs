@@ -24,9 +24,10 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
             var feedFactory = new FeedFactory(new FeedStreamRepository(new FeedStreamStore(session)));
             feed = new GGFactory(activityRepository, feedFactory).GetFeed(10, 2);
+            paging = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), 20);
         };
 
-        Because of = () => { results = activityRepository.Load(feed, DateTime.UtcNow.AddYears(3)).ToList(); };
+        Because of = () => { results = activityRepository.Load(feed, paging).ToList(); };
 
         It should_do_the_right_job = () =>
         {
@@ -35,6 +36,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
         static List<Activity> results;
         static Feed feed;
+        static Paging paging;
         static IActivityRepository activityRepository;
     }
 

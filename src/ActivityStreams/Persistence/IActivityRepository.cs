@@ -22,7 +22,7 @@ namespace ActivityStreams.Persistence
         /// </summary>
         /// <param name="feed"></param>
         /// <returns></returns>
-        IEnumerable<Activity> Load(Feed feed, DateTime timestamp);
+        IEnumerable<Activity> Load(Feed feed, Paging paging);
     }
 
     public class ActivityRepository : IActivityRepository
@@ -41,12 +41,13 @@ namespace ActivityStreams.Persistence
 
         public IEnumerable<Activity> Load(Feed feed)
         {
-            return Load(feed, DateTime.UtcNow);
+            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
+            return Load(feed, paging);
         }
 
-        public IEnumerable<Activity> Load(Feed feed, DateTime timestamp)
+        public IEnumerable<Activity> Load(Feed feed, Paging paging)
         {
-            var result = store.Get(feed, new Paging(timestamp.ToFileTimeUtc(), 20));
+            var result = store.Get(feed, paging);
             return result;
         }
     }

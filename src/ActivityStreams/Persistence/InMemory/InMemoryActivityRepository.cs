@@ -24,10 +24,11 @@ namespace ActivityStreams.Persistence.InMemory
         /// </summary>
         public IEnumerable<Activity> Load(Feed feed)
         {
-            return Load(feed, DateTime.UtcNow);
+            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
+            return Load(feed, paging);
         }
 
-        public IEnumerable<Activity> Load(Feed feed, DateTime timestamp)
+        public IEnumerable<Activity> Load(Feed feed, Paging paging)
         {
             var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count, new ByteArrayEqualityComparer());
             foreach (var item in activityStreamStore)
