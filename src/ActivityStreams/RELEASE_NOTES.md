@@ -1,3 +1,6 @@
+#### 0.3.0-alpha001 - 09.10.2015
+* Added  the Load of Activity to take Paging type instead of DateTime
+
 #### 0.2.0-alpha004 - 05.10.2015
 * Ability to attach/detach feed to feed or stream to feed
 * Rollback the C* driver because of a bug
