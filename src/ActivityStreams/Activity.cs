@@ -10,7 +10,7 @@ namespace ActivityStreams
     {
         Activity() { }
 
-        Activity(byte[] streamId, byte[] id, object body, string author, DateTime timestamp)
+        public Activity(byte[] streamId, byte[] id, object body, string author, DateTime timestamp)
         {
             if (ReferenceEquals(null, id) || id.Length == 0) throw new ArgumentNullException(nameof(id));
             if (ReferenceEquals(null, streamId) || streamId.Length == 0) throw new ArgumentNullException(nameof(streamId));
