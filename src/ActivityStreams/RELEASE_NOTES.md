@@ -1,3 +1,6 @@
+#### 0.3.0-alpha002 - 12.10.2015
+* Changed the accessibility level of Activity constructor
+
 #### 0.3.0-alpha001 - 09.10.2015
 * Added  the Load of Activity to take Paging type instead of DateTime
 
