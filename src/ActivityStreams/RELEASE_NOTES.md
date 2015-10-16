@@ -1,3 +1,6 @@
+#### 0.4.0-alpha001 - 17.10.2015
+* Added SortOrder for activities.
+
 #### 0.3.0-alpha002 - 12.10.2015
 * Changed the accessibility level of Activity constructor
 
