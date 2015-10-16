@@ -21,8 +21,26 @@ namespace ActivityStreams.Persistence
         /// Loads all activities associated with the streams for the specified feed.
         /// </summary>
         /// <param name="feed"></param>
+        /// <param name="paging"></param>
         /// <returns></returns>
         IEnumerable<Activity> Load(Feed feed, Paging paging);
+
+        /// <summary>
+        /// Loads all activities associated with the streams for the specified feed.
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <param name="sortOrder"></param>
+        /// <returns></returns>
+        IEnumerable<Activity> Load(Feed feed, SortOrder sortOrder);
+
+        /// <summary>
+        /// Loads all activities associated with the streams for the specified feed.
+        /// </summary>
+        /// <param name="feed"></param>
+        /// <param name="paging"></param>
+        /// <param name="sortOrder"></param>
+        /// <returns></returns>
+        IEnumerable<Activity> Load(Feed feed, Paging paging, SortOrder sortOrder);
     }
 
     public class ActivityRepository : IActivityRepository
@@ -42,12 +60,26 @@ namespace ActivityStreams.Persistence
         public IEnumerable<Activity> Load(Feed feed)
         {
             var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
-            return Load(feed, paging);
+            var sortOrder = SortOrder.Descending;
+
+            return Load(feed, paging, sortOrder);
         }
 
         public IEnumerable<Activity> Load(Feed feed, Paging paging)
         {
-            var result = store.Get(feed, paging);
+            var sortOrder = SortOrder.Descending;
+            return Load(feed, paging, sortOrder);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, SortOrder sortOrder)
+        {
+            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
+            return Load(feed, paging, sortOrder);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, Paging paging, SortOrder sortOrder)
+        {
+            var result = store.Get(feed, paging, sortOrder);
             return result;
         }
     }

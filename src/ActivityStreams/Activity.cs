@@ -85,8 +85,11 @@ namespace ActivityStreams
             return !(left == right);
         }
 
-        static IComparer<Activity> comparerInstance = new ActivityComparer();
-        public static IComparer<Activity> Comparer = comparerInstance;
+        static IComparer<Activity> comparerInstanceDesc = new ActivityComparerDesc();
+        public static IComparer<Activity> ComparerDesc = comparerInstanceDesc;
+
+        static IComparer<Activity> comparerInstanceAsc = new ActivityComparerAsc();
+        public static IComparer<Activity> ComparerAsc = comparerInstanceAsc;
 
         public static Activity UnitTestFactory(byte[] streamId, byte[] externalId, object body, string author, DateTime timestamp)
         {
@@ -94,13 +97,25 @@ namespace ActivityStreams
         }
 
         [DataContract(Name = "b1a79981-edae-4880-ad3c-fdaa7c5980ad")]
-        class ActivityComparer : IComparer<Activity>
+        class ActivityComparerDesc : IComparer<Activity>
         {
             public int Compare(Activity x, Activity y)
             {
                 if (x == y) return 0;
                 var compareResult = Comparer<long>.Default.Compare(x.Timestamp, y.Timestamp);
                 if (compareResult == 0) return Comparer<int>.Default.Compare(x.GetHashCode(), y.GetHashCode());
+                return compareResult;
+            }
+        }
+
+        [DataContract(Name = "a465ae44-e785-4d93-b43f-b346cf4269b7")]
+        class ActivityComparerAsc : IComparer<Activity>
+        {
+            public int Compare(Activity x, Activity y)
+            {
+                if (x == y) return 0;
+                var compareResult = Comparer<long>.Default.Compare(y.Timestamp, x.Timestamp);
+                if (compareResult == 0) return Comparer<int>.Default.Compare(y.GetHashCode(), x.GetHashCode());
                 return compareResult;
             }
         }

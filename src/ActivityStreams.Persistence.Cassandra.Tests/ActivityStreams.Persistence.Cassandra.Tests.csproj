@@ -64,6 +64,7 @@
     <Compile Include="Helpers\SessionExtensionsForIntegrationTests.cs" />
     <Compile Include="When_feed_is_persisted.cs" />
     <Compile Include="When_activity_is_persisted.cs" />
+    <Compile Include="When_loading_activities_in_asc_desc_order_consistancy_check.cs" />
     <Compile Include="When_loading_from_multiple_activity_streams.cs" />
   </ItemGroup>
   <ItemGroup>

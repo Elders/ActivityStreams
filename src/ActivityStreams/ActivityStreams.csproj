@@ -59,6 +59,7 @@
     <Compile Include="Persistence\Cassandra\FeedStore.cs" />
     <Compile Include="Persistence\IFeedStreamStore.cs" />
     <Compile Include="Persistence\Paging.cs" />
+    <Compile Include="Persistence\SortOrder.cs" />
     <Compile Include="Serialization\Proteus\ProteusSerializer.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Persistence\IActivityRepository.cs" />

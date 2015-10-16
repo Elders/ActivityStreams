@@ -16,7 +16,7 @@ namespace ActivityStreams.Persistence.InMemory
             if (activityStreamStore.TryGetValue(activity.StreamId, out stream))
                 stream.Add(activity);
             else
-                activityStreamStore.TryAdd(activity.StreamId, new SortedSet<Activity>(Activity.Comparer) { activity });
+                activityStreamStore.TryAdd(activity.StreamId, new SortedSet<Activity>(Activity.ComparerDesc) { activity });
         }
 
         /// <summary>
@@ -25,10 +25,23 @@ namespace ActivityStreams.Persistence.InMemory
         public IEnumerable<Activity> Load(Feed feed)
         {
             var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
-            return Load(feed, paging);
+            var sortOrder = SortOrder.Descending;
+            return Load(feed, paging, sortOrder);
         }
 
         public IEnumerable<Activity> Load(Feed feed, Paging paging)
+        {
+            var sortOrder = SortOrder.Descending;
+            return Load(feed, paging, sortOrder);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, SortOrder sortOrder)
+        {
+            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
+            return Load(feed, paging, sortOrder);
+        }
+
+        public IEnumerable<Activity> Load(Feed feed, Paging paging, SortOrder sortOrder)
         {
             var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count, new ByteArrayEqualityComparer());
             foreach (var item in activityStreamStore)
@@ -36,7 +49,7 @@ namespace ActivityStreams.Persistence.InMemory
                 snapshot.Add(item.Key, new Queue<Activity>(item.Value));
             }
 
-            SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.Comparer);
+            SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.ComparerDesc);
             var streams = feed.Streams.ToList();
             var streamsCount = streams.Count;
             var snapshotCount = snapshot.Count;

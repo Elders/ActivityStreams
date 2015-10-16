@@ -11,9 +11,13 @@ namespace ActivityStreams.Persistence.Cassandra
     /// </summary>
     public class ActivityStore : IActivityStore
     {
-        const string AppendActivityStreamQueryTemplate = @"INSERT INTO activities_desc (sid,ts,data) VALUES (?,?,?);";
+        const string AppendActivityStreamQueryTemplateDesc = @"INSERT INTO activities_desc (sid,ts,data) VALUES (?,?,?);";
 
-        const string LoadActivityStreamQueryTemplate = @"SELECT data FROM ""activities_desc"" where sid=? AND ts<=?;";
+        const string AppendActivityStreamQueryTemplateAsc = @"INSERT INTO activities_asc (sid,ts,data) VALUES (?,?,?);";
+
+        const string LoadActivityStreamQueryTemplateDesc = @"SELECT data FROM ""activities_desc"" where sid=? AND ts<=?;";
+
+        const string LoadActivityStreamQueryTemplateAsc = @"SELECT data FROM ""activities_asc"" where sid=? AND ts<=?;";
 
         readonly ISerializer serializer;
 
@@ -27,24 +31,36 @@ namespace ActivityStreams.Persistence.Cassandra
 
         public void Save(Activity activity)
         {
-            var prepared = session.Prepare(AppendActivityStreamQueryTemplate);
+            var preparedAppendDesc = session.Prepare(AppendActivityStreamQueryTemplateDesc);
+            var preparedAppendAsc = session.Prepare(AppendActivityStreamQueryTemplateAsc);
 
             byte[] data = SerializeActivity(activity);
             session
-                .Execute(prepared
+                .Execute(preparedAppendDesc
+                .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
+
+            session
+                .Execute(preparedAppendAsc
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
-        public IEnumerable<Activity> Get(Feed feed, Paging paging)
+        public IEnumerable<Activity> Get(Feed feed, Paging paging, SortOrder sortOrder)
         {
-            SortedSet<Activity> activities = new SortedSet<Activity>(Activity.Comparer);
+            var statement = LoadActivityStreamQueryTemplateDesc;
+            SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
+
+            if (sortOrder == SortOrder.Ascending)
+            {
+                statement = LoadActivityStreamQueryTemplateAsc;
+                activities = new SortedSet<Activity>(Activity.ComparerAsc);
+            }
 
             foreach (var streamId in feed.Streams)
             {
                 var streamIdQuery = Convert.ToBase64String(streamId.StreamId);
 
                 var prepared = session
-                        .Prepare(LoadActivityStreamQueryTemplate)
+                        .Prepare(statement)
                         .Bind(streamIdQuery, paging.Timestamp)
                         .SetAutoPage(false)
                         .SetPageSize(paging.Take);
@@ -59,6 +75,7 @@ namespace ActivityStreams.Persistence.Cassandra
                     }
                 }
             }
+
             return activities.Take(paging.Take);
         }
 
