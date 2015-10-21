@@ -36,9 +36,13 @@ namespace ActivityStreams.Tests.Activities
                 feed = feedFactory.GG(subscriptionOwnerId);
                 feed.Attach(new Stream(subscriptionOwnerId, streamId1));
                 feed.Attach(new Stream(subscriptionOwnerId, streamId2));
+
+                paging = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), int.MaxValue);
+                sortOrder = SortOrder.Descending;
+                feedOptions = new FeedOptions(paging, sortOrder);
             };
 
-        Because of = () => activityStream = activityStreamRepository.Load(feed).ToList();
+        Because of = () => activityStream = activityStreamRepository.Load(feed, feedOptions).ToList();
 
         It should_return_all_activities = () => activityStream.Count.ShouldEqual(3);
 
@@ -55,5 +59,8 @@ namespace ActivityStreams.Tests.Activities
         static Activity item1;
         static Activity item2;
         static Activity item3;
+        static Paging paging;
+        static SortOrder sortOrder;
+        static FeedOptions feedOptions;
     }
 }

@@ -14,33 +14,9 @@ namespace ActivityStreams.Persistence
         /// Loads all activities associated with the streams for the specified feed.
         /// </summary>
         /// <param name="feed"></param>
+        /// <param name="feedOptions"></param>
         /// <returns></returns>
-        IEnumerable<Activity> Load(Feed feed);
-
-        /// <summary>
-        /// Loads all activities associated with the streams for the specified feed.
-        /// </summary>
-        /// <param name="feed"></param>
-        /// <param name="paging"></param>
-        /// <returns></returns>
-        IEnumerable<Activity> Load(Feed feed, Paging paging);
-
-        /// <summary>
-        /// Loads all activities associated with the streams for the specified feed.
-        /// </summary>
-        /// <param name="feed"></param>
-        /// <param name="sortOrder"></param>
-        /// <returns></returns>
-        IEnumerable<Activity> Load(Feed feed, SortOrder sortOrder);
-
-        /// <summary>
-        /// Loads all activities associated with the streams for the specified feed.
-        /// </summary>
-        /// <param name="feed"></param>
-        /// <param name="paging"></param>
-        /// <param name="sortOrder"></param>
-        /// <returns></returns>
-        IEnumerable<Activity> Load(Feed feed, Paging paging, SortOrder sortOrder);
+        IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions);
     }
 
     public class ActivityRepository : IActivityRepository
@@ -57,29 +33,9 @@ namespace ActivityStreams.Persistence
             store.Save(activity);
         }
 
-        public IEnumerable<Activity> Load(Feed feed)
+        public IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions)
         {
-            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
-            var sortOrder = SortOrder.Descending;
-
-            return Load(feed, paging, sortOrder);
-        }
-
-        public IEnumerable<Activity> Load(Feed feed, Paging paging)
-        {
-            var sortOrder = SortOrder.Descending;
-            return Load(feed, paging, sortOrder);
-        }
-
-        public IEnumerable<Activity> Load(Feed feed, SortOrder sortOrder)
-        {
-            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
-            return Load(feed, paging, sortOrder);
-        }
-
-        public IEnumerable<Activity> Load(Feed feed, Paging paging, SortOrder sortOrder)
-        {
-            var result = store.Get(feed, paging, sortOrder);
+            var result = store.Get(feed, feedOptions);
             return result;
         }
     }

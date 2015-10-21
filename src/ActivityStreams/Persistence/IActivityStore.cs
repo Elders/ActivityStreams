@@ -4,7 +4,7 @@ namespace ActivityStreams.Persistence
 {
     public interface IActivityStore
     {
-        IEnumerable<Activity> Get(Feed feed, Paging paging, SortOrder sortOrder);
+        IEnumerable<Activity> Get(Feed feed, FeedOptions feedOptions);
 
         void Save(Activity activity);
     }

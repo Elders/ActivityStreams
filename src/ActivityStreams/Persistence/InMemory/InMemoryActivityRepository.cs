@@ -22,26 +22,7 @@ namespace ActivityStreams.Persistence.InMemory
         /// <summary>
         /// FanIn
         /// </summary>
-        public IEnumerable<Activity> Load(Feed feed)
-        {
-            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
-            var sortOrder = SortOrder.Descending;
-            return Load(feed, paging, sortOrder);
-        }
-
-        public IEnumerable<Activity> Load(Feed feed, Paging paging)
-        {
-            var sortOrder = SortOrder.Descending;
-            return Load(feed, paging, sortOrder);
-        }
-
-        public IEnumerable<Activity> Load(Feed feed, SortOrder sortOrder)
-        {
-            var paging = new Paging(DateTime.UtcNow.ToFileTimeUtc(), 20);
-            return Load(feed, paging, sortOrder);
-        }
-
-        public IEnumerable<Activity> Load(Feed feed, Paging paging, SortOrder sortOrder)
+        public IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions)
         {
             var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count, new ByteArrayEqualityComparer());
             foreach (var item in activityStreamStore)

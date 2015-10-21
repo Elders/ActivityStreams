@@ -24,13 +24,19 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
             var feedFactory = new FeedFactory(new FeedStreamRepository(new FeedStreamStore(session)));
             feed = new GGFactory(activityRepository, feedFactory).GetFeed(1, 5);
-            paging = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), int.MaxValue);
+            paging1 = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), int.MaxValue);
+            sortOrder1 = SortOrder.Descending;
+            feedOptions1 = new FeedOptions(paging1, sortOrder1);
+
+            paging2 = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), int.MaxValue);
+            sortOrder2 = SortOrder.Ascending;
+            feedOptions2 = new FeedOptions(paging2, sortOrder2);
         };
 
         Because of = () =>
         {
-            activitiesDesc = activityRepository.Load(feed, paging, SortOrder.Descending).ToList();
-            activitiesAsc = activityRepository.Load(feed, paging, SortOrder.Ascending).ToList();
+            activitiesDesc = activityRepository.Load(feed, feedOptions1).ToList();
+            activitiesAsc = activityRepository.Load(feed, feedOptions2).ToList();
         };
 
         It should_return_two_sequence_equal_enumerables = () =>
@@ -42,7 +48,13 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         static List<Activity> activitiesDesc;
         static List<Activity> activitiesAsc;
         static Feed feed;
-        static Paging paging;
+        static Paging paging1;
+        static SortOrder sortOrder1;
+        static FeedOptions feedOptions1;
+
+        static Paging paging2;
+        static SortOrder sortOrder2;
+        static FeedOptions feedOptions2;
         static IActivityRepository activityRepository;
     }
 }
