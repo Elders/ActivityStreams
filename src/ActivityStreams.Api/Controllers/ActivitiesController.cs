@@ -30,6 +30,8 @@ namespace ActivityStreams.Api.Controllers
         [HttpGet]
         public ResponseResult<FeedModel> LoadActivities(string feedId, FeedOptions feedOptions)
         {
+            feedOptions = feedOptions ?? FeedOptions.Default;
+
             var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
 
             var feed = ActivityStreams.Api.WebApiApplication.FeedFactory.GG(feedIdBytes);

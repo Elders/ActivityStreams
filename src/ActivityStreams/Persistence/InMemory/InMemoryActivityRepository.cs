@@ -24,6 +24,8 @@ namespace ActivityStreams.Persistence.InMemory
         /// </summary>
         public IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions)
         {
+            feedOptions = feedOptions ?? FeedOptions.Default;
+
             var snapshot = new Dictionary<byte[], Queue<Activity>>(activityStreamStore.Count, new ByteArrayEqualityComparer());
             foreach (var item in activityStreamStore)
             {

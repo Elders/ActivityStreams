@@ -10,5 +10,7 @@
 
         public Paging Paging { get; set; }
         public SortOrder SortOrder { get; set; }
+
+        public static FeedOptions Default = new FeedOptions(Paging.Default, SortOrder.Descending);
     }
 }

@@ -46,6 +46,8 @@ namespace ActivityStreams.Persistence.Cassandra
 
         public IEnumerable<Activity> Get(Feed feed, FeedOptions feedOptions)
         {
+            feedOptions = feedOptions ?? FeedOptions.Default;
+
             var statement = LoadActivityStreamQueryTemplateDesc;
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
 
