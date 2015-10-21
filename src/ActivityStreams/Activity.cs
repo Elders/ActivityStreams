@@ -91,12 +91,6 @@ namespace ActivityStreams
         static IComparer<Activity> comparerInstanceAsc = new ActivityComparerAsc();
         public static IComparer<Activity> ComparerAsc = comparerInstanceAsc;
 
-        public static Activity UnitTestFactory(byte[] streamId, byte[] externalId, object body, string author, DateTime timestamp)
-        {
-            return new Activity(streamId, externalId, body, author, timestamp);
-        }
-
-        [DataContract(Name = "b1a79981-edae-4880-ad3c-fdaa7c5980ad")]
         class ActivityComparerDesc : IComparer<Activity>
         {
             public int Compare(Activity x, Activity y)
@@ -108,7 +102,6 @@ namespace ActivityStreams
             }
         }
 
-        [DataContract(Name = "a465ae44-e785-4d93-b43f-b346cf4269b7")]
         class ActivityComparerAsc : IComparer<Activity>
         {
             public int Compare(Activity x, Activity y)

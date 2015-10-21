@@ -69,7 +69,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
                     var externalId = $"extid-{i}-{j}";
                     var body = new ActivityBody() { Content = externalId };
 
-                    var activity = Activity.UnitTestFactory(streamId.ToByteArray(), Encoding.UTF8.GetBytes(externalId), body, "author", DateTime.UtcNow.AddYears(i));
+                    var activity = new Activity(streamId.ToByteArray(), Encoding.UTF8.GetBytes(externalId), body, "author", DateTime.UtcNow.AddYears(i));
                     activityRepository.Append(activity);
                 }
             }

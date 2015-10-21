@@ -28,7 +28,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             streamId = Encoding.UTF8.GetBytes("streamId" + timestamp);
             externalId = Encoding.UTF8.GetBytes("activityId");
             body = new ActivityBody() { Content = "test content" };
-            activity = Activity.UnitTestFactory(streamId, externalId, body, "author", shit);
+            activity = new Activity(streamId, externalId, body, "author", shit);
         };
 
         Because of = () => activityRepository.Append(activity);

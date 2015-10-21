@@ -16,13 +16,13 @@ namespace ActivityStreams.Tests.Activities
                 var streamId = Encoding.UTF8.GetBytes("streamId");
 
                 var id1 = Encoding.UTF8.GetBytes("activityId1");
-                item1 = Activity.UnitTestFactory(streamId, id1, "body1", "author1", DateTime.UtcNow.AddMinutes(1));
+                item1 = new Activity(streamId, id1, "body1", "author1", DateTime.UtcNow.AddMinutes(1));
 
                 var id2 = Encoding.UTF8.GetBytes("activityId2");
-                item2 = Activity.UnitTestFactory(streamId, id2, "body2", "author2", DateTime.UtcNow.AddMinutes(2));
+                item2 = new Activity(streamId, id2, "body2", "author2", DateTime.UtcNow.AddMinutes(2));
 
                 var id3 = Encoding.UTF8.GetBytes("activityId3");
-                item3 = Activity.UnitTestFactory(streamId, id3, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
+                item3 = new Activity(streamId, id3, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
 
                 activityStreamRepository = new InMemoryActivityRepository();
                 activityStreamRepository.Append(item2);
