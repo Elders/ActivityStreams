@@ -44,10 +44,13 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
-        public IEnumerable<Activity> Get(Feed feed, Paging paging, SortOrder sortOrder)
+        public IEnumerable<Activity> Get(Feed feed, FeedOptions feedOptions)
         {
             var statement = LoadActivityStreamQueryTemplateDesc;
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
+
+            var sortOrder = feedOptions.SortOrder;
+            var paging = feedOptions.Paging;
 
             if (sortOrder == SortOrder.Ascending)
             {

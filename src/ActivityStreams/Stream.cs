@@ -4,7 +4,6 @@ using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
-
     public class Stream : IStream, IEqualityComparer<Stream>, IEquatable<Stream>
     {
         public Stream(byte[] feedId, byte[] streamId)

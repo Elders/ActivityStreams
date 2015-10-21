@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Feed.cs" />
     <Compile Include="Activity.cs" />
+    <Compile Include="FeedOptions.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
     <Compile Include="IStream.cs" />
     <Compile Include="Persistence\Cassandra\ActivityStore.cs" />
@@ -58,8 +59,8 @@
     <Compile Include="Persistence\IActivityStore.cs" />
     <Compile Include="Persistence\Cassandra\FeedStore.cs" />
     <Compile Include="Persistence\IFeedStreamStore.cs" />
-    <Compile Include="Persistence\Paging.cs" />
-    <Compile Include="Persistence\SortOrder.cs" />
+    <Compile Include="Paging.cs" />
+    <Compile Include="SortOrder.cs" />
     <Compile Include="Serialization\Proteus\ProteusSerializer.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Persistence\IActivityRepository.cs" />

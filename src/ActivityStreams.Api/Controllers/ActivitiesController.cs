@@ -25,9 +25,10 @@ namespace ActivityStreams.Api.Controllers
         /// Load Activities for feed
         /// </summary>
         /// <param name="feedId"></param>
+        /// /// <param name="feedOptions"></param>
         /// <returns></returns>
         [HttpGet]
-        public ResponseResult<FeedModel> LoadActivities(string feedId)
+        public ResponseResult<FeedModel> LoadActivities(string feedId, FeedOptions feedOptions)
         {
             var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
 
@@ -35,7 +36,7 @@ namespace ActivityStreams.Api.Controllers
             if (feed == null)
                 return new ResponseResult<FeedModel>();
 
-            var activities = WebApiApplication.ActivityRepository.Load(feed);
+            var activities = WebApiApplication.ActivityRepository.Load(feed, feedOptions);
             return new ResponseResult<FeedModel>(new FeedModel(activities));
         }
 
