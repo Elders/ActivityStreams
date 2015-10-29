@@ -43,7 +43,7 @@ namespace ActivityStreams.Tests.Feeds
         public IStream GetFeed(string feedName)
         {
             var feed1Id = Encoding.UTF8.GetBytes(feedName);
-            var feed = feedFactory.GG(feed1Id);
+            var feed = feedFactory.Get(feed1Id);
             for (int i = 0; i < 2; i++)
             {
                 var feedStream = Encoding.UTF8.GetBytes($"{feedName}-stream-{i}");

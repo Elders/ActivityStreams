@@ -58,7 +58,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         public Feed GetFeed(int numberOfStreams, int activitiesPerStream)
         {
             var feedId = Encoding.UTF8.GetBytes("feedid" + DateTime.UtcNow.ToFileTimeUtc());
-            var feed = feedFactory.GG(feedId);
+            var feed = feedFactory.Get(feedId);
             for (int i = 0; i < numberOfStreams; i++)
             {
                 for (int j = 0; j < activitiesPerStream; j++)

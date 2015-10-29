@@ -27,7 +27,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             feedId = Encoding.UTF8.GetBytes("feedId" + timestamp);
             var streamId = Encoding.UTF8.GetBytes("strid" + timestamp);
             feedFactory = new FeedFactory(feedRepository);
-            feed = feedFactory.GG(feedId);
+            feed = feedFactory.Get(feedId);
             feedStream = new Stream(feedId, streamId);
         };
 
@@ -35,7 +35,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
         It should_have_the_attached_feed_stream = () =>
         {
-            var feed = feedFactory.GG(feedId);
+            var feed = feedFactory.Get(feedId);
             feed.Streams.Count().ShouldEqual(1);
         };
 
@@ -71,7 +71,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             theStreamId = "strid" + timestamp;
             var streamId = Encoding.UTF8.GetBytes(theStreamId);
             feedFactory = new FeedFactory(feedRepository);
-            feed = feedFactory.GG(feedId);
+            feed = feedFactory.Get(feedId);
             feedStream = new Stream(feedId, streamId);
         };
 
@@ -79,7 +79,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
         It should_have_the_attached_feed_stream = () =>
         {
-            var feed = feedFactory.GG(feedId);
+            var feed = feedFactory.Get(feedId);
             var loadedStream = System.Text.Encoding.UTF8.GetString(feed.Streams.First().StreamId);
             theStreamId.ShouldEqual(loadedStream);
         };

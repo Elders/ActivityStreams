@@ -14,13 +14,13 @@ namespace ActivityStreams.Tests.Feeds
 
             var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
 
-            var feed1 = feedFactory.GG(Encoding.UTF8.GetBytes("feed1"));
+            var feed1 = feedFactory.Get(Encoding.UTF8.GetBytes("feed1"));
             feed1.Attach(new Stream(feed1.FeedId, Encoding.UTF8.GetBytes("this")));
 
-            var feed2 = feedFactory.GG(Encoding.UTF8.GetBytes("feed2"));
+            var feed2 = feedFactory.Get(Encoding.UTF8.GetBytes("feed2"));
             feed2.Attach(new Stream(feed2.FeedId, Encoding.UTF8.GetBytes("is")));
 
-            var feed3 = feedFactory.GG(Encoding.UTF8.GetBytes("feed3"));
+            var feed3 = feedFactory.Get(Encoding.UTF8.GetBytes("feed3"));
             feed3.Attach(new Stream(feed3.FeedId, Encoding.UTF8.GetBytes("a")));
             feed3.Attach(new Stream(feed3.FeedId, Encoding.UTF8.GetBytes("normal")));
             feed3.Attach(new Stream(feed3.FeedId, Encoding.UTF8.GetBytes("test")));
@@ -30,11 +30,11 @@ namespace ActivityStreams.Tests.Feeds
             feed3.Attach(new Stream(feed3.FeedId, Encoding.UTF8.GetBytes("what")));
 
 
-            var feed4 = feedFactory.GG(Encoding.UTF8.GetBytes("feed4"));
+            var feed4 = feedFactory.Get(Encoding.UTF8.GetBytes("feed4"));
             feed4.Attach(new Stream(feed4.FeedId, Encoding.UTF8.GetBytes("again")));
             feed4.Attach(new Stream(feed4.FeedId, Encoding.UTF8.GetBytes("test")));
 
-            var feed5 = feedFactory.GG(Encoding.UTF8.GetBytes("feed5"));
+            var feed5 = feedFactory.Get(Encoding.UTF8.GetBytes("feed5"));
             feed5.Attach(new Stream(feed5.FeedId, Encoding.UTF8.GetBytes("another one")));
             feed5.Attach(new Stream(feed5.FeedId, Encoding.UTF8.GetBytes("guys")));
 

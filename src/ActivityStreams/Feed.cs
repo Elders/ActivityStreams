@@ -56,7 +56,7 @@ namespace ActivityStreams
             this.repository = repository;
         }
 
-        public Feed GG(byte[] feedId)
+        public Feed Get(byte[] feedId)
         {
             return new Feed(feedId, repository);
         }

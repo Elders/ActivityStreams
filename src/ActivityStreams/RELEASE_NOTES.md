@@ -1,3 +1,8 @@
+#### 0.5.0-beta0001 - 29.10.2015
+* Feeds now may have end date. Activities after that date are not loaded.
+* BREAKING CHANGES:
+* - FeedFactory.GG(...) now becomes FeedFactory.Get(...)
+
 #### 0.4.0-alpha001 - 17.10.2015
 * Added SortOrder for activities.
 

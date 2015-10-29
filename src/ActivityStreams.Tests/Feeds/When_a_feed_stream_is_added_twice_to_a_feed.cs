@@ -13,7 +13,7 @@ namespace ActivityStreams.Tests.Feeds
             {
                 var feedId = Encoding.UTF8.GetBytes("ownerId");
                 var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
-                feed = feedFactory.GG(feedId);
+                feed = feedFactory.Get(feedId);
                 var firstStreamId = Encoding.UTF8.GetBytes("streamId");
                 feed.Attach(new Stream(feed.Id, firstStreamId));
 

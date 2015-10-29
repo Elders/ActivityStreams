@@ -14,18 +14,18 @@ namespace ActivityStreams.Tests.Feeds
 
             var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
 
-            var feed1 = feedFactory.GG(Encoding.UTF8.GetBytes("feed1"));
+            var feed1 = feedFactory.Get(Encoding.UTF8.GetBytes("feed1"));
             feed1.Attach(new Stream(feed1.FeedId, Encoding.UTF8.GetBytes("this")));
             feed1.Attach(new Stream(feed1.FeedId, Encoding.UTF8.GetBytes("that")));
             feed1.Attach(new Stream(feed1.FeedId, Encoding.UTF8.GetBytes("begone")));
             feed1.Detach(new Stream(feed1.FeedId, Encoding.UTF8.GetBytes("begone")));
 
-            var feed2 = feedFactory.GG(Encoding.UTF8.GetBytes("feed2"));
+            var feed2 = feedFactory.Get(Encoding.UTF8.GetBytes("feed2"));
             feed2.Attach(new Stream(feed2.FeedId, Encoding.UTF8.GetBytes("is")));
 
             feed1.Attach(feed2);
 
-            var feed3 = feedFactory.GG(Encoding.UTF8.GetBytes("feed3"));
+            var feed3 = feedFactory.Get(Encoding.UTF8.GetBytes("feed3"));
             feed3.Attach(new Stream(feed3.FeedId, Encoding.UTF8.GetBytes("tova")));
             feed3.Attach(new Stream(feed3.FeedId, Encoding.UTF8.GetBytes("onova")));
 

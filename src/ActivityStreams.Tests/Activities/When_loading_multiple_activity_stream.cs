@@ -33,7 +33,7 @@ namespace ActivityStreams.Tests.Activities
 
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
                 var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
-                feed = feedFactory.GG(subscriptionOwnerId);
+                feed = feedFactory.Get(subscriptionOwnerId);
                 feed.Attach(new Stream(subscriptionOwnerId, streamId1));
                 feed.Attach(new Stream(subscriptionOwnerId, streamId2));
 
