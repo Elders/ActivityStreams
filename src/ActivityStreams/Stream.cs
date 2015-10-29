@@ -70,16 +70,6 @@ namespace ActivityStreams
             }
         }
 
-        public void Attach(IStream feedStream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Detach(IStream feedStream)
-        {
-            throw new NotImplementedException();
-        }
-
         public static bool operator ==(Stream left, Stream right)
         {
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;

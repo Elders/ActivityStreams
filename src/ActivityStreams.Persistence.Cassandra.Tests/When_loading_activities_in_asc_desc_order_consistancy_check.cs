@@ -47,7 +47,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
         static List<Activity> activitiesDesc;
         static List<Activity> activitiesAsc;
-        static Feed feed;
+        static IFeed feed;
         static Paging paging1;
         static SortOrder sortOrder1;
         static FeedOptions feedOptions1;

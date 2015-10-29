@@ -16,7 +16,7 @@ namespace ActivityStreams.Persistence
         /// <param name="feed"></param>
         /// <param name="feedOptions"></param>
         /// <returns></returns>
-        IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions);
+        IEnumerable<Activity> Load(IFeed feed, FeedOptions feedOptions);
     }
 
     public class ActivityRepository : IActivityRepository
@@ -33,7 +33,7 @@ namespace ActivityStreams.Persistence
             store.Save(activity);
         }
 
-        public IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions)
+        public IEnumerable<Activity> Load(IFeed feed, FeedOptions feedOptions)
         {
             var result = store.Get(feed, feedOptions);
             return result;

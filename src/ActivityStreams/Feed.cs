@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ActivityStreams.Persistence;
 
 namespace ActivityStreams
 {
-    public class Feed : IStream
+    public class Feed : IFeed
     {
         readonly HashSet<IStream> feedStreams;
 
@@ -12,15 +13,12 @@ namespace ActivityStreams
 
         internal Feed(byte[] id, IFeedStreamRepository repository)
         {
-            this.Id = id;
             this.feedStreams = new HashSet<IStream>(repository.Load(id));
-            FeedId = id;
+            this.FeedId = id;
             this.repository = repository;
         }
 
         public byte[] StreamId { get; set; }
-
-        public byte[] Id { get; }
 
         public byte[] FeedId { get; set; }
 
@@ -36,6 +34,11 @@ namespace ActivityStreams
         {
             if (feedStreams.Remove(feedStream))
                 repository.DetachStream(feedStream);
+        }
+
+        public void Close(DateTime endDate)
+        {
+
         }
     }
 
@@ -56,7 +59,7 @@ namespace ActivityStreams
             this.repository = repository;
         }
 
-        public Feed Get(byte[] feedId)
+        public IFeed Get(byte[] feedId)
         {
             return new Feed(feedId, repository);
         }

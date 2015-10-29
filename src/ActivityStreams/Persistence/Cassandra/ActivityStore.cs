@@ -44,7 +44,7 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
-        public IEnumerable<Activity> Get(Feed feed, FeedOptions feedOptions)
+        public IEnumerable<Activity> Get(IFeed feed, FeedOptions feedOptions)
         {
             feedOptions = feedOptions ?? FeedOptions.Default;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
@@ -10,9 +9,13 @@ namespace ActivityStreams
 
         byte[] StreamId { get; set; }
 
+        IEnumerable<IStream> Streams { get; }
+    }
+
+    public interface IFeed : IStream
+    {
         void Attach(IStream stream);
         void Detach(IStream stream);
-
-        IEnumerable<IStream> Streams { get; }
+        void Close(DateTime endDate);
     }
 }

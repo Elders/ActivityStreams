@@ -54,7 +54,7 @@ namespace ActivityStreams.Tests.Activities
         };
 
         static IActivityRepository activityStreamRepository;
-        static Feed feed;
+        static IFeed feed;
         static List<Activity> activityStream;
         static Activity item1;
         static Activity item2;

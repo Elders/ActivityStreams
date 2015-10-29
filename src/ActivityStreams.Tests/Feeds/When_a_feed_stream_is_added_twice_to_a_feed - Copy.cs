@@ -40,14 +40,14 @@ namespace ActivityStreams.Tests.Feeds
             this.feedFactory = feedFactory;
         }
 
-        public IStream GetFeed(string feedName)
+        public IFeed GetFeed(string feedName)
         {
             var feed1Id = Encoding.UTF8.GetBytes(feedName);
             var feed = feedFactory.Get(feed1Id);
             for (int i = 0; i < 2; i++)
             {
                 var feedStream = Encoding.UTF8.GetBytes($"{feedName}-stream-{i}");
-                feed.Attach(new Stream(feed.Id, feedStream));
+                feed.Attach(new Stream(feed.FeedId, feedStream));
             }
 
             return feed;

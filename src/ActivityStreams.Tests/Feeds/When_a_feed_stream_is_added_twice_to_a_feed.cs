@@ -15,16 +15,16 @@ namespace ActivityStreams.Tests.Feeds
                 var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
                 feed = feedFactory.Get(feedId);
                 var firstStreamId = Encoding.UTF8.GetBytes("streamId");
-                feed.Attach(new Stream(feed.Id, firstStreamId));
+                feed.Attach(new Stream(feed.FeedId, firstStreamId));
 
                 secondStreamId = Encoding.UTF8.GetBytes("streamId");
             };
 
-        Because of = () => feed.Attach(new Stream(feed.Id, secondStreamId));
+        Because of = () => feed.Attach(new Stream(feed.FeedId, secondStreamId));
 
         It should_be_threated_as_a_single_subscribtion = () => feed.Streams.Count().ShouldEqual(1);
 
-        static Feed feed;
+        static IFeed feed;
         static byte[] secondStreamId;
     }
 }

@@ -22,7 +22,7 @@ namespace ActivityStreams.Persistence.InMemory
         /// <summary>
         /// FanIn
         /// </summary>
-        public IEnumerable<Activity> Load(Feed feed, FeedOptions feedOptions)
+        public IEnumerable<Activity> Load(IFeed feed, FeedOptions feedOptions)
         {
             feedOptions = feedOptions ?? FeedOptions.Default;
 

@@ -46,7 +46,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         static ISerializer serializer;
         static ISession session;
         static IFeedStreamRepository feedRepository;
-        static Feed feed;
+        static IFeed feed;
         static FeedFactory feedFactory;
         static IStream feedStream;
     }
@@ -91,7 +91,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         static ISerializer serializer;
         static ISession session;
         static IFeedStreamRepository feedRepository;
-        static Feed feed;
+        static IFeed feed;
         static FeedFactory feedFactory;
         static IStream feedStream;
     }

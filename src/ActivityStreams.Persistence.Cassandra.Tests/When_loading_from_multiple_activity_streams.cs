@@ -37,7 +37,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         };
 
         static List<Activity> results;
-        static Feed feed;
+        static IFeed feed;
         static Paging paging;
         static SortOrder sortOrder;
         static FeedOptions feedOptions;
@@ -55,7 +55,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             this.feedFactory = feedFactory;
         }
 
-        public Feed GetFeed(int numberOfStreams, int activitiesPerStream)
+        public IFeed GetFeed(int numberOfStreams, int activitiesPerStream)
         {
             var feedId = Encoding.UTF8.GetBytes("feedid" + DateTime.UtcNow.ToFileTimeUtc());
             var feed = feedFactory.Get(feedId);
