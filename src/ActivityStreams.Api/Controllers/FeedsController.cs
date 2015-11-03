@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Web.Http;
 
 namespace ActivityStreams.Api.Controllers
@@ -22,8 +23,8 @@ namespace ActivityStreams.Api.Controllers
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
 
             var feed = WebApiApplication.FeedFactory.Get(feedIdBytes);
-            var feedStream = new Stream(feedIdBytes, streamIdBytes);
-            feed.Attach(feedStream);
+            var attach = WebApiApplication.FeedFactory.Get(streamIdBytes);
+            feed.Attach(attach.StreamId);
 
             return this.Ok();
         }
@@ -41,8 +42,10 @@ namespace ActivityStreams.Api.Controllers
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
 
             var feed = WebApiApplication.FeedFactory.Get(feedIdBytes);
-            var feedStream = new Stream(feedIdBytes, streamIdBytes);
-            feed.Detach(feedStream);
+
+            var detach = WebApiApplication.FeedFactory.Get(streamIdBytes);
+
+            feed.Detach(detach.StreamId, DateTime.UtcNow);
 
             return this.Ok();
         }

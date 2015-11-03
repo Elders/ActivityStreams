@@ -4,8 +4,7 @@ namespace ActivityStreams.Persistence
 {
     public interface IActivityStore
     {
-        IEnumerable<Activity> Get(IFeed feed, FeedOptions feedOptions);
-
         void Save(Activity activity);
+        IEnumerable<Activity> LoadStream(byte[] streamId, Paging paging);
     }
 }

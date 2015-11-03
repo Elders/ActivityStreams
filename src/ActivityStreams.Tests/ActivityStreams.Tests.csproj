@@ -57,16 +57,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Feeds\When_a_feed_stream_is_added_twice_to_a_feed - Copy.cs" />
-    <Compile Include="Feeds\When_feeds_and_streams_are_attached_and_detached.cs" />
-    <Compile Include="Feeds\When_feeds_and_streams_are_nested.cs" />
+    <Compile Include="Activities\When_loading_nested_activity_streams_whith_detached_activity_stream.cs" />
+    <Compile Include="Activities\When_loading_nested_activity_streams.cs" />
+    <Compile Include="InMemoryContext.cs" />
+    <Compile Include="Feeds\When_closing_a_feed_which_is_already_closed.cs" />
+    <Compile Include="Feeds\When_stream_is_detached.cs" />
+    <Compile Include="Feeds\When_loading_nested_streams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Activities\When_a_new_activity_is_created.cs" />
     <Compile Include="Activities\When_comparing_two_different_activities.cs" />
     <Compile Include="Activities\When_loading_multiple_activity_stream.cs" />
     <Compile Include="Activities\When_loading_single_activity_stream.cs" />
     <Compile Include="Activities\When_comparing_two_equal_activities.cs" />
-    <Compile Include="Feeds\When_a_feed_stream_is_added_twice_to_a_feed.cs" />
+    <Compile Include="Feeds\When_a_stream_is_attached_twice.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

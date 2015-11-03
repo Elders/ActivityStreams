@@ -9,7 +9,7 @@ using Machine.Specifications;
 namespace ActivityStreams.Tests.Activities
 {
     [Subject("Streams")]
-    public class When_loading_single_activity_stream
+    public class When_loading_single_activity_stream : InMemoryContext
     {
         Establish context = () =>
             {
@@ -24,22 +24,21 @@ namespace ActivityStreams.Tests.Activities
                 var id3 = Encoding.UTF8.GetBytes("activityId3");
                 item3 = new Activity(streamId, id3, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
 
-                activityStreamRepository = new InMemoryActivityRepository();
-                activityStreamRepository.Append(item2);
-                activityStreamRepository.Append(item3);
-                activityStreamRepository.Append(item1);
+                activityRepository.Append(item2);
+                activityRepository.Append(item3);
+                activityRepository.Append(item1);
 
                 var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
-                var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
-                feed = feedFactory.Get(subscriptionOwnerId);
-                feed.Attach(new Stream(subscriptionOwnerId, streamId));
+                streamService.Attach(subscriptionOwnerId, streamId);
+
+                feed = streamService.Get(subscriptionOwnerId);
 
                 paging = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), int.MaxValue);
                 sortOrder = SortOrder.Descending;
-                feedOptions = new FeedOptions(paging, sortOrder);
+                feedOptions = new ActivityStreamOptions(paging, sortOrder);
             };
 
-        Because of = () => activityStream = activityStreamRepository.Load(feed, feedOptions).ToList();
+        Because of = () => activityStream = activityRepository.Load(feed, feedOptions).ToList();
 
         It should_return_all_activities = () => activityStream.Count.ShouldEqual(3);
 
@@ -50,14 +49,13 @@ namespace ActivityStreams.Tests.Activities
             activityStream[2].ShouldEqual(item3);
         };
 
-        static IActivityRepository activityStreamRepository;
-        static IFeed feed;
+        static ActivityStream feed;
         static List<Activity> activityStream;
         static Activity item1;
         static Activity item2;
         static Activity item3;
         static Paging paging;
         static SortOrder sortOrder;
-        static FeedOptions feedOptions;
+        static ActivityStreamOptions feedOptions;
     }
 }

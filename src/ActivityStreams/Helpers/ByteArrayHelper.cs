@@ -14,6 +14,10 @@ namespace ActivityStreams.Helpers
         {
             return ByteArrayHelper.ComputeHash(obj);
         }
+
+        private static ByteArrayEqualityComparer instance = new ByteArrayEqualityComparer();
+
+        public static ByteArrayEqualityComparer Default { get { return instance; } }
     }
 
     public static class ByteArrayHelper

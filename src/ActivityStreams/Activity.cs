@@ -76,8 +76,8 @@ namespace ActivityStreams
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
                 return false;
-            else
-                return left.Equals(right);
+
+            return left.Equals(right);
         }
 
         public static bool operator !=(Activity left, Activity right)

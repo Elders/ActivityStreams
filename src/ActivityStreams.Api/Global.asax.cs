@@ -6,8 +6,8 @@ namespace ActivityStreams.Api
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
-        public static IActivityRepository ActivityRepository = new InMemoryActivityRepository();
-        public static FeedFactory FeedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
+        public static IActivityRepository ActivityRepository = new InMemoryActivityRepository(null);
+        public static StreamFactory FeedFactory = new StreamFactory(new StreamRepository(new InMemoryFeedStreamStore()));
 
         protected void Application_Start()
         {

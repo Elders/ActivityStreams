@@ -44,9 +44,9 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
-        public IEnumerable<Activity> Get(IFeed feed, FeedOptions feedOptions)
+        public IEnumerable<Activity> Get(ActivityStream feed, ActivityStreamOptions feedOptions)
         {
-            feedOptions = feedOptions ?? FeedOptions.Default;
+            feedOptions = feedOptions ?? ActivityStreamOptions.Default;
 
             var statement = LoadActivityStreamQueryTemplateDesc;
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
@@ -60,9 +60,9 @@ namespace ActivityStreams.Persistence.Cassandra
                 activities = new SortedSet<Activity>(Activity.ComparerAsc);
             }
 
-            foreach (var streamId in feed.Streams)
+            foreach (var streamId in feed.Streams.Select(x => x.StreamId))
             {
-                var streamIdQuery = Convert.ToBase64String(streamId.StreamId);
+                var streamIdQuery = Convert.ToBase64String(streamId);
 
                 var prepared = session
                         .Prepare(statement)
@@ -91,6 +91,32 @@ namespace ActivityStreams.Persistence.Cassandra
                 serializer.Serialize(stream, activity);
                 return stream.ToArray();
             }
+        }
+
+        public IEnumerable<Activity> LoadStream(byte[] streamId, Paging paging)
+        {
+            var statement = LoadActivityStreamQueryTemplateDesc;
+            SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
+
+            var streamIdQuery = Convert.ToBase64String(streamId);
+
+            var prepared = session
+                    .Prepare(statement)
+                    .Bind(streamIdQuery, paging.Timestamp)
+                    .SetAutoPage(false)
+                    .SetPageSize(paging.Take);
+
+            var rowSet = session.Execute(prepared);
+            foreach (var row in rowSet.GetRows())
+            {
+                using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
+                {
+                    var storedActivity = (Activity)serializer.Deserialize(stream);
+                    activities.Add(storedActivity);
+                }
+            }
+
+            return activities;
         }
     }
 }
