@@ -1,3 +1,6 @@
+#### 0.5.0-beta0004 - 04.11.2015
+* Fix attach a stream with an expireation date
+
 #### 0.5.0-beta0003 - 04.11.2015
 * Allow to attach a stream with an expireation date
 

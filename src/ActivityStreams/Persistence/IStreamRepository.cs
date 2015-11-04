@@ -7,7 +7,7 @@ namespace ActivityStreams.Persistence
     {
         ActivityStream Load(byte[] streamId);
 
-        void AttachStream(byte[] sourceStreamId, byte[] streamIdToAttach);
+        void AttachStream(byte[] sourceStreamId, byte[] streamIdToAttach, long expiresAt);
 
         void DetachStream(byte[] sourceStreamId, byte[] streamIdToDetach, long detachedSince);
     }
@@ -21,9 +21,9 @@ namespace ActivityStreams.Persistence
             this.store = store;
         }
 
-        public void AttachStream(byte[] sourceStreamId, byte[] streamIdToAttach)
+        public void AttachStream(byte[] sourceStreamId, byte[] streamIdToAttach, long expiresAt)
         {
-            store.Attach(sourceStreamId, streamIdToAttach, ActivityStream.DefaultExpirationTimestamp);
+            store.Attach(sourceStreamId, streamIdToAttach, expiresAt);
         }
 
         public void DetachStream(byte[] sourceStreamId, byte[] streamIdToDetach, long detachedSince)
@@ -38,7 +38,7 @@ namespace ActivityStreams.Persistence
             {
                 result = new ActivityStream(streamId);
                 if (result.Attach(streamId).IsSuccessful)
-                    AttachStream(streamId, streamId);
+                    AttachStream(streamId, streamId, ActivityStream.DefaultExpirationTimestamp);
             }
             else
             {
