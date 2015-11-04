@@ -1,3 +1,6 @@
+#### 0.5.0-beta0002 - 29.10.2015
+Add asc load of Activities
+
 #### 0.5.0-beta0001 - 29.10.2015
 * Now streams are detached with (expiration/detach) timestamp. Activities after that date are not loaded.
 
