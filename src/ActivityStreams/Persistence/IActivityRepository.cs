@@ -92,8 +92,11 @@ namespace ActivityStreams.Persistence
             var snapshot = new Dictionary<byte[], Queue<Activity>>(new ByteArrayEqualityComparer());
             foreach (var stremToLoad in streams)
             {
-                var pagingOptions = new Paging(stremToLoad.Value, options.Paging.Take);
-                snapshot.Add(stremToLoad.Key, new Queue<Activity>(store.LoadStream(stremToLoad.Key, pagingOptions)));
+                var timestamp = stremToLoad.Value < options.Paging.Timestamp ? stremToLoad.Value : options.Paging.Timestamp;
+                var pagingOptions = new Paging(timestamp, options.Paging.Take);
+                var newOptions = new ActivityStreamOptions(pagingOptions, options.SortOrder);
+
+                snapshot.Add(stremToLoad.Key, new Queue<Activity>(store.LoadStream(stremToLoad.Key, newOptions)));
             }
             return snapshot;
         }

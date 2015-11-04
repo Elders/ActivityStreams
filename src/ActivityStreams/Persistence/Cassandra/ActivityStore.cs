@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
@@ -44,59 +43,21 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
-        public IEnumerable<Activity> Get(ActivityStream feed, ActivityStreamOptions feedOptions)
+        public IEnumerable<Activity> LoadStream(byte[] streamId, ActivityStreamOptions options)
         {
-            feedOptions = feedOptions ?? ActivityStreamOptions.Default;
+            options = options ?? ActivityStreamOptions.Default;
 
             var statement = LoadActivityStreamQueryTemplateDesc;
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
 
-            var sortOrder = feedOptions.SortOrder;
-            var paging = feedOptions.Paging;
+            var sortOrder = options.SortOrder;
+            var paging = options.Paging;
 
             if (sortOrder == SortOrder.Ascending)
             {
                 statement = LoadActivityStreamQueryTemplateAsc;
                 activities = new SortedSet<Activity>(Activity.ComparerAsc);
             }
-
-            foreach (var streamId in feed.Streams.Select(x => x.StreamId))
-            {
-                var streamIdQuery = Convert.ToBase64String(streamId);
-
-                var prepared = session
-                        .Prepare(statement)
-                        .Bind(streamIdQuery, paging.Timestamp)
-                        .SetAutoPage(false)
-                        .SetPageSize(paging.Take);
-
-                var rowSet = session.Execute(prepared);
-                foreach (var row in rowSet.GetRows())
-                {
-                    using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
-                    {
-                        var storedActivity = (Activity)serializer.Deserialize(stream);
-                        activities.Add(storedActivity);
-                    }
-                }
-            }
-
-            return activities.Take(paging.Take);
-        }
-
-        byte[] SerializeActivity(Activity activity)
-        {
-            using (var stream = new MemoryStream())
-            {
-                serializer.Serialize(stream, activity);
-                return stream.ToArray();
-            }
-        }
-
-        public IEnumerable<Activity> LoadStream(byte[] streamId, Paging paging)
-        {
-            var statement = LoadActivityStreamQueryTemplateDesc;
-            SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
 
             var streamIdQuery = Convert.ToBase64String(streamId);
 
@@ -117,6 +78,15 @@ namespace ActivityStreams.Persistence.Cassandra
             }
 
             return activities;
+        }
+
+        byte[] SerializeActivity(Activity activity)
+        {
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(stream, activity);
+                return stream.ToArray();
+            }
         }
     }
 }

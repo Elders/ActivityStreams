@@ -19,8 +19,11 @@ namespace ActivityStreams.Persistence.InMemory
                 activityStore.TryAdd(activity.StreamId, new SortedSet<Activity>(Activity.ComparerDesc) { activity });
         }
 
-        public IEnumerable<Activity> LoadStream(byte[] streamId, Paging paging)
+        public IEnumerable<Activity> LoadStream(byte[] streamId, ActivityStreamOptions options)
         {
+            var sortOrder = options.SortOrder;
+            var paging = options.Paging;
+
             SortedSet<Activity> stream;
             if (activityStore.TryGetValue(streamId, out stream))
             {

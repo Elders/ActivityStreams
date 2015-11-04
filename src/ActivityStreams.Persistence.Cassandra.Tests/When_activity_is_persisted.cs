@@ -34,7 +34,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
                 var storedActivity = (Activity)serializer.Deserialize(stream);
                 ByteArrayHelper.Compare(storedActivity.StreamId, streamId).ShouldBeTrue();
                 storedActivity.Timestamp.ShouldEqual(timestamp);
-                ByteArrayHelper.Compare(storedActivity.ExternalId, externalId).ShouldBeTrue();
+                ByteArrayHelper.Compare(storedActivity.ActivityId, externalId).ShouldBeTrue();
             }
         };
 
