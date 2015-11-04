@@ -20,6 +20,14 @@ namespace ActivityStreams
                 repository.AttachStream(streamId, streamIdToAttach);
         }
 
+        public void Attach(byte[] streamId, byte[] streamIdToAttach, DateTime expiresAt)
+        {
+            var stream = repository.Load(streamId);
+            var result = stream.Attach(streamIdToAttach, expiresAt.ToFileTimeUtc());
+            if (result.IsSuccessful)
+                repository.AttachStream(streamId, streamIdToAttach);
+        }
+
         public void Detach(byte[] streamId, byte[] streamIdToDetach, DateTime detachedSince)
         {
             var stream = repository.Load(streamId);

@@ -28,7 +28,7 @@ namespace ActivityStreams.Persistence.Cassandra
             session.Execute(tableAsc);
         }
 
-        public void CreateFeedsStorage()
+        public void CreateStreamsStorage()
         {
             var tableQ = CreateFeedsTableTemplate.ToLowerInvariant();
             session.Execute(tableQ);

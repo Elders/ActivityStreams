@@ -15,7 +15,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
 
             StorageManager manager = new StorageManager(session);
             manager.CreateActivitiesStorage();
-            manager.CreateFeedsStorage();
+            manager.CreateStreamsStorage();
 
             activityStore = new ActivityStore(session, serializer);
             activityStreamStore = new StreamStore(session);
