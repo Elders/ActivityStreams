@@ -68,6 +68,9 @@
     <Compile Include="Activities\When_loading_single_activity_stream.cs" />
     <Compile Include="CassandraContext.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Feeds\When_a_stream_is_attached_twice.cs" />
+    <Compile Include="Feeds\When_loading_nested_streams.cs" />
+    <Compile Include="Feeds\When_stream_is_detached.cs" />
     <Compile Include="Models\ActivityBody.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\SessionCreator.cs" />
