@@ -23,7 +23,7 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         It should_have_the_attached_feed_stream = () =>
         {
             var stream = streamService.Get(streamId);
-            stream.Streams.Count().ShouldEqual(2);
+            stream.Streams.Count().ShouldEqual(1);
             stream.AttachedStreams.Any(x => ByteArrayHelper.Compare(x.StreamId, attachedId)).ShouldBeTrue();
         };
 

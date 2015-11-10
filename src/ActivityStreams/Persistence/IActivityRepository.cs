@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ActivityStreams.Helpers;
 
 namespace ActivityStreams.Persistence
@@ -40,10 +41,11 @@ namespace ActivityStreams.Persistence
         /// <summary>
         /// FanIn
         /// </summary>
-        public IEnumerable<Activity> Load(ActivityStream feed, ActivityStreamOptions feedOptions)
+        public IEnumerable<Activity> Load(ActivityStream stream, ActivityStreamOptions feedOptions)
         {
             // At this point we have all the streams with their timestamp
-            Dictionary<byte[], long> streamsToLoad = new StreamCrawler(streamStore).StreamsToLoad(feed.StreamId);
+            Dictionary<byte[], long> streamsToLoad = new StreamCrawler(streamStore).StreamsToLoad(stream, feedOptions.Paging.Timestamp);
+            Dictionary<string, DateTime> debug = streamsToLoad.ToDictionary(key => Encoding.UTF8.GetString(key.Key), val => DateTime.FromFileTimeUtc(val.Value));
 
             feedOptions = feedOptions ?? ActivityStreamOptions.Default;
 
@@ -99,90 +101,6 @@ namespace ActivityStreams.Persistence
                 snapshot.Add(stremToLoad.Key, new Queue<Activity>(store.LoadStream(stremToLoad.Key, newOptions)));
             }
             return snapshot;
-        }
-
-        /// <summary>
-        /// Flattens the graph 'ActivityStreams' structure. If there are multiple nodes for a stream with different expiration
-        /// timestamp then the lates expiration timestamp will be captured.
-        /// </summary>
-        class StreamCrawler
-        {
-            readonly IStreamStore streamStore;
-
-            Dictionary<byte[], long> crawledStreams;
-            Dictionary<byte[], long> streamsToLoad;
-            int stupidityCounter;
-
-            public StreamCrawler(IStreamStore streamStore)
-            {
-                this.streamStore = streamStore;
-                crawledStreams = new Dictionary<byte[], long>(ByteArrayEqualityComparer.Default);
-                streamsToLoad = new Dictionary<byte[], long>(ByteArrayEqualityComparer.Default);
-                stupidityCounter = 0;
-            }
-
-            bool IsCrawled(ActivityStream stream)
-            {
-                return crawledStreams.ContainsKey(stream.StreamId) && crawledStreams[stream.StreamId] >= stream.ExpiresAt;
-            }
-
-            void MarkAsCrowled(ActivityStream stream)
-            {
-                if (crawledStreams.ContainsKey(stream.StreamId))
-                    crawledStreams[stream.StreamId] = stream.ExpiresAt;
-                else
-                    crawledStreams.Add(stream.StreamId, stream.ExpiresAt);
-            }
-
-            void Guard_AgainstStupidity()
-            {
-                stupidityCounter++;
-                if (stupidityCounter > 10000)
-                    throw new InvalidOperationException("The stupidity counter reached its max value. How did you do that?");
-            }
-
-            public Dictionary<byte[], long> StreamsToLoad(byte[] feedId)
-            {
-                Stack<byte[]> streamsToCrawl = new Stack<byte[]>();
-                streamsToCrawl.Push(feedId);
-
-                while (streamsToCrawl.Count > 0)
-                {
-                    Guard_AgainstStupidity();
-
-                    // Load next stream.
-                    var currentId = streamsToCrawl.Pop();
-                    var current = streamStore.Get(currentId) ?? ActivityStream.Empty;
-
-                    if (ActivityStream.IsEmpty(current)) continue;
-
-                    // Crawl only first level attached streams.
-                    foreach (var nested in current.AttachedStreams)
-                    {
-                        if (IsCrawled(nested)) continue;
-
-                        streamsToCrawl.Push(nested.StreamId);
-
-                        AddOrUpdateStreamsToLoadWith(streamsToLoad, nested);
-                    }
-                    AddOrUpdateStreamsToLoadWith(streamsToLoad, current);
-                }
-
-                return streamsToLoad;
-            }
-
-            void AddOrUpdateStreamsToLoadWith(Dictionary<byte[], long> streamsToLoad, ActivityStream stream)
-            {
-                if (streamsToLoad.ContainsKey(stream.StreamId))
-                {
-                    if (streamsToLoad[stream.StreamId] < stream.ExpiresAt)
-                        streamsToLoad[stream.StreamId] = stream.ExpiresAt;
-                }
-                else
-                    streamsToLoad.Add(stream.StreamId, stream.ExpiresAt);
-
-                MarkAsCrowled(stream);
-            }
         }
     }
 }

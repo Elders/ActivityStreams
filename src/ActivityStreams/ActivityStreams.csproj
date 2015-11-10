@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivityStream.cs" />
+    <Compile Include="Persistence\StreamCrawler.cs" />
     <Compile Include="StreamService.cs" />
     <Compile Include="Activity.cs" />
     <Compile Include="ActivityStreamOptions.cs" />

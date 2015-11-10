@@ -15,7 +15,7 @@ namespace ActivityStreams.Tests.Feeds
 
         Because of = () => streamService.Detach(Encoding.UTF8.GetBytes("top"), Encoding.UTF8.GetBytes("attached-level_1"), DateTime.UtcNow);
 
-        It should_not_remove_the_detached_stream = () => streamService.Get(Encoding.UTF8.GetBytes("top")).Streams.Count().ShouldEqual(2);
+        It should_not_remove_the_detached_stream = () => streamService.Get(Encoding.UTF8.GetBytes("top")).Streams.Count().ShouldEqual(1);
         It should_have_timestamp_when_detach_happened;
     }
 }

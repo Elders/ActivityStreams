@@ -57,7 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\ActivityRepositoryTestExtensions.cs" />
+    <Compile Include="Activities\When_crawling_streams_and_a_stream_is_attached_twice_trough_multilevel_attachments.cs" />
+    <Compile Include="Activities\When_crawling_streams_without_detachments.cs" />
+    <Compile Include="Activities\When_crawling_streams_with_complex_detachments.cs" />
     <Compile Include="Activities\When_loading_nested_activity_streams_whith_detached_activity_stream.cs" />
+    <Compile Include="Activities\When_loading_nested_circular_activity_streams.cs" />
     <Compile Include="Activities\When_loading_nested_activity_streams.cs" />
     <Compile Include="InMemoryContext.cs" />
     <Compile Include="Feeds\When_closing_a_feed_which_is_already_closed.cs" />

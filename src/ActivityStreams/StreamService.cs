@@ -1,4 +1,5 @@
 ﻿using System;
+using ActivityStreams.Helpers;
 using ActivityStreams.Persistence;
 
 namespace ActivityStreams
@@ -22,6 +23,9 @@ namespace ActivityStreams
 
         public void Attach(byte[] streamId, byte[] streamIdToAttach, DateTime expiresAt)
         {
+            if (ByteArrayHelper.Compare(streamId, streamIdToAttach))
+                throw new ArgumentException("Attaching a stream to itself is now allowed.");
+
             var stream = repository.Load(streamId);
             var result = stream.Attach(streamIdToAttach, expiresAt.ToFileTimeUtc());
             if (result.IsSuccessful)
@@ -30,6 +34,9 @@ namespace ActivityStreams
 
         public void Detach(byte[] streamId, byte[] streamIdToDetach, DateTime detachedSince)
         {
+            if (ByteArrayHelper.Compare(streamId, streamIdToDetach))
+                throw new ArgumentException("Detaching a stream from itself is now allowed.");
+
             var stream = repository.Load(streamId);
             var result = stream.Detach(streamIdToDetach, detachedSince);
             if (result.IsSuccessful)

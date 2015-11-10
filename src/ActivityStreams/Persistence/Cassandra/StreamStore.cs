@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
@@ -19,26 +18,6 @@ namespace ActivityStreams.Persistence.Cassandra
         {
             this.session = session;
         }
-
-        //public void Save(IStream feedStream)
-        //{
-        //    var prepared = session.Prepare(StoreFeedStreamQueryTemplate);
-        //    var fid = Convert.ToBase64String(feedStream.FeedId);
-        //    var sid = feedStream.StreamId;
-        //    session
-        //        .Execute(prepared
-        //        .Bind(fid, sid));
-        //}
-
-        //public void Detach(IStream source, IStream attachedStream, long endDate)
-        //{
-        //    //var prepared = session.Prepare(DeleteFeedStreamQueryTemplate);
-        //    //var fid = Convert.ToBase64String(feedStream.FeedId);
-        //    //var sid = feedStream.StreamId;
-        //    //session
-        //    //    .Execute(prepared
-        //    //    .Bind(fid, sid));
-        //}
 
         public IEnumerable<byte[]> Load(byte[] feedId)
         {

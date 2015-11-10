@@ -13,7 +13,7 @@ namespace ActivityStreams.Tests.Feeds
             streamService.Attach(Encoding.UTF8.GetBytes("nested_level_1"), Encoding.UTF8.GetBytes("str2-nested_level_1"));
         };
 
-        It should_return_only_top_level_streams = () => streamService.Get(Encoding.UTF8.GetBytes("top")).Streams.Count().ShouldEqual(2);
+        It should_return_only_top_level_streams = () => streamService.Get(Encoding.UTF8.GetBytes("top")).Streams.Count().ShouldEqual(1);
     }
 }
 

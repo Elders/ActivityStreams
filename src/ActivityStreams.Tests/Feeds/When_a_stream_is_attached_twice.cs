@@ -15,6 +15,6 @@ namespace ActivityStreams.Tests.Feeds
 
         Because of = () => streamService.Attach(Encoding.UTF8.GetBytes("top"), Encoding.UTF8.GetBytes("duplicate"));
 
-        It should_be_attached_only_once = () => streamService.Get(Encoding.UTF8.GetBytes("top")).Streams.Count().ShouldEqual(2);
+        It should_be_attached_only_once = () => streamService.Get(Encoding.UTF8.GetBytes("top")).Streams.Count().ShouldEqual(1);
     }
 }

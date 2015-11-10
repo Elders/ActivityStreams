@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ActivityStreams.Helpers;
 
 namespace ActivityStreams
 {
+    [DebuggerDisplay("Id = {System.Text.Encoding.UTF8.GetString(StreamId)} ExpiresAt = {System.DateTime.FromFileTimeUtc(ExpiresAt)}")]
     public class ActivityStream : IEqualityComparer<ActivityStream>, IEquatable<ActivityStream>
     {
-        public const long DefaultExpirationTimestamp = long.MaxValue;
+        public const long DefaultExpirationTimestamp = 2650467743999999999; // DateTime.MaxValue.ToFileTimeUtc();
 
         public ActivityStream(byte[] streamId, long expiresAt = DefaultExpirationTimestamp)
         {
@@ -16,8 +18,10 @@ namespace ActivityStreams
             ExpiresAt = expiresAt;
         }
 
+        [DebuggerDisplay("{System.Text.Encoding.UTF8.GetString(StreamId)}")]
         public byte[] StreamId { get; set; }
 
+        [DebuggerDisplay("{System.DateTime.FromFileTimeUtc(ExpiresAt)}")]
         public long ExpiresAt { get; set; }
 
         public bool HasExpiration { get { return ExpiresAt != DefaultExpirationTimestamp; } }

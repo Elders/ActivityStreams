@@ -7,7 +7,7 @@ using Machine.Specifications;
 namespace ActivityStreams.Tests.Activities
 {
     [Subject("Streams")]
-    public class When_loading_nested_activity_streams : InMemoryContext
+    public class When_loading_nested_circular_activity_streams : InMemoryContext
     {
         Establish context = () =>
             {
@@ -25,14 +25,15 @@ namespace ActivityStreams.Tests.Activities
                 act_a8 = activityRepository.NewActivity(streamId2, 8);
                 act_a10 = activityRepository.NewActivity(streamId2, 10);
 
-                streamService.Attach(streamId1, streamId2);
+                streamService.Attach(streamId1, streamId2, new DateTime(2000, 1, 7));
+                streamService.Attach(streamId2, streamId1);
 
                 stream = streamService.Get(streamId1);
             };
 
         Because of = () => activityStream = activityRepository.Load(stream, ActivityStreamOptions.Default).ToList();
 
-        It should_return_all_activities = () => activityStream.Count.ShouldEqual(10);
+        It should_return_all_activities = () => activityStream.Count.ShouldEqual(8);
 
         It should_return_ordered_activity_stream_by_timestamp = () =>
         {
@@ -43,9 +44,7 @@ namespace ActivityStreams.Tests.Activities
             activityStream[4].ShouldEqual(act_a5);
             activityStream[5].ShouldEqual(act_a6);
             activityStream[6].ShouldEqual(act_a7);
-            activityStream[7].ShouldEqual(act_a8);
-            activityStream[8].ShouldEqual(act_a9);
-            activityStream[9].ShouldEqual(act_a10);
+            activityStream[7].ShouldEqual(act_a9);
         };
 
         static ActivityStream stream;

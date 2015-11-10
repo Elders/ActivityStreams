@@ -17,7 +17,7 @@ namespace ActivityStreams.Persistence.InMemory
                 stream = new ActivityStream(sourceStreamId);
                 activityFeedStore.TryAdd(sourceStreamId, stream);
             }
-            var streamToAttach = new ActivityStream(streamIdToAttach);
+            var streamToAttach = new ActivityStream(streamIdToAttach, expiresAt);
             stream.AttachedStreams.Add(streamToAttach);
         }
 

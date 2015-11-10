@@ -35,15 +35,8 @@ namespace ActivityStreams.Persistence
         {
             var result = store.Get(streamId);
             if (ReferenceEquals(null, result))
-            {
                 result = new ActivityStream(streamId);
-                if (result.Attach(streamId).IsSuccessful)
-                    AttachStream(streamId, streamId, ActivityStream.DefaultExpirationTimestamp);
-            }
-            else
-            {
-                result.ExpiresAt = result.AttachedStreams.Single(x => ByteArrayHelper.Compare(x.StreamId, streamId)).ExpiresAt;
-            }
+
             return result;
         }
     }
