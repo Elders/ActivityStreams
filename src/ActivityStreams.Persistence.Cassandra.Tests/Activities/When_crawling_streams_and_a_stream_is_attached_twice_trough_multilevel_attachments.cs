@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using ActivityStreams.Persistence;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Activities
+namespace ActivityStreams.Persistence.Cassandra.Tests.Activities
 {
 
     [Subject("StreamCrawler")]
-    public class When_crawling_streams_and_a_stream_is_attached_twice_trough_multilevel_attachments : InMemoryContext
+    public class When_crawling_streams_and_a_stream_is_attached_twice_trough_multilevel_attachments : CassandraContext
     {
         Establish context = () =>
             {

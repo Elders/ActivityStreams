@@ -7,7 +7,6 @@ using Machine.Specifications;
 
 namespace ActivityStreams.Tests.Activities
 {
-
     [Subject("StreamCrawler")]
     public class When_crawling_streams_with_complex_detachments : InMemoryContext
     {
@@ -15,10 +14,10 @@ namespace ActivityStreams.Tests.Activities
             {
                 crawler = new StreamCrawler(activityStreamStore);
 
-                Q = Encoding.UTF8.GetBytes("Q");
-                X = Encoding.UTF8.GetBytes("X");
-                P = Encoding.UTF8.GetBytes("P");
-                L = Encoding.UTF8.GetBytes("L");
+                Q = Encoding.UTF8.GetBytes("Q" + sandbox);
+                X = Encoding.UTF8.GetBytes("X" + sandbox);
+                P = Encoding.UTF8.GetBytes("P" + sandbox);
+                L = Encoding.UTF8.GetBytes("L" + sandbox);
 
                 streamService.Attach(Q, X);
                 streamService.Attach(Q, P);

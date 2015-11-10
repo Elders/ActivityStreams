@@ -95,7 +95,7 @@ namespace ActivityStreams
         public Result<bool> Detach(byte[] streamId, DateTime detachedSince)
         {
             var streamToDetach = new ActivityStream(streamId);
-            var detachedStream = AttachedStreams.Where(x => x.StreamId.Equals(streamId)).SingleOrDefault() ?? ActivityStream.Empty;
+            var detachedStream = AttachedStreams.Where(x => ByteArrayHelper.Compare(x.StreamId, streamId)).SingleOrDefault() ?? ActivityStream.Empty;
 
             if (IsEmpty(detachedStream))
                 return Result.Error("No stream found to detach.");

@@ -37,12 +37,12 @@ namespace ActivityStreams.Persistence.Cassandra
             return feedStreams;
         }
 
-        public void Attach(byte[] sourceStreamId, byte[] streamIdToDetach, long expiresAt)
+        public void Attach(byte[] sourceStreamId, byte[] streamIdToAttach, long expiresAt)
         {
             var prepared = session.Prepare(StoreFeedStreamQueryTemplate);
             var sid = Convert.ToBase64String(sourceStreamId);
-            var asid = Convert.ToBase64String(streamIdToDetach);
-            long ts = expiresAt == long.MaxValue ? 0 : expiresAt;
+            var asid = Convert.ToBase64String(streamIdToAttach);
+            long ts = expiresAt == ActivityStream.DefaultExpirationTimestamp ? 0 : expiresAt;
             session
                 .Execute(prepared
                 .Bind(sid, asid, ts));
@@ -50,7 +50,13 @@ namespace ActivityStreams.Persistence.Cassandra
 
         public void Detach(byte[] sourceStreamId, byte[] streamIdToDetach, long detachedSince)
         {
-            throw new NotImplementedException();
+            var prepared = session.Prepare(StoreFeedStreamQueryTemplate);
+            var sid = Convert.ToBase64String(sourceStreamId);
+            var asid = Convert.ToBase64String(streamIdToDetach);
+            long ts = detachedSince == ActivityStream.DefaultExpirationTimestamp ? 0 : detachedSince;
+            session
+                .Execute(prepared
+                .Bind(sid, asid, ts));
         }
 
         public ActivityStream Get(byte[] streamId)
@@ -61,17 +67,15 @@ namespace ActivityStreams.Persistence.Cassandra
                     .Bind(sid);
 
             var rowSet = session.Execute(prepared);
-            var queryResult = rowSet.GetRows();
-
             var result = new ActivityStream(streamId);
             List<byte[]> feedStreams = new List<byte[]>();
             bool isLoaded = false;
-            foreach (var row in queryResult)
+            foreach (var row in rowSet.GetRows())
             {
                 isLoaded = true;
                 var asid = Convert.FromBase64String(row.GetValue<string>("asid"));
                 var ts = row.GetValue<long>("ts");
-                long expiresAt = ts == 0 ? long.MaxValue : ts;
+                long expiresAt = ts == 0 ? ActivityStream.DefaultExpirationTimestamp : ts;
                 result.Attach(asid, expiresAt);
             }
 

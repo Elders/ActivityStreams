@@ -3,10 +3,10 @@ using System.Linq;
 using System.Text;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Activities
+namespace ActivityStreams.Persistence.Cassandra.Tests.Activities
 {
     [Subject("Streams")]
-    public class When_loading_single_activity_stream : InMemoryContext
+    public class When_loading_single_activity_stream : CassandraContext
     {
         Establish context = () =>
         {
@@ -37,4 +37,3 @@ namespace ActivityStreams.Tests.Activities
         static Activity act_3;
     }
 }
-

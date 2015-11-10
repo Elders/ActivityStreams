@@ -3,6 +3,7 @@ using Cassandra;
 using Machine.Specifications;
 using ActivityStreams.Persistence.Cassandra.Tests.Helpers;
 using ActivityStreams.Persistence.Cassandra.Tests.Models;
+using System;
 
 namespace ActivityStreams.Persistence.Cassandra.Tests
 {
@@ -24,6 +25,8 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
             streamRepository = new DefaultStreamRepository(activityStreamStore);
 
             streamService = new StreamService(streamRepository);
+
+            sandbox = DateTime.UtcNow.ToFileTimeUtc().ToString();
         };
 
         protected static ISession session;
@@ -33,5 +36,6 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         protected static IActivityRepository activityRepository;
         protected static IStreamRepository streamRepository;
         protected static StreamService streamService;
+        protected static string sandbox;
     }
 }

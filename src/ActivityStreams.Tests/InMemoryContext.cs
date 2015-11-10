@@ -1,4 +1,5 @@
-﻿using ActivityStreams.Persistence;
+﻿using System;
+using ActivityStreams.Persistence;
 using ActivityStreams.Persistence.InMemory;
 using Cassandra;
 using Machine.Specifications;
@@ -16,6 +17,8 @@ namespace ActivityStreams.Tests
             streamRepository = new DefaultStreamRepository(activityStreamStore);
 
             streamService = new StreamService(streamRepository);
+
+            sandbox = DateTime.UtcNow.ToFileTimeUtc().ToString();
         };
 
         protected static ISession session;
@@ -24,5 +27,6 @@ namespace ActivityStreams.Tests
         protected static IActivityRepository activityRepository;
         protected static IStreamRepository streamRepository;
         protected static StreamService streamService;
+        protected static string sandbox;
     }
 }

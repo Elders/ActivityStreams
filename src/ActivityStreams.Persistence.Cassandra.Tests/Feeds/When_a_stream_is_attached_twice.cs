@@ -2,10 +2,10 @@
 using System.Text;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Feeds
+namespace ActivityStreams.Persistence.Cassandra.Tests.Feeds
 {
     [Subject("Feeds")]
-    public class When_a_stream_is_attached_twice : InMemoryContext
+    public class When_a_stream_is_attached_twice : CassandraContext
     {
         Establish context = () =>
         {

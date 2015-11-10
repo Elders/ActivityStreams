@@ -11,14 +11,14 @@ namespace ActivityStreams.Tests.Activities
     {
         Establish context = () =>
             {
-                var streamId1 = Encoding.UTF8.GetBytes("streamId1");
+                var streamId1 = Encoding.UTF8.GetBytes("streamId1" + sandbox);
                 act_a1 = activityRepository.NewActivity(streamId1, 1);
                 act_a3 = activityRepository.NewActivity(streamId1, 3);
                 act_a5 = activityRepository.NewActivity(streamId1, 5);
                 act_a7 = activityRepository.NewActivity(streamId1, 7);
                 act_a9 = activityRepository.NewActivity(streamId1, 9);
 
-                var streamId2 = Encoding.UTF8.GetBytes("streamId2");
+                var streamId2 = Encoding.UTF8.GetBytes("streamId2" + sandbox);
                 act_a2 = activityRepository.NewActivity(streamId2, 2);
                 act_a4 = activityRepository.NewActivity(streamId2, 4);
                 act_a6 = activityRepository.NewActivity(streamId2, 6);

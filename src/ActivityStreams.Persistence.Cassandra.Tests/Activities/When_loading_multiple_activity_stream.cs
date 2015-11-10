@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ActivityStreams.Persistence;
-using ActivityStreams.Persistence.InMemory;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Activities
+namespace ActivityStreams.Persistence.Cassandra.Tests.Activities
 {
     [Subject("Streams")]
-    public class When_loading_multiple_activity_stream : InMemoryContext
+    public class When_loading_multiple_activity_stream : CassandraContext
     {
         Establish context = () =>
             {

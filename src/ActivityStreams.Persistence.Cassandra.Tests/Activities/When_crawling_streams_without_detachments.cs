@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ActivityStreams.Persistence;
 using Machine.Specifications;
 
-namespace ActivityStreams.Tests.Activities
+namespace ActivityStreams.Persistence.Cassandra.Tests.Activities
 {
 
     [Subject("StreamCrawler")]
-    public class When_crawling_streams_without_detachments : InMemoryContext
+    public class When_crawling_streams_without_detachments : CassandraContext
     {
         Establish context = () =>
             {
