@@ -66,9 +66,10 @@
     <Compile Include="Persistence\InMemory\InMemoryActivityStore.cs" />
     <Compile Include="Persistence\IStreamRepository.cs" />
     <Compile Include="Persistence\InMemory\InMemoryStreamStore.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
