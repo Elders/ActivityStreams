@@ -1,3 +1,6 @@
+#### 0.5.0-beta0005 - 12.11.2015
+* vNext
+
 #### 0.5.0-beta0004 - 04.11.2015
 * Fix attach a stream with an expireation date
 
