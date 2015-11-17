@@ -2,7 +2,6 @@
 using System.Text;
 using System.Web.Http;
 using Elders.Web.Api;
-using System;
 
 namespace ActivityStreams.Api.Controllers
 {
@@ -17,29 +16,27 @@ namespace ActivityStreams.Api.Controllers
             var activityIdBytes = Encoding.UTF8.GetBytes(model.ActivityId);
             var streamIdBytes = Encoding.UTF8.GetBytes(model.StreamId);
 
-            var activity = new Activity(streamIdBytes, activityIdBytes, model.Body, null);
+            var activity = new Activity(streamIdBytes, activityIdBytes, model.Body, string.Empty);
             WebApiApplication.ActivityRepository.Append(activity);
-            return this.Ok(model.ActivityId);
+
+            return Ok(model.ActivityId);
         }
         /// <summary>
-        /// Load Activities for feed
+        /// Load Activities for stream
         /// </summary>
-        /// <param name="feedId"></param>
-        /// /// <param name="feedOptions"></param>
+        /// <param name="streamId"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         [HttpGet]
-        public ResponseResult<FeedModel> LoadActivities(string feedId, FeedOptions feedOptions)
+        public ResponseResult<StreamModel> LoadActivities(string streamId, ActivityStreamOptions options)
         {
-            feedOptions = feedOptions ?? FeedOptions.Default;
+            options = options ?? ActivityStreamOptions.Default;
 
-            var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
+            var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
+            var stream = WebApiApplication.StreamService.Get(streamIdBytes);
 
-            var feed = ActivityStreams.Api.WebApiApplication.FeedFactory.Get(feedIdBytes);
-            if (feed == null)
-                return new ResponseResult<FeedModel>();
-
-            var activities = WebApiApplication.ActivityRepository.Load(feed, feedOptions);
-            return new ResponseResult<FeedModel>(new FeedModel(activities));
+            var activities = WebApiApplication.ActivityRepository.Load(stream, options);
+            return new ResponseResult<StreamModel>(new StreamModel(activities));
         }
 
         public class PostActivityModel
@@ -52,9 +49,9 @@ namespace ActivityStreams.Api.Controllers
         }
     }
 
-    public class FeedModel
+    public class StreamModel
     {
-        public FeedModel(IEnumerable<Activity> activities)
+        public StreamModel(IEnumerable<Activity> activities)
         {
             Activities = activities;
         }
