@@ -13,7 +13,7 @@ namespace ActivityStreams
         public Paging Paging { get; set; }
         public SortOrder SortOrder { get; set; }
 
-        public static ActivityStreamOptions Default = new ActivityStreamOptions(Paging.Default, SortOrder.Descending);
+        public static ActivityStreamOptions Default { get { return new ActivityStreamOptions(Paging.Default, SortOrder.Descending); } }
     }
 
     public enum SortOrder
