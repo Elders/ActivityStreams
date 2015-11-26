@@ -68,7 +68,6 @@
     <Compile Include="Feeds\When_closing_a_feed_which_is_already_closed.cs" />
     <Compile Include="Feeds\When_stream_is_detached.cs" />
     <Compile Include="Feeds\When_loading_nested_streams.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Activities\When_a_new_activity_is_created.cs" />
     <Compile Include="Activities\When_comparing_two_different_activities.cs" />
     <Compile Include="Activities\When_loading_multiple_activity_stream.cs" />
@@ -87,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

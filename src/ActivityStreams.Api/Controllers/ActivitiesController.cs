@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Web.Http;
 using Elders.Web.Api;
-using System;
 
 namespace ActivityStreams.Api.Controllers
 {
@@ -17,29 +17,36 @@ namespace ActivityStreams.Api.Controllers
             var activityIdBytes = Encoding.UTF8.GetBytes(model.ActivityId);
             var streamIdBytes = Encoding.UTF8.GetBytes(model.StreamId);
 
-            var activity = new Activity(streamIdBytes, activityIdBytes, model.Body, null);
+            var activity = new Activity(streamIdBytes, activityIdBytes, model.Body, string.Empty);
             WebApiApplication.ActivityRepository.Append(activity);
-            return this.Ok(model.ActivityId);
+
+            return Ok(model.ActivityId);
         }
+
         /// <summary>
-        /// Load Activities for feed
+        /// Load Activities for stream
         /// </summary>
-        /// <param name="feedId"></param>
-        /// /// <param name="feedOptions"></param>
+        /// <param name="streamId"></param>
+        /// <param name="before">Load activities before specific date. Default is current datetime</param>
+        /// <param name="take">The number of activities to return. Default is 20</param>
+        /// <param name="ascendingOrder">Sorts the activities in ascending order. Default is descending</param>
         /// <returns></returns>
         [HttpGet]
-        public ResponseResult<FeedModel> LoadActivities(string feedId, FeedOptions feedOptions)
+        public ResponseResult<StreamModel> LoadActivities(string streamId, DateTime? before = null, int take = 20, bool ascendingOrder = false)
         {
-            feedOptions = feedOptions ?? FeedOptions.Default;
+            if (before.HasValue == false)
+                before = DateTime.UtcNow;
 
-            var feedIdBytes = Encoding.UTF8.GetBytes(feedId);
+            var sortOrder = SortOrder.Descending;
+            if (ascendingOrder == true)
+                sortOrder = SortOrder.Ascending;
 
-            var feed = ActivityStreams.Api.WebApiApplication.FeedFactory.Get(feedIdBytes);
-            if (feed == null)
-                return new ResponseResult<FeedModel>();
+            var options = new ActivityStreamOptions(new Paging(before.Value.ToFileTimeUtc(), take), sortOrder);
+            var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
+            var stream = WebApiApplication.StreamService.Get(streamIdBytes);
 
-            var activities = WebApiApplication.ActivityRepository.Load(feed, feedOptions);
-            return new ResponseResult<FeedModel>(new FeedModel(activities));
+            var activities = WebApiApplication.ActivityRepository.Load(stream, options);
+            return new ResponseResult<StreamModel>(new StreamModel(activities));
         }
 
         public class PostActivityModel
@@ -52,9 +59,9 @@ namespace ActivityStreams.Api.Controllers
         }
     }
 
-    public class FeedModel
+    public class StreamModel
     {
-        public FeedModel(IEnumerable<Activity> activities)
+        public StreamModel(IEnumerable<Activity> activities)
         {
             Activities = activities;
         }
