@@ -29,13 +29,17 @@ namespace ActivityStreams.Api.Controllers
         /// <param name="streamId"></param>
         /// <param name="before">Load activities before specific date. Default is current datetime</param>
         /// <param name="take">The number of activities to return. Default is 20</param>
-        /// <param name="sortOrder">Sorts the activities in specific order. Descending = -1, Unspecified = 0, Ascending = 1. Default is Descending</param>
+        /// <param name="ascendingOrder">Sorts the activities in ascending order. Default is descending</param>
         /// <returns></returns>
         [HttpGet]
-        public ResponseResult<StreamModel> LoadActivities(string streamId, DateTime? before = null, int take = 20, SortOrder sortOrder = SortOrder.Descending)
+        public ResponseResult<StreamModel> LoadActivities(string streamId, DateTime? before = null, int take = 20, bool ascendingOrder = false)
         {
             if (before.HasValue == false)
                 before = DateTime.UtcNow;
+
+            var sortOrder = SortOrder.Descending;
+            if (ascendingOrder == true)
+                sortOrder = SortOrder.Ascending;
 
             var options = new ActivityStreamOptions(new Paging(before.Value.ToFileTimeUtc(), take), sortOrder);
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
