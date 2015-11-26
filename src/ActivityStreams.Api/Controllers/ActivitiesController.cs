@@ -27,20 +27,17 @@ namespace ActivityStreams.Api.Controllers
         /// Load Activities for stream
         /// </summary>
         /// <param name="streamId"></param>
-        /// <param name="before">Load activities before specific date. Default is current datetime.</param>
-        /// <param name="take">The number of activities to return. Default is 20.</param>
-        /// <param name="sortOrder">Sorts the activities in specific order. Descending = -1, Unspecified = 0, Ascending = 1. Default is Descending.</param>
+        /// <param name="before">Load activities before specific date. Default is current datetime</param>
+        /// <param name="take">The number of activities to return. Default is 20</param>
+        /// <param name="sortOrder">Sorts the activities in specific order. Descending = -1, Unspecified = 0, Ascending = 1. Default is Descending</param>
         /// <returns></returns>
         [HttpGet]
         public ResponseResult<StreamModel> LoadActivities(string streamId, DateTime? before = null, int take = 20, SortOrder sortOrder = SortOrder.Descending)
         {
-            long timestamp = DateTime.UtcNow.ToFileTimeUtc();
+            if (before.HasValue == false)
+                before = DateTime.UtcNow;
 
-            if (before.HasValue == true)
-                timestamp = before.Value.ToFileTimeUtc();
-
-            var options = new ActivityStreamOptions(new Paging(timestamp, take), sortOrder);
-
+            var options = new ActivityStreamOptions(new Paging(before.Value.ToFileTimeUtc(), take), sortOrder);
             var streamIdBytes = Encoding.UTF8.GetBytes(streamId);
             var stream = WebApiApplication.StreamService.Get(streamIdBytes);
 
