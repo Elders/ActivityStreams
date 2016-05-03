@@ -1,4 +1,5 @@
-#### 0.5.0-beta0005 - 12.11.2015
+#### 0.5.0-beta0005 - 04.05.2016
+* Added ability to remove activity from stream
 * vNext
 
 #### 0.5.0-beta0004 - 04.11.2015

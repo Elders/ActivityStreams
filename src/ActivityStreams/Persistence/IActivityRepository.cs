@@ -14,6 +14,13 @@ namespace ActivityStreams.Persistence
         void Append(Activity activity);
 
         /// <summary>
+        /// Removes all activities from stream in specific point of time
+        /// </summary>
+        /// <param name="streamId"></param>
+        /// <param name="timestamp">Utc time</param>
+        void Remove(byte[] streamId, long timestamp);
+
+        /// <summary>
         /// Loads all activities for the specified stream.
         /// </summary>
         /// <param name="stream"></param>
@@ -36,6 +43,11 @@ namespace ActivityStreams.Persistence
         public void Append(Activity activity)
         {
             store.Save(activity);
+        }
+
+        public void Remove(byte[] streamId, long timestamp)
+        {
+            store.Delete(streamId, timestamp);
         }
 
         /// <summary>

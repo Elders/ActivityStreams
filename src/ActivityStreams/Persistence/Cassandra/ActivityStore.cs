@@ -18,6 +18,10 @@ namespace ActivityStreams.Persistence.Cassandra
 
         const string LoadActivityStreamQueryTemplateAsc = @"SELECT data FROM ""activities_asc"" where sid=? AND ts<=?;";
 
+        const string RemoveActivityStreamQueryTemplateDesc = @"DELETE FROM ""activities_desc"" where sid=? AND ts=?;";
+
+        const string RemoveActivityStreamQueryTemplateAsc = @"DELETE FROM ""activities_asc"" where sid=? AND ts=?;";
+
         readonly ISerializer serializer;
 
         readonly ISession session;
@@ -41,6 +45,20 @@ namespace ActivityStreams.Persistence.Cassandra
             session
                 .Execute(preparedAppendAsc
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
+        }
+
+        public void Delete(byte[] streamId, long timestamp)
+        {
+            var preparedRemoveDesc = session.Prepare(RemoveActivityStreamQueryTemplateDesc);
+            var preparedRemoveAsc = session.Prepare(RemoveActivityStreamQueryTemplateAsc);
+
+            session
+                .Execute(preparedRemoveDesc
+                .Bind(Convert.ToBase64String(streamId), timestamp));
+
+            session
+                .Execute(preparedRemoveAsc
+                .Bind(Convert.ToBase64String(streamId), timestamp));
         }
 
         public IEnumerable<Activity> LoadStream(byte[] streamId, ActivityStreamOptions options)

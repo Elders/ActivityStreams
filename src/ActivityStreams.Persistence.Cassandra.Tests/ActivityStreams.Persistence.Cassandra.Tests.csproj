@@ -66,6 +66,7 @@
     <Compile Include="Activities\When_loading_nested_activity_streams_whith_detached_activity_stream.cs" />
     <Compile Include="Activities\When_loading_nested_circular_activity_streams.cs" />
     <Compile Include="Activities\When_loading_single_activity_stream.cs" />
+    <Compile Include="Activities\When_removing_activity_from_activity_stream.cs" />
     <Compile Include="CassandraContext.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Feeds\When_a_stream_is_attached_twice.cs" />
