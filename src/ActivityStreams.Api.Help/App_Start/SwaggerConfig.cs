@@ -1,9 +1,8 @@
 using ActivityStreams.Api.Help;
 using Swashbuckle.Application;
-using Swashbuckle.Swagger;
 using System;
+using System.Web;
 using System.Web.Http;
-using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
