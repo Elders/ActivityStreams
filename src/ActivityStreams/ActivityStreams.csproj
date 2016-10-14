@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ActivityStreams</RootNamespace>
-    <AssemblyName>ActivityStreams</AssemblyName>
+    <AssemblyName>Elders.ActivityStreams</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -31,16 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cassandra, Version=2.5.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\CassandraCSharpDriver.2.5.2\lib\net40\Cassandra.dll</HintPath>
+    <Reference Include="Cassandra, Version=3.0.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CassandraCSharpDriver.3.0.5\lib\net40\Cassandra.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Elders.Proteus, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Proteus.1.0.8\lib\net45-full\Elders.Proteus.dll</HintPath>
+    <Reference Include="Elders.Proteus, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Proteus.1.0.9\lib\net45-full\Elders.Proteus.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LZ4, Version=1.0.5.93, Culture=neutral, PublicKeyToken=fd2bda0a70c5a705, processorArchitecture=MSIL">
-      <HintPath>..\packages\lz4net.1.0.5.93\lib\net40-client\LZ4.dll</HintPath>
+    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
+      <HintPath>..\packages\lz4net.1.0.10.93\lib\net4-client\LZ4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>..\packages\Proteus.1.0.9\lib\net45-full\protobuf-net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -49,28 +53,27 @@
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Feed.cs" />
+    <Compile Include="ActivityStream.cs" />
+    <Compile Include="Persistence\StreamCrawler.cs" />
+    <Compile Include="StreamService.cs" />
     <Compile Include="Activity.cs" />
-    <Compile Include="FeedOptions.cs" />
+    <Compile Include="ActivityStreamOptions.cs" />
     <Compile Include="Helpers\ByteArrayHelper.cs" />
-    <Compile Include="IStream.cs" />
     <Compile Include="Persistence\Cassandra\ActivityStore.cs" />
-    <Compile Include="Persistence\Cassandra\ActivityStreamsStorageManager.cs" />
+    <Compile Include="Persistence\Cassandra\StorageManager.cs" />
     <Compile Include="Persistence\IActivityStore.cs" />
-    <Compile Include="Persistence\Cassandra\FeedStore.cs" />
-    <Compile Include="Persistence\IFeedStreamStore.cs" />
-    <Compile Include="Paging.cs" />
-    <Compile Include="SortOrder.cs" />
+    <Compile Include="Persistence\Cassandra\StreamStore.cs" />
+    <Compile Include="Persistence\IStreamStore.cs" />
     <Compile Include="Serialization\Proteus\ProteusSerializer.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Persistence\IActivityRepository.cs" />
-    <Compile Include="Persistence\InMemory\InMemoryActivityRepository.cs" />
-    <Compile Include="Persistence\IActivityFeedRepository.cs" />
-    <Compile Include="Persistence\InMemory\InMemoryFeedStreamStore.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stream.cs" />
+    <Compile Include="Persistence\InMemory\InMemoryActivityStore.cs" />
+    <Compile Include="Persistence\IStreamRepository.cs" />
+    <Compile Include="Persistence\InMemory\InMemoryStreamStore.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

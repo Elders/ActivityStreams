@@ -1,63 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ActivityStreams.Persistence;
-using ActivityStreams.Persistence.InMemory;
 using Machine.Specifications;
 
 namespace ActivityStreams.Tests.Activities
 {
     [Subject("Streams")]
-    public class When_loading_single_activity_stream
+    public class When_loading_single_activity_stream : InMemoryContext
     {
         Establish context = () =>
-            {
-                var streamId = Encoding.UTF8.GetBytes("streamId");
+        {
+            var streamId = Encoding.UTF8.GetBytes("streamId" + sandbox);
 
-                var id1 = Encoding.UTF8.GetBytes("activityId1");
-                item1 = new Activity(streamId, id1, "body1", "author1", DateTime.UtcNow.AddMinutes(1));
+            act_1 = activityRepository.NewActivity(streamId, 1);
+            act_2 = activityRepository.NewActivity(streamId, 2);
+            act_3 = activityRepository.NewActivity(streamId, 3);
 
-                var id2 = Encoding.UTF8.GetBytes("activityId2");
-                item2 = new Activity(streamId, id2, "body2", "author2", DateTime.UtcNow.AddMinutes(2));
+            stream = streamService.Get(streamId);
+        };
 
-                var id3 = Encoding.UTF8.GetBytes("activityId3");
-                item3 = new Activity(streamId, id3, "body3", "author3", DateTime.UtcNow.AddMinutes(3));
-
-                activityStreamRepository = new InMemoryActivityRepository();
-                activityStreamRepository.Append(item2);
-                activityStreamRepository.Append(item3);
-                activityStreamRepository.Append(item1);
-
-                var subscriptionOwnerId = Encoding.UTF8.GetBytes("subscriptionOwnerId");
-                var feedFactory = new FeedFactory(new FeedStreamRepository(new InMemoryFeedStreamStore()));
-                feed = feedFactory.GG(subscriptionOwnerId);
-                feed.Attach(new Stream(subscriptionOwnerId, streamId));
-
-                paging = new Paging(DateTime.UtcNow.AddYears(3).ToFileTimeUtc(), int.MaxValue);
-                sortOrder = SortOrder.Descending;
-                feedOptions = new FeedOptions(paging, sortOrder);
-            };
-
-        Because of = () => activityStream = activityStreamRepository.Load(feed, feedOptions).ToList();
+        Because of = () => activityStream = activityRepository.Load(stream, ActivityStreamOptions.Default).ToList();
 
         It should_return_all_activities = () => activityStream.Count.ShouldEqual(3);
 
         It should_return_ordered_activity_stream_by_timestamp = () =>
         {
-            activityStream[0].ShouldEqual(item1);
-            activityStream[1].ShouldEqual(item2);
-            activityStream[2].ShouldEqual(item3);
+            activityStream[0].ShouldEqual(act_1);
+            activityStream[1].ShouldEqual(act_2);
+            activityStream[2].ShouldEqual(act_3);
         };
 
-        static IActivityRepository activityStreamRepository;
-        static Feed feed;
+        static ActivityStream stream;
         static List<Activity> activityStream;
-        static Activity item1;
-        static Activity item2;
-        static Activity item3;
-        static Paging paging;
-        static SortOrder sortOrder;
-        static FeedOptions feedOptions;
+        static Activity act_1;
+        static Activity act_2;
+        static Activity act_3;
     }
 }
+

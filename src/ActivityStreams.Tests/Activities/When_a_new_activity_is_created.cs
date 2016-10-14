@@ -16,7 +16,7 @@ namespace ActivityStreams.Tests.Activities
 
         Because of = () => item = new Activity(streamId, id, body, author);
 
-        It should_have_id = () => item.ExternalId.ShouldEqual(id);
+        It should_have_id = () => item.ActivityId.ShouldEqual(id);
         It should_have_stream_id = () => item.StreamId.ShouldEqual(streamId);
         It should_have_author = () => item.Author.ShouldEqual(author);
         It should_have_body = () => item.Body.ShouldEqual(body);

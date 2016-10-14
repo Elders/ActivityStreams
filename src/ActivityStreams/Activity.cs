@@ -17,7 +17,7 @@ namespace ActivityStreams
             if (ReferenceEquals(null, body)) throw new ArgumentNullException(nameof(body));
             if (ReferenceEquals(null, author)) throw new ArgumentNullException(nameof(author));
 
-            ExternalId = id;
+            ActivityId = id;
             StreamId = streamId;
             Body = body;
             Author = author;
@@ -38,10 +38,10 @@ namespace ActivityStreams
         public object Body { get; private set; }
 
         /// <summary>
-        /// Reference back to an object inside system which generated the activity. Usually it is used to identify idempotency.
+        /// Reference back to an object inside system which generated the activity. It is used to identify idempotency.
         /// </summary>
         [DataMember(Order = 4)]
-        public byte[] ExternalId { get; private set; }
+        public byte[] ActivityId { get; private set; }
 
         [DataMember(Order = 5)]
         public string Author { get; private set; }
@@ -63,12 +63,12 @@ namespace ActivityStreams
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return ByteArrayHelper.Compare(ExternalId, other.ExternalId);
+            return ByteArrayHelper.Compare(ActivityId, other.ActivityId);
         }
 
         public override int GetHashCode()
         {
-            unchecked { return 223 ^ ByteArrayHelper.ComputeHash(ExternalId); }
+            unchecked { return 223 ^ ByteArrayHelper.ComputeHash(ActivityId); }
         }
 
         public static bool operator ==(Activity left, Activity right)
@@ -76,8 +76,8 @@ namespace ActivityStreams
             if (ReferenceEquals(null, left) && ReferenceEquals(null, right)) return true;
             if (ReferenceEquals(null, left))
                 return false;
-            else
-                return left.Equals(right);
+
+            return left.Equals(right);
         }
 
         public static bool operator !=(Activity left, Activity right)

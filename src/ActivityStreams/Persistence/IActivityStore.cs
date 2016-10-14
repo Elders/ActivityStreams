@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ActivityStreams.Persistence
 {
     public interface IActivityStore
     {
-        IEnumerable<Activity> Get(Feed feed, FeedOptions feedOptions);
-
         void Save(Activity activity);
+        void Delete(byte[] streamId, long timestamp);
+        IEnumerable<Activity> LoadStream(byte[] streamId, ActivityStreamOptions options);
     }
 }

@@ -8,5 +8,7 @@
     <language>en-US</language>
     <summary>@summary@</summary>
     <releaseNotes>@releaseNotes@</releaseNotes>
+    <tags>activity, stream, feed</tags>
+    @dependencies@
   </metadata>
 </package>

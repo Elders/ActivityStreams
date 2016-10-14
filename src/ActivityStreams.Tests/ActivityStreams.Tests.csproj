@@ -30,12 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cassandra, Version=2.5.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\CassandraCSharpDriver.2.5.2\lib\net40\Cassandra.dll</HintPath>
+    <Reference Include="Cassandra, Version=3.0.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CassandraCSharpDriver.3.0.5\lib\net40\Cassandra.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LZ4, Version=1.0.5.93, Culture=neutral, PublicKeyToken=fd2bda0a70c5a705, processorArchitecture=MSIL">
-      <HintPath>..\packages\lz4net.1.0.5.93\lib\net40-client\LZ4.dll</HintPath>
+    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
+      <HintPath>..\packages\lz4net.1.0.10.93\lib\net4-client\LZ4.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Machine.Specifications">
@@ -44,8 +44,9 @@
     <Reference Include="Machine.Specifications.Clr4">
       <HintPath>..\packages\Machine.Specifications.0.9.3\lib\net45\Machine.Specifications.Clr4.dll</HintPath>
     </Reference>
-    <Reference Include="Machine.Specifications.Should">
-      <HintPath>..\packages\Machine.Specifications.Should.0.7.2\lib\net45\Machine.Specifications.Should.dll</HintPath>
+    <Reference Include="Machine.Specifications.Should, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Machine.Specifications.Should.0.8.0\lib\net45\Machine.Specifications.Should.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -57,16 +58,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Feeds\When_a_feed_stream_is_added_twice_to_a_feed - Copy.cs" />
-    <Compile Include="Feeds\When_feeds_and_streams_are_attached_and_detached.cs" />
-    <Compile Include="Feeds\When_feeds_and_streams_are_nested.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Activities\ActivityRepositoryTestExtensions.cs" />
+    <Compile Include="Activities\When_crawling_streams_and_a_stream_is_attached_twice_trough_multilevel_attachments.cs" />
+    <Compile Include="Activities\When_crawling_streams_without_detachments.cs" />
+    <Compile Include="Activities\When_crawling_streams_with_complex_detachments.cs" />
+    <Compile Include="Activities\When_loading_nested_activity_streams_whith_detached_activity_stream.cs" />
+    <Compile Include="Activities\When_loading_nested_circular_activity_streams.cs" />
+    <Compile Include="Activities\When_loading_nested_activity_streams.cs" />
+    <Compile Include="Activities\When_removing_activity_from_stream.cs" />
+    <Compile Include="InMemoryContext.cs" />
+    <Compile Include="Feeds\When_closing_a_feed_which_is_already_closed.cs" />
+    <Compile Include="Feeds\When_stream_is_detached.cs" />
+    <Compile Include="Feeds\When_loading_nested_streams.cs" />
     <Compile Include="Activities\When_a_new_activity_is_created.cs" />
     <Compile Include="Activities\When_comparing_two_different_activities.cs" />
     <Compile Include="Activities\When_loading_multiple_activity_stream.cs" />
     <Compile Include="Activities\When_loading_single_activity_stream.cs" />
     <Compile Include="Activities\When_comparing_two_equal_activities.cs" />
-    <Compile Include="Feeds\When_a_feed_stream_is_added_twice_to_a_feed.cs" />
+    <Compile Include="Feeds\When_a_stream_is_attached_twice.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -79,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

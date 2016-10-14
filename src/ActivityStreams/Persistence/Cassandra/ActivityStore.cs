@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
@@ -18,6 +17,10 @@ namespace ActivityStreams.Persistence.Cassandra
         const string LoadActivityStreamQueryTemplateDesc = @"SELECT data FROM ""activities_desc"" where sid=? AND ts<=?;";
 
         const string LoadActivityStreamQueryTemplateAsc = @"SELECT data FROM ""activities_asc"" where sid=? AND ts<=?;";
+
+        const string RemoveActivityStreamQueryTemplateDesc = @"DELETE FROM ""activities_desc"" where sid=? AND ts=?;";
+
+        const string RemoveActivityStreamQueryTemplateAsc = @"DELETE FROM ""activities_asc"" where sid=? AND ts=?;";
 
         readonly ISerializer serializer;
 
@@ -44,15 +47,29 @@ namespace ActivityStreams.Persistence.Cassandra
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
-        public IEnumerable<Activity> Get(Feed feed, FeedOptions feedOptions)
+        public void Delete(byte[] streamId, long timestamp)
         {
-            feedOptions = feedOptions ?? FeedOptions.Default;
+            var preparedRemoveDesc = session.Prepare(RemoveActivityStreamQueryTemplateDesc);
+            var preparedRemoveAsc = session.Prepare(RemoveActivityStreamQueryTemplateAsc);
+
+            session
+                .Execute(preparedRemoveDesc
+                .Bind(Convert.ToBase64String(streamId), timestamp));
+
+            session
+                .Execute(preparedRemoveAsc
+                .Bind(Convert.ToBase64String(streamId), timestamp));
+        }
+
+        public IEnumerable<Activity> LoadStream(byte[] streamId, ActivityStreamOptions options)
+        {
+            options = options ?? ActivityStreamOptions.Default;
 
             var statement = LoadActivityStreamQueryTemplateDesc;
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
 
-            var sortOrder = feedOptions.SortOrder;
-            var paging = feedOptions.Paging;
+            var sortOrder = options.SortOrder;
+            var paging = options.Paging;
 
             if (sortOrder == SortOrder.Ascending)
             {
@@ -60,28 +77,25 @@ namespace ActivityStreams.Persistence.Cassandra
                 activities = new SortedSet<Activity>(Activity.ComparerAsc);
             }
 
-            foreach (var streamId in feed.Streams)
+            var streamIdQuery = Convert.ToBase64String(streamId);
+
+            var prepared = session
+                    .Prepare(statement)
+                    .Bind(streamIdQuery, paging.Timestamp)
+                    .SetAutoPage(false)
+                    .SetPageSize(paging.Take);
+
+            var rowSet = session.Execute(prepared);
+            foreach (var row in rowSet.GetRows())
             {
-                var streamIdQuery = Convert.ToBase64String(streamId.StreamId);
-
-                var prepared = session
-                        .Prepare(statement)
-                        .Bind(streamIdQuery, paging.Timestamp)
-                        .SetAutoPage(false)
-                        .SetPageSize(paging.Take);
-
-                var rowSet = session.Execute(prepared);
-                foreach (var row in rowSet.GetRows())
+                using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
                 {
-                    using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
-                    {
-                        var storedActivity = (Activity)serializer.Deserialize(stream);
-                        activities.Add(storedActivity);
-                    }
+                    var storedActivity = (Activity)serializer.Deserialize(stream);
+                    activities.Add(storedActivity);
                 }
             }
 
-            return activities.Take(paging.Take);
+            return activities;
         }
 
         byte[] SerializeActivity(Activity activity)
