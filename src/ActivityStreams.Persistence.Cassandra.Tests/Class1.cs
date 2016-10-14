@@ -9,7 +9,12 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         public static Activity NewActivity(this IActivityRepository activityRepository, byte[] streamId, int pattern)
         {
             var id = Encoding.UTF8.GetBytes($"activity_{pattern}");
-            var activity = new Activity(streamId, id, new TestActivityBody($"body_{pattern}"), $"author_{pattern}", new DateTime(2000, 1, pattern));
+            return NewActivity(activityRepository, streamId, id, pattern);
+        }
+
+        public static Activity NewActivity(this IActivityRepository activityRepository, byte[] streamId, byte[] activityId, int pattern)
+        {
+            var activity = new Activity(streamId, activityId, new TestActivityBody($"body_{pattern}"), $"author_{pattern}", new DateTime(2000, 1, pattern));
             activityRepository.Append(activity);
             return activity;
         }

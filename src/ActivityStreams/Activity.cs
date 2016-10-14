@@ -38,7 +38,7 @@ namespace ActivityStreams
         public object Body { get; private set; }
 
         /// <summary>
-        /// Reference back to an object inside system which generated the activity. Usually it is used to identify idempotency.
+        /// Reference back to an object inside system which generated the activity. It is used to identify idempotency.
         /// </summary>
         [DataMember(Order = 4)]
         public byte[] ActivityId { get; private set; }
