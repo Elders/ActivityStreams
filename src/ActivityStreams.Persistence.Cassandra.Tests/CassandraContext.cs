@@ -4,6 +4,7 @@ using Machine.Specifications;
 using ActivityStreams.Persistence.Cassandra.Tests.Helpers;
 using ActivityStreams.Persistence.Cassandra.Tests.Models;
 using System;
+using System.Linq;
 
 namespace ActivityStreams.Persistence.Cassandra.Tests
 {
@@ -37,5 +38,29 @@ namespace ActivityStreams.Persistence.Cassandra.Tests
         protected static IStreamRepository streamRepository;
         protected static StreamService streamService;
         protected static string sandbox;
+    }
+
+    public class ProteusSerializer : ISerializer
+    {
+        Elders.Proteus.Serializer serializer;
+
+        public ProteusSerializer(Assembly[] assembliesContainingContracts)
+        {
+            var internalAssemblies = assembliesContainingContracts.ToList();
+            internalAssemblies.Add(typeof(Elders.Proteus.Serializer).Assembly);
+
+            var identifier = new Elders.Proteus.GuidTypeIdentifier(internalAssemblies.ToArray());
+            serializer = new Elders.Proteus.Serializer(identifier);
+        }
+
+        public object Deserialize(System.IO.Stream str)
+        {
+            return serializer.DeserializeWithHeaders(str);
+        }
+
+        public void Serialize<T>(System.IO.Stream str, T message)
+        {
+            serializer.SerializeWithHeaders(str, message);
+        }
     }
 }
