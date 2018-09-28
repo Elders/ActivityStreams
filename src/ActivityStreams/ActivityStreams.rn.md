@@ -1,3 +1,7 @@
+#### 1.0.0 - 28.09.2018
+* Targets .Net Standard 2.0
+* Removes Proteus dependancy
+
 #### 0.5.0 - 14.10.2016
 * Added ability to remove activity from stream
 * Fix attach a stream with an expireation date
