@@ -1,79 +1,59 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D64E748-0A5C-466F-AD59-0CD015496F09}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ActivityStreams</RootNamespace>
-    <AssemblyName>Elders.ActivityStreams</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <!--Nuget-->
+  <PropertyGroup>
+    <PackageId>ActivityStreams</PackageId>
+    <Product>ActivityStreams</Product>
+    <Title>ActivityStreams</Title>
+    <Authors>Elders OSS</Authors>
+    <Copyright>Copyright © Elders OSS 2013</Copyright>
+    <Description>ActivityStreams</Description>
+    <PackageTags>elders activity streams serializer</PackageTags>
+    <PackageLicenseUrl>https://github.com/Elders/ActivityStreams/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Elders/ActivityStreams</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Elders/ActivityStreams.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>ActivityStreams</AssemblyName>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <!--netstandard2.0-->
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Cassandra, Version=3.0.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\CassandraCSharpDriver.3.0.5\lib\net40\Cassandra.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
-      <HintPath>..\packages\lz4net.1.0.10.93\lib\net4-client\LZ4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+
+  <!--net45-->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net45'">
+    <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="ActivityStream.cs" />
-    <Compile Include="Persistence\StreamCrawler.cs" />
-    <Compile Include="StreamService.cs" />
-    <Compile Include="Activity.cs" />
-    <Compile Include="ActivityStreamOptions.cs" />
-    <Compile Include="Helpers\ByteArrayHelper.cs" />
-    <Compile Include="Persistence\Cassandra\ActivityStore.cs" />
-    <Compile Include="Persistence\Cassandra\StorageManager.cs" />
-    <Compile Include="Persistence\IActivityStore.cs" />
-    <Compile Include="Persistence\Cassandra\StreamStore.cs" />
-    <Compile Include="Persistence\IStreamStore.cs" />
-    <Compile Include="Serialization\ISerializer.cs" />
-    <Compile Include="Persistence\IActivityRepository.cs" />
-    <Compile Include="Persistence\InMemory\InMemoryActivityStore.cs" />
-    <Compile Include="Persistence\IStreamRepository.cs" />
-    <Compile Include="Persistence\InMemory\InMemoryStreamStore.cs" />
+    <PackageReference Include="CassandraCSharpDriver" Version="3.6.0" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <EmbedSources>true</EmbedSources>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <EmbedSources>true</EmbedSources>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.2" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

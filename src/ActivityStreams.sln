@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams", "ActivityStreams\ActivityStreams.csproj", "{6D64E748-0A5C-466F-AD59-0CD015496F09}"
 EndProject
@@ -12,10 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{F42E9A
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Tests", "ActivityStreams.Tests\ActivityStreams.Tests.csproj", "{79CB0B90-FF73-421D-8EDA-11C805670493}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Api", "ActivityStreams.Api\ActivityStreams.Api.csproj", "{7A7F0C1B-1B5F-4CAB-9651-B939CDA4A5E8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Api.Help", "ActivityStreams.Api.Help\ActivityStreams.Api.Help.csproj", "{F94DAF68-D59F-4843-98D5-621448C999D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityStreams.Persistence.Cassandra.Tests", "ActivityStreams.Persistence.Cassandra.Tests\ActivityStreams.Persistence.Cassandra.Tests.csproj", "{A237C101-157E-4926-B807-EE905427BB25}"
 EndProject
@@ -35,14 +31,6 @@ Global
 		{79CB0B90-FF73-421D-8EDA-11C805670493}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79CB0B90-FF73-421D-8EDA-11C805670493}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79CB0B90-FF73-421D-8EDA-11C805670493}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A7F0C1B-1B5F-4CAB-9651-B939CDA4A5E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A7F0C1B-1B5F-4CAB-9651-B939CDA4A5E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A7F0C1B-1B5F-4CAB-9651-B939CDA4A5E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A7F0C1B-1B5F-4CAB-9651-B939CDA4A5E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F94DAF68-D59F-4843-98D5-621448C999D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F94DAF68-D59F-4843-98D5-621448C999D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F94DAF68-D59F-4843-98D5-621448C999D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F94DAF68-D59F-4843-98D5-621448C999D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A237C101-157E-4926-B807-EE905427BB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A237C101-157E-4926-B807-EE905427BB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A237C101-157E-4926-B807-EE905427BB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,5 +42,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{79CB0B90-FF73-421D-8EDA-11C805670493} = {46D6DDB1-3E86-4255-A733-4CDCDAEFDDB2}
 		{A237C101-157E-4926-B807-EE905427BB25} = {46D6DDB1-3E86-4255-A733-4CDCDAEFDDB2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {58F3C0F5-93F2-4869-AAC2-AF9969EEC279}
 	EndGlobalSection
 EndGlobal
