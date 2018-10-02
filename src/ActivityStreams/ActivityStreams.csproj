@@ -41,19 +41,13 @@
     <PackageReference Include="CassandraCSharpDriver" Version="3.6.0" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <EmbedSources>true</EmbedSources>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <PropertyGroup >
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <EmbedSources>true</EmbedSources>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.2" PrivateAssets="All" />
+    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
   </ItemGroup>
 </Project>
