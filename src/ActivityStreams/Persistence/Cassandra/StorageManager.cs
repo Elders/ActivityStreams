@@ -1,10 +1,12 @@
-﻿using Cassandra;
+﻿using System;
+using System.Threading;
+using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
 {
     public class StorageManager
     {
-        const string CreateKeySpaceTemplate = @"CREATE KEYSPACE IF NOT EXISTS ""activitystreams"" WITH replication = {{'class':'SimpleStrategy', 'replication_factor':1}};";
+        static int IsStorageCreationExecuted = 0;
 
         const string CreateEventsTableTemplateDesc = @"CREATE TABLE IF NOT EXISTS ""activities_desc"" (sid text, ts bigint, data blob, PRIMARY KEY (sid,ts)) WITH CLUSTERING ORDER BY (ts DESC);";
 
@@ -12,26 +14,28 @@ namespace ActivityStreams.Persistence.Cassandra
 
         const string CreateFeedsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""streams"" (sid text, asid text, ts bigint, PRIMARY KEY (sid,asid));";
 
-        readonly ISession session;
+        private readonly ISession session;
 
-        public StorageManager(ISession session)
+        public StorageManager(ICassandraProvider cassandraProvider)
         {
-            this.session = session;
+            if (cassandraProvider is null) throw new ArgumentNullException(nameof(cassandraProvider));
+
+            this.session = cassandraProvider.GetSession();
         }
 
-        public void CreateActivitiesStorage()
+        public void CreateStorage()
         {
-            var tableDesc = CreateEventsTableTemplateDesc.ToLowerInvariant();
-            session.Execute(tableDesc);
+            if (Interlocked.CompareExchange(ref IsStorageCreationExecuted, 1, 0) == 0)
+            {
+                var tableDesc = CreateEventsTableTemplateDesc.ToLower();
+                session.Execute(tableDesc);
 
-            var tableAsc = CreateEventsTableTemplateAsc.ToLowerInvariant();
-            session.Execute(tableAsc);
-        }
+                var tableAsc = CreateEventsTableTemplateAsc.ToLower();
+                session.Execute(tableAsc);
 
-        public void CreateStreamsStorage()
-        {
-            var tableQ = CreateFeedsTableTemplate.ToLowerInvariant();
-            session.Execute(tableQ);
+                var tableQ = CreateFeedsTableTemplate.ToLower();
+                session.Execute(tableQ);
+            }
         }
     }
 }

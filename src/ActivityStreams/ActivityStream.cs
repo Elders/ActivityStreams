@@ -28,8 +28,6 @@ namespace ActivityStreams
 
         public HashSet<ActivityStream> AttachedStreams { get; set; }
 
-        public IEnumerable<ActivityStream> Streams { get { return AttachedStreams.ToList().AsReadOnly(); } }
-
         public static ActivityStream Empty = new ActivityStream(Guid.Empty.ToByteArray());
 
         public static bool IsEmpty(ActivityStream stream)

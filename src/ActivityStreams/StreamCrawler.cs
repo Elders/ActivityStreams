@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using ActivityStreams.Helpers;
+using ActivityStreams.Persistence;
 
-namespace ActivityStreams.Persistence
+namespace ActivityStreams
 {
     /// <summary>
     /// Flattens the graph 'ActivityStreams' structure. If there are multiple nodes for a stream with different expiration
     /// timestamp then the lates expiration timestamp will be captured.
     /// </summary>
-    public class StreamCrawler
+    internal sealed class StreamCrawler
     {
         readonly IStreamStore streamStore;
 

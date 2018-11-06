@@ -12,11 +12,13 @@ namespace ActivityStreams.Persistence.Cassandra
 
         const string LoadFeedStreamQueryTemplate = @"SELECT * FROM ""streams"" where sid=?;";
 
-        readonly ISession session;
+        private readonly ISession session;
 
-        public StreamStore(ISession session)
+        public StreamStore(ICassandraProvider cassandraProvider)
         {
-            this.session = session;
+            if (cassandraProvider is null) throw new ArgumentNullException(nameof(cassandraProvider));
+
+            this.session = cassandraProvider.GetSession();
         }
 
         public IEnumerable<byte[]> Load(byte[] feedId)

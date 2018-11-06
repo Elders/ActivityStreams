@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ActivityStreams.Helpers;
+using ActivityStreams.Persistence;
 
-namespace ActivityStreams.Persistence
+namespace ActivityStreams
 {
     public interface IActivityRepository
     {
@@ -57,7 +56,6 @@ namespace ActivityStreams.Persistence
         {
             // At this point we have all the streams with their timestamp
             Dictionary<byte[], long> streamsToLoad = new StreamCrawler(streamStore).StreamsToLoad(stream, feedOptions.Paging.Timestamp);
-            Dictionary<string, DateTime> debug = streamsToLoad.ToDictionary(key => Encoding.UTF8.GetString(key.Key), val => DateTime.FromFileTimeUtc(val.Value));
 
             feedOptions = feedOptions ?? ActivityStreamOptions.Default;
 

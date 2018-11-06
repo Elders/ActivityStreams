@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using ActivityStreams.Helpers;
+﻿using ActivityStreams.Persistence;
 
-namespace ActivityStreams.Persistence
+namespace ActivityStreams
 {
     public interface IStreamRepository
     {
