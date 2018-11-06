@@ -1,3 +1,6 @@
+#### 1.0.0-beta0002 - 06.11.2018
+* Changes which I do not remember when I did but it is working
+
 #### 1.0.0-beta0001 - 02.10.2018
 * Targets .Net Standard 2.0
 * Removes Proteus dependancy
