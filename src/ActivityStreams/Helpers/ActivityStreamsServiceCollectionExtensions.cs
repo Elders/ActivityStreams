@@ -39,7 +39,7 @@ namespace ActivityStreams
             return services;
         }
 
-        static int GetReplocationFactor(IConfiguration configuration)
+        static int GetReplicationFactor(IConfiguration configuration)
         {
             var replFactorCfg = configuration["activitystreams_persistence_cassandra_replication_factor"];
             return string.IsNullOrEmpty(replFactorCfg) ? 1 : int.Parse(replFactorCfg);
@@ -57,11 +57,11 @@ namespace ActivityStreams
             }
             else if (replStratefyCfg.Equals("simple", StringComparison.OrdinalIgnoreCase))
             {
-                replicationStrategy = new SimpleReplicationStrategy(GetReplocationFactor(configuration));
+                replicationStrategy = new SimpleReplicationStrategy(GetReplicationFactor(configuration));
             }
             else if (replStratefyCfg.Equals("network_topology", StringComparison.OrdinalIgnoreCase))
             {
-                int replicationFactor = GetReplocationFactor(configuration);
+                int replicationFactor = GetReplicationFactor(configuration);
                 var settings = new List<NetworkTopologyReplicationStrategy.DataCenterSettings>();
                 string[] datacenters = configuration["activitystreams_persistence_cassandra__datacenters"].Split(',');
                 foreach (var datacenter in datacenters)
