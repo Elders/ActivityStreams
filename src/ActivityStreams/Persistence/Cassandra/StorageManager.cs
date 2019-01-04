@@ -14,13 +14,13 @@ namespace ActivityStreams.Persistence.Cassandra
 
         const string CreateFeedsTableTemplate = @"CREATE TABLE IF NOT EXISTS ""streams"" (sid text, asid text, ts bigint, PRIMARY KEY (sid,asid));";
 
-        private readonly ISession session;
+        private ISession GetSession() => cassandraProvider.GetSession();
+
+        private readonly ICassandraProvider cassandraProvider;
 
         public StorageManager(ICassandraProvider cassandraProvider)
         {
-            if (cassandraProvider is null) throw new ArgumentNullException(nameof(cassandraProvider));
-
-            this.session = cassandraProvider.GetSession();
+            this.cassandraProvider = cassandraProvider ?? throw new ArgumentNullException(nameof(cassandraProvider));
         }
 
         public void CreateStorage()
@@ -28,13 +28,13 @@ namespace ActivityStreams.Persistence.Cassandra
             if (Interlocked.CompareExchange(ref IsStorageCreationExecuted, 1, 0) == 0)
             {
                 var tableDesc = CreateEventsTableTemplateDesc.ToLower();
-                session.Execute(tableDesc);
+                GetSession().Execute(tableDesc);
 
                 var tableAsc = CreateEventsTableTemplateAsc.ToLower();
-                session.Execute(tableAsc);
+                GetSession().Execute(tableAsc);
 
                 var tableQ = CreateFeedsTableTemplate.ToLower();
-                session.Execute(tableQ);
+                GetSession().Execute(tableQ);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ActivityStreams.Helpers;
 using ActivityStreams.Persistence;
 
@@ -61,6 +62,39 @@ namespace ActivityStreams
                 // Load next stream.
                 var currentId = streamsToCrawl.Pop();
                 var current = streamStore.Get(currentId) ?? ActivityStream.Empty;
+                long currentExpiresAt = current.ExpiresAt;
+                streamsToLoad.TryGetValue(current.StreamId, out currentExpiresAt);
+
+                if (ActivityStream.IsEmpty(current)) continue;
+
+                // Crawl only first level attached streams.
+                foreach (var nested in current.AttachedStreams)
+                {
+                    if (IsCrawled(nested)) continue;
+
+                    streamsToCrawl.Push(nested.StreamId);
+
+                    var nestedShouldExpireAt = currentExpiresAt < nested.ExpiresAt ? currentExpiresAt : nested.ExpiresAt;
+                    AddOrUpdateStreamsToLoadWith(streamsToLoad, nested, nestedShouldExpireAt);
+                }
+            }
+
+            return streamsToLoad;
+        }
+
+        public async Task<Dictionary<byte[], long>> StreamsToLoadAsync(ActivityStream stream, long timestamp = 0)
+        {
+            AddOrUpdateStreamsToLoadWith(streamsToLoad, stream, timestamp);
+            Stack<byte[]> streamsToCrawl = new Stack<byte[]>();
+            streamsToCrawl.Push(stream.StreamId);
+
+            while (streamsToCrawl.Count > 0)
+            {
+                Guard_AgainstStupidity();
+
+                // Load next stream.
+                var currentId = streamsToCrawl.Pop();
+                var current = await streamStore.GetAsync(currentId).ConfigureAwait(false) ?? ActivityStream.Empty;
                 long currentExpiresAt = current.ExpiresAt;
                 streamsToLoad.TryGetValue(current.StreamId, out currentExpiresAt);
 

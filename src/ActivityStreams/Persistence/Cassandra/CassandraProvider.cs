@@ -1,14 +1,15 @@
 ﻿using System;
 using Cassandra;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace ActivityStreams.Persistence.Cassandra
 {
     public class CassandraProvider : ICassandraProvider
     {
-        public const string ConnectionStringSettingKey = "activitystreams_cassandra_connectionstring";
+        private bool optionsHasChanged = true;
 
-        protected readonly IConfiguration configuration;
+        protected CassandraProviderOptions options;
+
         protected readonly ICassandraReplicationStrategy replicationStrategy;
         protected readonly IInitializer initializer;
 
@@ -17,19 +18,21 @@ namespace ActivityStreams.Persistence.Cassandra
 
         protected string baseConfigurationKeyspace;
 
-        public CassandraProvider(IConfiguration configuration, ICassandraReplicationStrategy replicationStrategy, IInitializer initializer = null)
+        public CassandraProvider(IOptionsMonitor<CassandraProviderOptions> optionsMonitor, ICassandraReplicationStrategy replicationStrategy, IInitializer initializer = null)
         {
-            if (configuration is null) throw new ArgumentNullException(nameof(configuration));
+            if (optionsMonitor is null) throw new ArgumentNullException(nameof(optionsMonitor));
             if (replicationStrategy is null) throw new ArgumentNullException(nameof(replicationStrategy));
 
-            this.configuration = configuration;
+            this.options = optionsMonitor.CurrentValue;
+            optionsMonitor.OnChange(Changed);
+
             this.replicationStrategy = replicationStrategy;
             this.initializer = initializer;
         }
 
         public Cluster GetCluster()
         {
-            if (cluster is null == false)
+            if (cluster is null == false && optionsHasChanged == false)
                 return cluster;
 
             Builder builder = initializer as Builder;
@@ -38,11 +41,11 @@ namespace ActivityStreams.Persistence.Cassandra
                 builder = Cluster.Builder();
                 //  TODO: check inside the `cfg` (var cfg = builder.GetConfiguration();) if we already have connectionString specified
 
-                string connectionString = configuration[ConnectionStringSettingKey];
+                string connectionString = options.ConnectionString;
 
                 var hackyBuilder = new CassandraConnectionStringBuilder(connectionString);
                 if (string.IsNullOrEmpty(hackyBuilder.DefaultKeyspace) == false)
-                    connectionString = connectionString.Replace(hackyBuilder.DefaultKeyspace, "");
+                    connectionString = connectionString.Replace(hackyBuilder.DefaultKeyspace, string.Empty);
                 baseConfigurationKeyspace = hackyBuilder.DefaultKeyspace;
 
                 var connStrBuilder = new CassandraConnectionStringBuilder(connectionString);
@@ -50,11 +53,12 @@ namespace ActivityStreams.Persistence.Cassandra
                     .ApplyToBuilder(builder)
                     .Build();
             }
-
             else
             {
                 cluster = Cluster.BuildFrom(initializer);
             }
+
+            optionsHasChanged = false;
 
             return cluster;
         }
@@ -69,7 +73,7 @@ namespace ActivityStreams.Persistence.Cassandra
 
         public ISession GetSession()
         {
-            if (session is null)
+            if (session is null || session.IsDisposed || optionsHasChanged)
             {
                 session = GetCluster().Connect();
                 CreateKeyspace(GetKeyspace(), replicationStrategy);
@@ -83,6 +87,12 @@ namespace ActivityStreams.Persistence.Cassandra
             var createKeySpaceQuery = replicationStrategy.CreateKeySpaceTemplate(keyspace);
             session.Execute(createKeySpaceQuery);
             session.ChangeKeyspace(keyspace);
+        }
+
+        private void Changed(CassandraProviderOptions newOptions)
+        {
+            options = newOptions;
+            optionsHasChanged = true;
         }
     }
 }

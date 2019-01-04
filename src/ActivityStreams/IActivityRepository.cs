@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ActivityStreams.Helpers;
 using ActivityStreams.Persistence;
 
@@ -26,6 +27,8 @@ namespace ActivityStreams
         /// <param name="options"></param>
         /// <returns></returns>
         IEnumerable<Activity> Load(ActivityStream stream, ActivityStreamOptions options);
+
+        Task<List<Activity>> LoadAsync(ActivityStream stream, ActivityStreamOptions options);
     }
 
     public class DefaultActivityRepository : IActivityRepository
@@ -111,6 +114,38 @@ namespace ActivityStreams
                 snapshot.Add(stremToLoad.Key, new Queue<Activity>(store.LoadStream(stremToLoad.Key, newOptions)));
             }
             return snapshot;
+        }
+
+        public async Task<List<Activity>> LoadAsync(ActivityStream stream, ActivityStreamOptions options)
+        {
+            List<Activity> result = new List<Activity>();
+            // At this point we have all the streams with their timestamp
+            var crawler = new StreamCrawler(streamStore);
+            Dictionary<byte[], long> streamsToLoad = await crawler.StreamsToLoadAsync(stream, options.Paging.Timestamp).ConfigureAwait(false);
+
+            options = options ?? ActivityStreamOptions.Default;
+
+            var snapshot = GetSnapshot(streamsToLoad, options);
+
+            SortedSet<Activity> buffer = new SortedSet<Activity>(Activity.ComparerDesc);
+
+            //  Init
+            foreach (var str in streamsToLoad)
+            {
+                var streamId = str.Key;
+                FetchNextActivity(snapshot, streamId, buffer);
+            }
+
+            while (buffer.Count > 0)
+            {
+                Activity nextActivity = buffer.First();
+                buffer.Remove(nextActivity);
+                result.Add(nextActivity);
+
+                FetchNextActivity(snapshot, nextActivity.StreamId, buffer);
+            }
+
+            return result;
         }
     }
 }

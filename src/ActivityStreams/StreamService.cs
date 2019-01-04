@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ActivityStreams.Helpers;
-using ActivityStreams.Persistence;
 
 namespace ActivityStreams
 {
@@ -46,6 +46,11 @@ namespace ActivityStreams
         public ActivityStream Get(byte[] streamId)
         {
             return repository.Load(streamId);
+        }
+
+        public Task<ActivityStream> GetAsync(byte[] streamId)
+        {
+            return repository.LoadAsync(streamId);
         }
     }
 }
