@@ -1,3 +1,6 @@
+#### 1.0.0-beta0003 - 04.01.2019
+* Adds async support for the GET/Query side
+
 #### 1.0.0-beta0002 - 06.11.2018
 * Changes which I do not remember when I did but it is working
 
