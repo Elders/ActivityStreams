@@ -18,8 +18,8 @@ namespace ActivityStreams
             services.AddSingleton<ISerializer, TSerializer>();
             services.AddSingleton<CassandraProvider, CassandraProvider>();
             services.AddSingleton<ICassandraProvider, CassandraProvider>();
-            services.AddTransient<IActivityStore, ActivityStore>(provider => new ActivityStore(provider.GetService<ICassandraProvider>().GetSession(), provider.GetService<ISerializer>()));
-            services.AddTransient<IStreamStore, StreamStore>(provider => new StreamStore(provider.GetService<ICassandraProvider>()));
+            services.AddSingleton<IActivityStore, ActivityStore>();
+            services.AddSingleton<IStreamStore, StreamStore>();
             services.AddSingleton<IActivityRepository, DefaultActivityRepository>();
             services.AddTransient<StreamService>();
             services.AddTransient<IStreamRepository, DefaultStreamRepository>();

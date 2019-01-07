@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Cassandra;
 
 namespace ActivityStreams.Persistence.Cassandra
@@ -11,52 +12,49 @@ namespace ActivityStreams.Persistence.Cassandra
     public class ActivityStore : IActivityStore
     {
         const string AppendActivityStreamQueryTemplateDesc = @"INSERT INTO activities_desc (sid,ts,data) VALUES (?,?,?);";
-
         const string AppendActivityStreamQueryTemplateAsc = @"INSERT INTO activities_asc (sid,ts,data) VALUES (?,?,?);";
-
         const string LoadActivityStreamQueryTemplateDesc = @"SELECT data FROM ""activities_desc"" where sid=? AND ts<=?;";
-
         const string LoadActivityStreamQueryTemplateAsc = @"SELECT data FROM ""activities_asc"" where sid=? AND ts<=?;";
-
         const string RemoveActivityStreamQueryTemplateDesc = @"DELETE FROM ""activities_desc"" where sid=? AND ts=?;";
-
         const string RemoveActivityStreamQueryTemplateAsc = @"DELETE FROM ""activities_asc"" where sid=? AND ts=?;";
 
-        readonly ISerializer serializer;
+        private readonly ISerializer serializer;
 
-        readonly ISession session;
+        private readonly ICassandraProvider cassandraProvider;
 
-        public ActivityStore(ISession session, ISerializer serializer)
+        private ISession GetSession() => cassandraProvider.GetSession();
+
+        public ActivityStore(ICassandraProvider cassandraProvider, ISerializer serializer)
         {
-            this.session = session;
-            this.serializer = serializer;
+            this.cassandraProvider = cassandraProvider ?? throw new ArgumentNullException(nameof(cassandraProvider));
+            this.serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
         }
 
         public void Save(Activity activity)
         {
-            var preparedAppendDesc = session.Prepare(AppendActivityStreamQueryTemplateDesc);
-            var preparedAppendAsc = session.Prepare(AppendActivityStreamQueryTemplateAsc);
+            var preparedAppendDesc = GetSession().Prepare(AppendActivityStreamQueryTemplateDesc);
+            var preparedAppendAsc = GetSession().Prepare(AppendActivityStreamQueryTemplateAsc);
 
             byte[] data = SerializeActivity(activity);
-            session
+            GetSession()
                 .Execute(preparedAppendDesc
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
 
-            session
+            GetSession()
                 .Execute(preparedAppendAsc
                 .Bind(Convert.ToBase64String(activity.StreamId), activity.Timestamp, data));
         }
 
         public void Delete(byte[] streamId, long timestamp)
         {
-            var preparedRemoveDesc = session.Prepare(RemoveActivityStreamQueryTemplateDesc);
-            var preparedRemoveAsc = session.Prepare(RemoveActivityStreamQueryTemplateAsc);
+            var preparedRemoveDesc = GetSession().Prepare(RemoveActivityStreamQueryTemplateDesc);
+            var preparedRemoveAsc = GetSession().Prepare(RemoveActivityStreamQueryTemplateAsc);
 
-            session
+            GetSession()
                 .Execute(preparedRemoveDesc
                 .Bind(Convert.ToBase64String(streamId), timestamp));
 
-            session
+            GetSession()
                 .Execute(preparedRemoveAsc
                 .Bind(Convert.ToBase64String(streamId), timestamp));
         }
@@ -65,7 +63,6 @@ namespace ActivityStreams.Persistence.Cassandra
         {
             options = options ?? ActivityStreamOptions.Default;
 
-            var statement = LoadActivityStreamQueryTemplateDesc;
             SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
 
             var sortOrder = options.SortOrder;
@@ -73,19 +70,54 @@ namespace ActivityStreams.Persistence.Cassandra
 
             if (sortOrder == SortOrder.Ascending)
             {
-                statement = LoadActivityStreamQueryTemplateAsc;
                 activities = new SortedSet<Activity>(Activity.ComparerAsc);
             }
 
             var streamIdQuery = Convert.ToBase64String(streamId);
 
-            var prepared = session
-                    .Prepare(statement)
+            PreparedStatement prepared = GetPreparedStatementToLoadActivityStream(sortOrder == SortOrder.Ascending);
+            var query = prepared
                     .Bind(streamIdQuery, paging.Timestamp)
                     .SetAutoPage(false)
                     .SetPageSize(paging.Take);
 
-            var rowSet = session.Execute(prepared);
+            var rowSet = GetSession().Execute(query);
+            foreach (var row in rowSet.GetRows())
+            {
+                using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
+                {
+                    var storedActivity = (Activity)serializer.Deserialize(stream);
+                    activities.Add(storedActivity);
+                }
+            }
+
+            return activities;
+        }
+
+        public async Task<IEnumerable<Activity>> LoadStreamAsync(byte[] streamId, ActivityStreamOptions options)
+        {
+            options = options ?? ActivityStreamOptions.Default;
+
+            SortedSet<Activity> activities = new SortedSet<Activity>(Activity.ComparerDesc);
+
+            var sortOrder = options.SortOrder;
+            var paging = options.Paging;
+
+            if (sortOrder == SortOrder.Ascending)
+            {
+                activities = new SortedSet<Activity>(Activity.ComparerAsc);
+            }
+
+            var streamIdQuery = Convert.ToBase64String(streamId);
+
+            PreparedStatement prepared = await GetPreparedStatementToLoadActivityStreamAsync(sortOrder == SortOrder.Ascending).ConfigureAwait(false);
+
+            var query = prepared
+                    .Bind(streamIdQuery, paging.Timestamp)
+                    .SetAutoPage(false)
+                    .SetPageSize(paging.Take);
+
+            var rowSet = await GetSession().ExecuteAsync(query).ConfigureAwait(false);
             foreach (var row in rowSet.GetRows())
             {
                 using (var stream = new MemoryStream(row.GetValue<byte[]>("data")))
@@ -104,6 +136,45 @@ namespace ActivityStreams.Persistence.Cassandra
             {
                 serializer.Serialize(stream, activity);
                 return stream.ToArray();
+            }
+        }
+
+        PreparedStatement loadActivityStreamAsc_PreparedStatement;
+        PreparedStatement loadActivityStreamDesc_PreparedStatement;
+
+        PreparedStatement GetPreparedStatementToLoadActivityStream(bool ascending)
+        {
+            if (ascending)
+            {
+                if (loadActivityStreamAsc_PreparedStatement is null)
+                    loadActivityStreamAsc_PreparedStatement = GetSession().Prepare(LoadActivityStreamQueryTemplateAsc);
+
+                return loadActivityStreamAsc_PreparedStatement;
+            }
+            else
+            {
+                if (loadActivityStreamDesc_PreparedStatement is null)
+                    loadActivityStreamDesc_PreparedStatement = GetSession().Prepare(LoadActivityStreamQueryTemplateDesc);
+
+                return loadActivityStreamDesc_PreparedStatement;
+            }
+        }
+
+        async Task<PreparedStatement> GetPreparedStatementToLoadActivityStreamAsync(bool ascending)
+        {
+            if (ascending)
+            {
+                if (loadActivityStreamAsc_PreparedStatement is null)
+                    loadActivityStreamAsc_PreparedStatement = await GetSession().PrepareAsync(LoadActivityStreamQueryTemplateAsc).ConfigureAwait(false);
+
+                return loadActivityStreamAsc_PreparedStatement;
+            }
+            else
+            {
+                if (loadActivityStreamDesc_PreparedStatement is null)
+                    loadActivityStreamDesc_PreparedStatement = await GetSession().PrepareAsync(LoadActivityStreamQueryTemplateDesc).ConfigureAwait(false);
+
+                return loadActivityStreamDesc_PreparedStatement;
             }
         }
     }

@@ -19,7 +19,7 @@ namespace ActivityStreams.Persistence.Cassandra
 
         public StreamStore(ICassandraProvider cassandraProvider)
         {
-            this.cassandraProvider = cassandraProvider ?? throw new ArgumentNullException(nameof(cassandraProvider)); ;
+            this.cassandraProvider = cassandraProvider ?? throw new ArgumentNullException(nameof(cassandraProvider));
         }
 
         public void Attach(byte[] sourceStreamId, byte[] streamIdToAttach, long expiresAt)
