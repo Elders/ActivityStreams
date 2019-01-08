@@ -23,6 +23,7 @@ namespace ActivityStreams
             services.AddSingleton<IActivityRepository, DefaultActivityRepository>();
             services.AddTransient<StreamService>();
             services.AddTransient<IStreamRepository, DefaultStreamRepository>();
+            services.AddSingleton<StorageManager>();
             services.AddTransient(typeof(ICassandraReplicationStrategy), provider => GetReplicationStrategy(configuration));
 
             return services;
