@@ -1,3 +1,6 @@
+#### 1.0.0-beta0005 - 08.01.2019
+* Register StorageManager instance as singleton
+
 #### 1.0.0-beta0004 - 07.01.2019
 * Adds async support for the GET/Query side
 
