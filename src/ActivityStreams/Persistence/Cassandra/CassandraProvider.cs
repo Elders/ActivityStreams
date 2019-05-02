@@ -49,6 +49,7 @@ namespace ActivityStreams.Persistence.Cassandra
                 baseConfigurationKeyspace = hackyBuilder.DefaultKeyspace;
 
                 var connStrBuilder = new CassandraConnectionStringBuilder(connectionString);
+                cluster?.Shutdown(30000);
                 cluster = connStrBuilder
                     .ApplyToBuilder(builder)
                     .Build();
@@ -75,6 +76,7 @@ namespace ActivityStreams.Persistence.Cassandra
         {
             if (session is null || session.IsDisposed || optionsHasChanged)
             {
+                session?.Dispose();
                 session = GetCluster().Connect();
                 CreateKeyspace(GetKeyspace(), replicationStrategy);
             }
@@ -91,8 +93,11 @@ namespace ActivityStreams.Persistence.Cassandra
 
         private void Changed(CassandraProviderOptions newOptions)
         {
-            options = newOptions;
-            optionsHasChanged = true;
+            if (options != newOptions)
+            {
+                options = newOptions;
+                optionsHasChanged = true;
+            }
         }
     }
 }
