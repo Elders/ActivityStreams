@@ -1,3 +1,6 @@
+#### 1.0.0-beta0006 - 02.05.2019
+* Fixes a memory leak due to TCP Socket management
+
 #### 1.0.0-beta0005 - 08.01.2019
 * Register StorageManager instance as singleton
 
