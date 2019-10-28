@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <!--Nuget-->
@@ -9,27 +9,26 @@
     <Product>ActivityStreams</Product>
     <Title>ActivityStreams</Title>
     <Authors>Elders OSS</Authors>
-    <Copyright>Copyright © Elders OSS 2013</Copyright>
+    <Copyright>Copyright © Elders OSS 2013-2020</Copyright>
     <Description>ActivityStreams</Description>
     <PackageTags>elders activity streams serializer</PackageTags>
     <PackageLicenseUrl>https://github.com/Elders/ActivityStreams/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Elders/ActivityStreams</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Elders/ActivityStreams.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyName>ActivityStreams</AssemblyName>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibLog" Version="5.0.2">
+    <PackageReference Include="LibLog" Version="5.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.1" />
-    <PackageReference Include="CassandraCSharpDriver" Version="3.6.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
+    <PackageReference Include="CassandraCSharpDriver" Version="3.11.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
