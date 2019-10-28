@@ -1,3 +1,6 @@
+#### 1.0.0-beta0007 - 28.10.2019
+* Updates packages
+
 #### 1.0.0-beta0006 - 02.05.2019
 * Fixes a memory leak due to TCP Socket management
 
