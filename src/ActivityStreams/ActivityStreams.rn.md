@@ -1,3 +1,7 @@
+#### 1.0.0-beta0008 - 07.07.2020
+* Updates the way Cassandra is being configured
+* Adds a README.md
+
 #### 1.0.0-beta0007 - 28.10.2019
 * Updates packages
 
