@@ -4,7 +4,7 @@ namespace ActivityStreams.Persistence.Cassandra
 {
     public interface ICassandraProvider
     {
-        Cluster GetCluster();
+        ICluster GetCluster();
         ISession GetSession();
     }
 }

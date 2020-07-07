@@ -5,7 +5,18 @@ namespace ActivityStreams.Persistence.Cassandra
 {
     public class CassandraProviderOptions : IEquatable<CassandraProviderOptions>
     {
+        public CassandraProviderOptions()
+        {
+            Datacenters = new List<string>();
+        }
+
         public string ConnectionString { get; set; }
+
+        public string ReplicationStrategy { get; set; } = "simple";
+
+        public int ReplicationFactor { get; set; } = 1;
+
+        public List<string> Datacenters { get; set; }
 
         public override bool Equals(object obj)
         {

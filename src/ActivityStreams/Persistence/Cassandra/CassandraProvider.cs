@@ -30,7 +30,7 @@ namespace ActivityStreams.Persistence.Cassandra
             this.initializer = initializer;
         }
 
-        public Cluster GetCluster()
+        public ICluster GetCluster()
         {
             if (cluster is null == false && optionsHasChanged == false)
                 return cluster;
@@ -52,6 +52,8 @@ namespace ActivityStreams.Persistence.Cassandra
                 cluster?.Shutdown(30000);
                 cluster = connStrBuilder
                     .ApplyToBuilder(builder)
+                    .WithReconnectionPolicy(new ExponentialReconnectionPolicy(100, 100000))
+                    .WithRetryPolicy(new NoHintedHandOffRetryPolicy())
                     .Build();
             }
             else
@@ -98,6 +100,29 @@ namespace ActivityStreams.Persistence.Cassandra
                 options = newOptions;
                 optionsHasChanged = true;
             }
+        }
+    }
+
+    class NoHintedHandOffRetryPolicy : IRetryPolicy
+    {
+        public RetryDecision OnReadTimeout(IStatement query, ConsistencyLevel cl, int requiredResponses, int receivedResponses, bool dataRetrieved, int nbRetry)
+        {
+            if (nbRetry != 0)
+                return RetryDecision.Rethrow();
+
+            return receivedResponses >= requiredResponses && !dataRetrieved
+                       ? RetryDecision.Retry(cl)
+                       : RetryDecision.Rethrow();
+        }
+
+        public RetryDecision OnUnavailable(IStatement query, ConsistencyLevel cl, int requiredReplica, int aliveReplica, int nbRetry)
+        {
+            return RetryDecision.Rethrow();
+        }
+
+        public RetryDecision OnWriteTimeout(IStatement query, ConsistencyLevel cl, string writeType, int requiredAcks, int receivedAcks, int nbRetry)
+        {
+            return RetryDecision.Rethrow();
         }
     }
 }
