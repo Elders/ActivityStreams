@@ -1,3 +1,6 @@
+#### 1.0.0-beta0009 - 05.08.2020
+* Removes dependency to msvcrt.dll for comparing sequences
+
 #### 1.0.0-beta0008 - 07.07.2020
 * Updates the way Cassandra is being configured
 * Adds a README.md
