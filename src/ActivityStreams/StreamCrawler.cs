@@ -10,7 +10,7 @@ namespace ActivityStreams
     /// Flattens the graph 'ActivityStreams' structure. If there are multiple nodes for a stream with different expiration
     /// timestamp then the lates expiration timestamp will be captured.
     /// </summary>
-    internal sealed class StreamCrawler
+    public sealed class StreamCrawler
     {
         readonly IStreamStore streamStore;
 
