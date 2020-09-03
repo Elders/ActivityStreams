@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ActivityStreams.Persistence.Cassandra
+namespace ActivityStreams
 {
     public interface ISerializer
     {

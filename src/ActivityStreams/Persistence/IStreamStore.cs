@@ -1,8 +1,11 @@
-﻿namespace ActivityStreams.Persistence
+﻿using System.Threading.Tasks;
+
+namespace ActivityStreams.Persistence
 {
     public interface IStreamStore
     {
         ActivityStream Get(byte[] streamId);
+        Task<ActivityStream> GetAsync(byte[] streamId);
 
         void Attach(byte[] sourceStreamId, byte[] streamIdToAttach, long expiresAt);
 

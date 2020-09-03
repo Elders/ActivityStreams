@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 using ActivityStreams.Helpers;
 
 namespace ActivityStreams.Persistence.InMemory
@@ -36,6 +37,11 @@ namespace ActivityStreams.Persistence.InMemory
             ActivityStream stream = null;
             activityFeedStore.TryGetValue(streamId, out stream);
             return stream;
+        }
+
+        public Task<ActivityStream> GetAsync(byte[] streamId)
+        {
+            return Task.FromResult(Get(streamId));
         }
     }
 }

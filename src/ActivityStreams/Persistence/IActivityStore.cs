@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ActivityStreams.Persistence
 {
@@ -8,5 +8,6 @@ namespace ActivityStreams.Persistence
         void Save(Activity activity);
         void Delete(byte[] streamId, long timestamp);
         IEnumerable<Activity> LoadStream(byte[] streamId, ActivityStreamOptions options);
+        Task<IEnumerable<Activity>> LoadStreamAsync(byte[] streamId, ActivityStreamOptions options);
     }
 }

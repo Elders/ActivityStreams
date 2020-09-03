@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ActivityStreams.Helpers;
 using System;
+using System.Threading.Tasks;
 
 namespace ActivityStreams.Persistence.InMemory
 {
@@ -45,6 +46,11 @@ namespace ActivityStreams.Persistence.InMemory
             {
                 yield break;
             }
+        }
+
+        public Task<IEnumerable<Activity>> LoadStreamAsync(byte[] streamId, ActivityStreamOptions options)
+        {
+            return Task.FromResult(LoadStream(streamId, options));
         }
     }
 }

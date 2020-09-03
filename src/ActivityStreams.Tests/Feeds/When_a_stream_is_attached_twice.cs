@@ -18,7 +18,7 @@ namespace ActivityStreams.Tests.Feeds
 
         Because of = () => streamService.Attach(topId, duplicatedId);
 
-        It should_be_attached_only_once = () => streamService.Get(topId).Streams.Count().ShouldEqual(1);
+        It should_be_attached_only_once = () => streamService.Get(topId).AttachedStreams.Count().ShouldEqual(1);
 
         static byte[] topId;
         static byte[] duplicatedId;

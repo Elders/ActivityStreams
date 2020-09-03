@@ -1,11 +1,12 @@
-﻿using System.Linq;
-using ActivityStreams.Helpers;
+﻿using ActivityStreams.Persistence;
+using System.Threading.Tasks;
 
-namespace ActivityStreams.Persistence
+namespace ActivityStreams
 {
     public interface IStreamRepository
     {
         ActivityStream Load(byte[] streamId);
+        Task<ActivityStream> LoadAsync(byte[] streamId);
 
         void AttachStream(byte[] sourceStreamId, byte[] streamIdToAttach, long expiresAt);
 
@@ -34,6 +35,15 @@ namespace ActivityStreams.Persistence
         public ActivityStream Load(byte[] streamId)
         {
             var result = store.Get(streamId);
+            if (ReferenceEquals(null, result))
+                result = new ActivityStream(streamId);
+
+            return result;
+        }
+
+        public async Task<ActivityStream> LoadAsync(byte[] streamId)
+        {
+            var result = await store.GetAsync(streamId).ConfigureAwait(false);
             if (ReferenceEquals(null, result))
                 result = new ActivityStream(streamId);
 
