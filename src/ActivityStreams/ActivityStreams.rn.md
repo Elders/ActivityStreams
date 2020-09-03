@@ -1,3 +1,6 @@
+#### 1.0.0-beta0011 - 03.09.2020
+* Fixes network topology for cassandra configs
+
 #### 1.0.0-beta0010 - 05.08.2020
 * Reloads the ActivityStreams.Tests
 
