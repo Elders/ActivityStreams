@@ -24,7 +24,8 @@ namespace ActivityStreams
             services.AddTransient<StreamService>();
             services.AddTransient<IStreamRepository, DefaultStreamRepository>();
             services.AddSingleton<StorageManager>();
-            services.AddTransient(typeof(ICassandraReplicationStrategy), provider => GetReplicationStrategy(configuration));
+            services.AddSingleton<CassandraReplicationStrategyFactory>();
+            services.AddTransient(typeof(ICassandraReplicationStrategy), provider => provider.GetRequiredService<CassandraReplicationStrategyFactory>().GetReplicationStrategy());
 
             return services;
         }
@@ -39,35 +40,30 @@ namespace ActivityStreams
 
             return services;
         }
+    }
 
-        static int GetReplicationFactor(IConfiguration configuration)
+    class CassandraReplicationStrategyFactory
+    {
+        private readonly CassandraProviderOptions options;
+
+        public CassandraReplicationStrategyFactory(IOptionsMonitor<CassandraProviderOptions> optionsMonitor)
         {
-            var replFactorCfg = configuration["activitystreams_persistence_cassandra_replication_factor"];
-            return string.IsNullOrEmpty(replFactorCfg) ? 1 : int.Parse(replFactorCfg);
+            this.options = optionsMonitor.CurrentValue;
         }
 
-        static ICassandraReplicationStrategy GetReplicationStrategy(IConfiguration configuration)
+        internal ICassandraReplicationStrategy GetReplicationStrategy()
         {
-            var replStratefyCfg = configuration["activitystreams_persistence_cassandra_replication_strategy"];
-            var replFactorCfg = configuration["activitystreams_persistence_cassandra_replication_factor"];
-
             ICassandraReplicationStrategy replicationStrategy = null;
-            if (string.IsNullOrEmpty(replStratefyCfg))
+            if (options.ReplicationStrategy.Equals("simple", StringComparison.OrdinalIgnoreCase))
             {
-                replicationStrategy = new SimpleReplicationStrategy(1);
+                replicationStrategy = new SimpleReplicationStrategy(options.ReplicationFactor);
             }
-            else if (replStratefyCfg.Equals("simple", StringComparison.OrdinalIgnoreCase))
+            else if (options.ReplicationStrategy.Equals("network_topology", StringComparison.OrdinalIgnoreCase))
             {
-                replicationStrategy = new SimpleReplicationStrategy(GetReplicationFactor(configuration));
-            }
-            else if (replStratefyCfg.Equals("network_topology", StringComparison.OrdinalIgnoreCase))
-            {
-                int replicationFactor = GetReplicationFactor(configuration);
                 var settings = new List<NetworkTopologyReplicationStrategy.DataCenterSettings>();
-                string[] datacenters = configuration["activitystreams_persistence_cassandra__datacenters"].Split(',');
-                foreach (var datacenter in datacenters)
+                foreach (var datacenter in options.Datacenters)
                 {
-                    var setting = new NetworkTopologyReplicationStrategy.DataCenterSettings(datacenter, replicationFactor);
+                    var setting = new NetworkTopologyReplicationStrategy.DataCenterSettings(datacenter, options.ReplicationFactor);
                     settings.Add(setting);
                 }
                 replicationStrategy = new NetworkTopologyReplicationStrategy(settings);

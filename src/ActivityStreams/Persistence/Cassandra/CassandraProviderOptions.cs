@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 
 namespace ActivityStreams.Persistence.Cassandra
@@ -42,6 +43,18 @@ namespace ActivityStreams.Persistence.Cassandra
         public static bool operator !=(CassandraProviderOptions left, CassandraProviderOptions right)
         {
             return !(left == right);
+        }
+    }
+
+    public class CassandraProviderOptionsProvider : OptionsProviderBase<CassandraProviderOptions>
+    {
+        public const string SettingKey = "activitystreams:cassandra";
+
+        public CassandraProviderOptionsProvider(IConfiguration configuration) : base(configuration) { }
+
+        public override void Configure(CassandraProviderOptions options)
+        {
+            configuration.GetSection(SettingKey).Bind(options);
         }
     }
 }
